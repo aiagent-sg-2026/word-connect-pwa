@@ -10,7 +10,7 @@ The core flow is letter wheel → swipe physical tile indexes → candidate → 
 
 ## 3. Dictionary and word policy
 
-The dictionary is a build-time content pipeline, never a raw `words.txt`. Lexical evidence, frequency, and game policy are separate inputs. Word classes are exactly `TARGET`, `BONUS`, `ACCEPT_ONLY`, `BLOCKED`, and `REVIEW`. A valid word is not automatically suitable as a required answer.
+The dictionary is a build-time content pipeline, never a raw `words.txt`. Phase 4 adds explicit TypeScript contracts and Node tooling for `WordRecord`, lexical evidence, frequency signal, policy/manual overrides, provenance source ids, and reason codes. Word classes are exactly `TARGET`, `BONUS`, `ACCEPT_ONLY`, `BLOCKED`, and `REVIEW`. A valid word is not automatically suitable as a required answer.
 
 A word record contains `word`, normalized `signature`, and `length`; optional `lemma`, POS, and inflection; dialects; sources; frequency, commonness, and familiarity; flags `properNoun`, `abbreviation`, `offensive`, `archaic`, and `technical`; `targetScore`, `bonusScore`; `class`; and reason codes. Normalization must not silently change meaning: `can't` must not become `cant`, hyphenated forms must not become concatenations, and accents must not become alternate spellings unless an explicit language policy says so.
 
@@ -22,7 +22,7 @@ TargetScore V1 is proposed as `0.38 Frequency + 0.18 LexicalConfidence + 0.12 Mo
 
 ## 5. Content generation
 
-The Level Generator is answer/anchor → letter multiset → enumerate subword signatures → quality filter → target/bonus selection → difficulty score → deterministic validator → immutable content. The primary data structure is an Anagram Signature Index plus letter-multiset counts and a HashSet. An optional bitmask is a prefilter. A Trie is reserved for prefix/hints/DFS; runtime must never scan a 300k-word dictionary per swipe.
+The Phase 6 LAB generator is answer/anchor → rack → candidate lookup → quality/class filter → target/bonus/accept-only selection → difficulty score → deterministic validator → immutable LAB content. The primary data structure is an Anagram Signature Index plus exact letter-multiset counts; bitmask is coarse metadata only. A Trie is reserved for prefix/hints/DFS; runtime must never scan a 300k-word dictionary per swipe.
 
 Every level contract includes `campaignVersion`, `contentVersion`, `levelId`, `revision`, `letters`, `targets`, `bonus`, optional `acceptOnly`, `difficulty`, `dictionaryVersion`, `scoringVersion`, `generatorVersion`, and `hash`.
 

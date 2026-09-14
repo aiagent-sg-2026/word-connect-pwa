@@ -11,12 +11,18 @@ npm run dev
 
 Vite dev uses local HTTPS via `@vitejs/plugin-basic-ssl` for PWA-compatible development.
 
-## Test and build
+## Test, build, and content tooling
 
 ```bash
 npm test
 npm run build
+npm run dictionary:build
+npm run score:eval
+npm run content:generate
+npm run content:verify
 ```
+
+Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`.
 
 Browser smoke after building:
 

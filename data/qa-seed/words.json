@@ -1,0 +1,6921 @@
+[
+  {
+    "word": "CAT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CAT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ACT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ACT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "AT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "AT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.88,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TACT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TACT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DOG",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DOG",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.835,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "GOD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "GOD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DO",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DO",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.94,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "GO",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "GO",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SUN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SUN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "US",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "US",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.88,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "STAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "STAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RATS",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RATS",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ARTS",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ARTS",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ART",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ART",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SAT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SAT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RAT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RAT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.805,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TSAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TSAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MOON",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MOON",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MONO",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MONO",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MOO",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MOO",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ON",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ON",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "ACCEPT_ONLY",
+        "reasons": [
+          "OK_ACCEPT_ONLY"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PLANT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PLANT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.64,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PLAN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PLAN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PANT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PANT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ANT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ANT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.835,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TAP",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TAP",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "NAP",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "NAP",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LAP",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LAP",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BREAD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BREAD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.64,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BEAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BEAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BARE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BARE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "READ",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "READ",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DARE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DARE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BAD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BAD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RED",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RED",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BED",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BED",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "STONE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "STONE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.655,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TONES",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TONES",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "NOTES",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "NOTES",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TONE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TONE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "NOTE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "NOTE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ONE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ONE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SET",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SET",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "NET",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "NET",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.805,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CLOUD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CLOUD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "COLD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "COLD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LOUD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LOUD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "COD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "COD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DOC",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DOC",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "OLD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "OLD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "GARDEN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "GARDEN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5800000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "GRADE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "GRADE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RANGE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RANGE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ANGER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ANGER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DANGER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DANGER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.64,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "EAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "EAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "AGE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "AGE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SMILE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SMILE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.655,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MILES",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MILES",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SLIM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SLIM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LIME",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LIME",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MILE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MILE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ELM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ELM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LIE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LIE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SIM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SIM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.805,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BRIGHT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BRIGHT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5950000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BIRTH",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BIRTH",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "GIRTH",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "GIRTH",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RIGHT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RIGHT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BIT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BIT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RIG",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RIG",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HIT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HIT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.805,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FLOWER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FLOWER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5950000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LOWER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LOWER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FOWLER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FOWLER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.625,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "WOLF",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "WOLF",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FLOE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FLOE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ROLE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ROLE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "OWE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "OWE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.805,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MARKET",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MARKET",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5950000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MAKER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MAKER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TAKER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TAKER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TAME",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TAME",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TEA",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TEA",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MET",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MET",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ARM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ARM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.805,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CASTLE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CASTLE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5950000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CLEATS",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CLEATS",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.6100000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "STALE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "STALE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "STEAL",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "STEAL",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TALES",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TALES",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.625,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SEA",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SEA",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.79,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TEAL",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TEAL",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ORANGE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ORANGE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5950000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ORGAN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ORGAN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "GROAN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "GROAN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RAN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RAN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "EON",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "EON",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PLANET",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PLANET",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5650000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PLANE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PLANE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.655,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PANEL",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PANEL",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LEANT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LEANT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TEN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TEN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PEN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PEN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "STREAM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "STREAM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.55,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MASTER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MASTER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5650000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TAMERS",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TAMERS",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5800000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "STARE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "STARE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TEARS",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TEARS",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RAM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RAM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "EAST",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "EAST",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CANDLE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CANDLE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.55,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LANCED",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LANCED",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5650000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DANCE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DANCE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.655,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CLEAN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CLEAN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LANCE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LANCE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CAN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CAN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LED",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LED",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "END",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "END",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.775,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "WONDER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "WONDER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5650000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DOWNER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DOWNER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.5800000000000001,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "OWNER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "OWNER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DROWN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DROWN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ROW",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ROW",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.85,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "NOW",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "NOW",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.865,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BONUS",
+        "reasons": [
+          "OK_BONUS"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HOME",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HOME",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HONE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HONE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MESH",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MESH",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SHOE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SHOE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HOSE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HOSE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ROSE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ROSE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SORE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SORE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "EARS",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "EARS",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SEAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SEAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RATE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RATE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TEAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TEAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TREE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TREE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FREE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FREE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FERN",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FERN",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FINE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FINE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "FIND",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "FIND",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "KIND",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "KIND",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "KING",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "KING",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RING",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RING",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SING",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SING",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "SONG",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "SONG",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LONG",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LONG",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LONE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LONE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LINE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LINE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MIND",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MIND",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MINE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MINE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TIME",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TIME",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TEAM",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TEAM",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MEAT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MEAT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "MATE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "MATE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LATE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LATE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TALE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TALE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "DEAL",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "DEAL",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LEAD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LEAD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PLEAD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PLEAD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PEAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PEAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PEARL",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PEARL",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.64,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "LEAP",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "LEAP",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "PLEA",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "PLEA",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CARE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CARE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "RACE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "RACE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ACRE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ACRE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "TRACE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "TRACE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.625,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "REACT",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "REACT",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.64,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CRATE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CRATE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.655,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CATER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CATER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CART",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CART",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CARD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CARD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7749999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HARD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HARD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7899999999999999,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HARE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HARE",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HEAR",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HEAR",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.715,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "HEART",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "HEART",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.655,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "EARTH",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "EARTH",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.67,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "WATER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "WATER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.685,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "WARTER",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "WARTER",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.625,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "TARGET",
+        "reasons": [
+          "OK_TARGET"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "BADWORD",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "BADWORD",
+        "confidence": 0.9,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.565,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "BLOCKED",
+        "reasons": [
+          "UNSAFE_EXACT_TOKEN"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "NASA",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "NASA",
+        "confidence": 0.4,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": true
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.7,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "REVIEW",
+        "reasons": [
+          "REVIEW_REQUIRED"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "ALICE",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "ALICE",
+        "confidence": 0.4,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": true,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.64,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "REVIEW",
+        "reasons": [
+          "REVIEW_REQUIRED"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CAN'T",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CAN'T",
+        "confidence": 0.4,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.73,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "REVIEW",
+        "reasons": [
+          "REVIEW_REQUIRED"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CO-OP",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CO-OP",
+        "confidence": 0.4,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.745,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "REVIEW",
+        "reasons": [
+          "REVIEW_REQUIRED"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  },
+  {
+    "word": "CAFÉ",
+    "lexical": [
+      {
+        "sourceId": "qa-seed-lexicon-v1",
+        "token": "CAFÉ",
+        "confidence": 0.4,
+        "pos": [
+          "unknown"
+        ],
+        "dialects": [
+          "en"
+        ],
+        "flags": {
+          "properNoun": false,
+          "abbreviation": false
+        }
+      }
+    ],
+    "frequency": [
+      {
+        "sourceId": "qa-seed-frequency-v1",
+        "value": 0.76,
+        "scale": "0..1"
+      }
+    ],
+    "policy": [
+      {
+        "sourceId": "qa-seed-policy-v1",
+        "class": "REVIEW",
+        "reasons": [
+          "REVIEW_REQUIRED"
+        ],
+        "note": "QA seed classification, not production corpus"
+      }
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "scoringVersion": "score-v1-provisional",
+  "goldenVersion": "starter-golden-v1",
+  "goldenStatus": "qa-starter-not-2000-human-reviewed",
+  "count": 11,
+  "accuracy": 1,
+  "mismatches": []
+}

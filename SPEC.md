@@ -18,6 +18,7 @@ The terms MUST and MUST NOT are mandatory. SHOULD and SHOULD NOT are strong defa
 
 1. The implementation SHOULD begin with the proposed TargetScore and BonusScore V1 formulas in DESIGN.md, including stricter short-word thresholds.
 2. Scores MUST be calibrated with a human Golden Set and later telemetry; formulas and versions MUST be recorded in content metadata.
+3. Until the roughly 2,000-word human Golden Set exists, score policies and generated campaigns MUST be labeled provisional/LAB and MUST NOT be promoted as immutable production campaign content.
 
 ## GEN
 

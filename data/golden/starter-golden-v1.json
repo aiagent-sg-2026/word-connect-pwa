@@ -1,0 +1,18 @@
+{
+  "version": "starter-golden-v1",
+  "status": "qa-starter-not-2000-human-reviewed",
+  "note": "Bounded starter Golden Set from hand-authored content and deliberate edge cases. The ~2,000 human judgment milestone remains pending.",
+  "judgments": [
+    {"word":"CAT","expectedClass":"TARGET"},
+    {"word":"DOG","expectedClass":"TARGET"},
+    {"word":"AT","expectedClass":"ACCEPT_ONLY"},
+    {"word":"SUN","expectedClass":"TARGET"},
+    {"word":"STONE","expectedClass":"TARGET"},
+    {"word":"BADWORD","expectedClass":"BLOCKED"},
+    {"word":"NASA","expectedClass":"REVIEW"},
+    {"word":"ALICE","expectedClass":"REVIEW"},
+    {"word":"CAN'T","expectedClass":"REVIEW"},
+    {"word":"CO-OP","expectedClass":"REVIEW"},
+    {"word":"CAFÉ","expectedClass":"REVIEW"}
+  ]
+}

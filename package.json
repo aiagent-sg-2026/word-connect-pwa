@@ -1,1 +1,30 @@
-{"name":"word-connect-pwa","version":"0.1.0","private":true,"type":"module","scripts":{"dev":"vite --host 0.0.0.0","build":"tsc && vite build","test":"vitest run","preview":"vite preview --host 0.0.0.0","smoke":"node scripts/smoke.mjs"},"dependencies":{"@vitejs/plugin-basic-ssl":"latest","idb":"latest","typescript":"latest","vite":"latest"},"devDependencies":{"@types/node":"^26.5.1","fake-indexeddb":"latest","jsdom":"latest","playwright":"latest","vitest":"latest"}}
+{
+  "name": "word-connect-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "preview": "vite preview --host 0.0.0.0",
+    "smoke": "node scripts/smoke.mjs",
+    "dictionary:build": "node scripts/dictionary-build.mjs",
+    "score:eval": "node scripts/score-eval.mjs",
+    "content:generate": "node scripts/content-generate.mjs",
+    "content:verify": "node scripts/content-verify.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-basic-ssl": "latest",
+    "idb": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.1",
+    "fake-indexeddb": "latest",
+    "jsdom": "latest",
+    "playwright": "latest",
+    "vitest": "latest"
+  }
+}

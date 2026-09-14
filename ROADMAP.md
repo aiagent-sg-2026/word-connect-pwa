@@ -28,17 +28,23 @@ Exit gate: local play is deterministic and completion/economy/stats commit atomi
 
 Tasks: ingest lexical evidence, frequency, dialects, morphology, safety flags, reason codes, normalization policy, and exact-token review workflow.
 
+Status: LAB foundation implemented with `npm run dictionary:build`; artifact `dict-qa-seed-v1` contains classified, explainable QA seed records and manifest checksum. Production corpus/licensing remains a later content milestone.
+
 Exit gate: versioned build artifact contains only classified, explainable records.
 
 ## Phase 5 — WordScore V1 + ~2,000-word human Golden Set
 
 Tasks: implement proposed TargetScore/BonusScore, stricter short-word thresholds, curate roughly 2,000 judgments, and record scoring version.
 
+Status: `score-v1-provisional` implemented with explicit versioned config and `npm run score:eval` against `starter-golden-v1`. The starter set is deterministic QA coverage only; the ~2,000 human-reviewed Golden Set exit gate is not complete.
+
 Exit gate: human Golden Set calibration report and reproducible score build.
 
 ## Phase 6 — Signature index/generator
 
 Tasks: build anagram signature index, multiset/HashSet lookup, optional bitmask prefilter, generator, validator, duplicate checks, solvability checks, and difficulty bands.
+
+Status: LAB generator implemented as `generator-v1-lab-provisional` via `npm run content:generate` and `npm run content:verify`. With the bounded QA seed corpus it honestly generates fewer than 1,000 unique quality levels and records the blocker; it does not mutate `campaign-en-v1`.
 
 Exit gate: identical inputs/seed produce identical valid level packs without runtime dictionary scans.
 

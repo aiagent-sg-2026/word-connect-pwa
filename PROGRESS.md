@@ -11,6 +11,14 @@
 - Added unit tests for content validity, duplicate physical tile behavior, outcomes, no duplicate rewards, IDB bootstrap/persistence, schema/key-path verification, real legacy profile save migration replay, immutable campaign overwrite fail-closed, SHA-256 save integrity rejection before mutation, content mismatch fail-closed, and deterministic update safe-gate/owner-lock/readiness helpers.
 - Added Playwright smoke script covering responsive viewports, no horizontal overflow, tap and pointer-swipe gameplay, no page/console errors, warm offline reload after clearing ordinary HTTP cache, and two-page Service Worker presence.
 
+## Phase 4–6 LAB content-engineering foundation
+
+- Added build-time dictionary contracts for `WordRecord`, exact classes, lexical evidence, frequency signals, policy overrides, provenance and reason codes.
+- Added deterministic English V1 normalization: NFC, canonical lower/upper, a-z exact-token policy, no silent apostrophe/hyphen/accent transformations, exact-token safety gates, proper-noun/abbreviation/invalid/source-conflict REVIEW gates, and BLOCKED/REVIEW target rejection.
+- Added local JSON/CSV/TSV import adapter support and `data/qa-seed/words.json`, explicitly labeled QA seed data rather than a licensed production corpus.
+- Added `score-v1-provisional` with versioned weights/thresholds, short-word strictness, per-word explanations, and starter Golden Set evaluation. The ~2,000 human-reviewed Golden Set remains pending and Phase 5 is not production-complete.
+- Added signature index, exact multiset constructibility, deterministic seeded LAB generator, difficulty scoring, duplicate identity detection, campaign/level hashes, and verification commands. Generated LAB artifacts are separate from and do not replace `campaign-en-v1`.
+
 ## Independent reviewer notes
 
 P0 gaps found and fixed:

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildDictionary } from './dictionary.ts';
-import { generateLabCampaign, validateGenerated, buildSignatureIndex } from './generator.ts';
+import { computeGeneratedLevelHash, findCandidatesForRack, generateLabCampaign, validateGenerated, buildCandidateLookup, buildSignatureIndex } from './generator.ts';
 import { canonical, sha256 } from './hash.ts';
 import { canConstructExact, countsOf, normalizeEnglishV1, signatureOf } from './normalize.ts';
 import type { SourceWordInput } from './types.ts';
@@ -48,12 +48,54 @@ describe('content pipeline', () => {
     expect(d.records[0].class).not.toBe('TARGET');
   });
 
-  it('indexes signatures with exact repeated-letter multisets', async () => {
-    const d = await buildDictionary(fixture);
+  it('indexes signatures and looks up candidates with exact repeated-letter multisets', async () => {
+    const d = await buildDictionary([
+      ...fixture,
+      { word: 'moon', lexical: [{ sourceId: 'lex', token: 'moon', confidence: 0.95, dialects: ['en'] }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] },
+      { word: 'mono', lexical: [{ sourceId: 'lex', token: 'mono', confidence: 0.95, dialects: ['en'] }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'BONUS', reasons: ['OK_BONUS'] }] },
+      { word: 'mom', lexical: [{ sourceId: 'lex', token: 'mom', confidence: 0.95, dialects: ['en'] }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] }
+    ]);
     const idx = buildSignatureIndex(d.records);
     expect(idx.get('ACT')?.words).toContain('CAT');
+    const lookup = buildCandidateLookup(d.records);
+    const stats = { indexEntriesVisited: 0, candidateWordsReturned: 0 };
+    const words = findCandidatesForRack(lookup, ['M','O','O','N'], stats).map(r => r.upper);
+    expect(words).toEqual(expect.arrayContaining(['MOON', 'MONO']));
+    expect(words).not.toContain('MOM');
+    expect(stats.indexEntriesVisited).toBeGreaterThan(0);
+    expect(stats.candidateWordsReturned).toBe(words.length);
     expect(canConstructExact('MOON', ['M','O','N'])).toBe(false);
     expect(canConstructExact('MONO', ['M','O','O','N'])).toBe(true);
+  });
+
+  it('formalizes morphology metadata and reviews conflicting evidence safely', async () => {
+    const d = await buildDictionary([
+      { word: 'play', lexical: [{ sourceId: 'lex-a', token: 'play', confidence: 0.95, pos: ['verb'], morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-a', token: 'play', lemma: 'play', inflectionOf: 'play', inflectionType: 'base', provenance: 'qa-seed', confidence: 'high' } }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] },
+      { word: 'cats', lexical: [{ sourceId: 'lex-a', token: 'cats', confidence: 0.95, pos: ['noun'], morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-a', token: 'cats', lemma: 'cat', inflectionOf: 'cat', inflectionType: 'plural', provenance: 'qa-seed', confidence: 'high' } }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }] },
+      { word: 'played', lexical: [{ sourceId: 'lex-a', token: 'played', confidence: 0.95, pos: ['verb'], morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-a', token: 'played', lemma: 'play', inflectionOf: 'play', inflectionType: 'past', provenance: 'qa-seed', confidence: 'high' } }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }] },
+      { word: 'playing', lexical: [{ sourceId: 'lex-a', token: 'playing', confidence: 0.95, pos: ['verb'], morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-a', token: 'playing', lemma: 'play', inflectionOf: 'play', inflectionType: 'gerund', provenance: 'qa-seed', confidence: 'high' } }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }] },
+      { word: 'axes', lexical: [
+        { sourceId: 'lex-a', token: 'axes', confidence: 0.95, morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-a', token: 'axes', lemma: 'axis', inflectionOf: 'axis', inflectionType: 'plural', provenance: 'qa-seed', confidence: 'high' } },
+        { sourceId: 'lex-b', token: 'axes', confidence: 0.95, morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-b', token: 'axes', lemma: 'axe', inflectionOf: 'axe', inflectionType: 'plural', provenance: 'qa-seed', confidence: 'high' } }
+      ], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] }
+    ]);
+    const by = new Map(d.records.map(r => [r.upper, r]));
+    expect(by.get('PLAY')?.morphology?.inflectionType).toBe('base');
+    expect(by.get('CATS')?.morphology?.inflectionType).toBe('plural');
+    expect(by.get('PLAYED')?.morphology?.inflectionType).toBe('past');
+    expect(by.get('PLAYING')?.morphology?.inflectionType).toBe('gerund');
+    expect(by.get('AXES')?.flags.morphologyConflict).toBe(true);
+    expect(by.get('AXES')?.class).toBe('REVIEW');
+    expect(by.get('AXES')?.reasons).toContain('MORPHOLOGY_CONFLICT');
+  });
+
+  it('verifier hash helpers reject tampered lab level and campaign hashes', async () => {
+    const d = await buildDictionary(fixture);
+    const { campaign } = await generateLabCampaign(d.records, { seed: 'same', maxLevels: 2 });
+    const tamperedLevel = { ...campaign.levels[0], targets: [...campaign.levels[0].targets, 'ZZZ'] };
+    expect(await computeGeneratedLevelHash(tamperedLevel)).not.toBe(campaign.levels[0].hash);
+    expect(await sha256(canonical({ campaignVersion: campaign.campaignVersion, contentVersion: campaign.contentVersion, levels: campaign.levels.map(l => l.hash) }))).toBe(campaign.campaignHash);
+    expect(await sha256(canonical({ campaignVersion: campaign.campaignVersion, contentVersion: campaign.contentVersion, levels: ['bad', ...campaign.levels.slice(1).map(l => l.hash)] }))).not.toBe(campaign.campaignHash);
   });
 
   it('generates deterministic constructible duplicate-free lab campaigns and rejects forbidden targets', async () => {

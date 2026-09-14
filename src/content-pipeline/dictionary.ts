@@ -1,12 +1,12 @@
 import { canonical, sha256 } from './hash.ts';
 import { normalizeEnglishV1, signatureOf } from './normalize.ts';
 import { scoreBonus, scoreTarget, SCORE_POLICY_V1_PROVISIONAL } from './scoring.ts';
-import type { DictionaryArtifact, ReasonCode, SourceWordInput, WordClass, WordRecord } from './types.ts';
+import type { DictionaryArtifact, MorphologyEvidence, ReasonCode, SourceWordInput, WordClass, WordRecord } from './types.ts';
 
 const unsafeExact = new Set(['BADWORD']);
 
 function chooseClass(record: WordRecord): WordClass {
-  if (record.targetScore?.reasons.some(r => ['INVALID_TOKEN','SOURCE_CONFLICT','PROPER_NOUN','ABBREVIATION','UNSAFE_EXACT_TOKEN'].includes(r))) {
+  if (record.targetScore?.reasons.some(r => ['INVALID_TOKEN','SOURCE_CONFLICT','MORPHOLOGY_CONFLICT','PROPER_NOUN','ABBREVIATION','UNSAFE_EXACT_TOKEN'].includes(r))) {
     return record.flags.offensive ? 'BLOCKED' : 'REVIEW';
   }
   for (const p of record.policyOverrides) if (p.class) return p.class;
@@ -16,6 +16,30 @@ function chooseClass(record: WordRecord): WordClass {
   }
   if ((record.bonusScore?.score ?? 0) >= SCORE_POLICY_V1_PROVISIONAL.thresholds.bonus) return 'BONUS';
   return 'ACCEPT_ONLY';
+}
+
+function normalizedMorphology(evidence: MorphologyEvidence): MorphologyEvidence | undefined {
+  const token = normalizeEnglishV1(evidence.token);
+  const lemma = normalizeEnglishV1(evidence.lemma);
+  const inflectionOf = normalizeEnglishV1(evidence.inflectionOf);
+  if (!token.ok || !lemma.ok || !inflectionOf.ok) return undefined;
+  return {
+    contractVersion: 'morphology-v1',
+    sourceId: evidence.sourceId,
+    token: token.lower!,
+    lemma: lemma.lower!,
+    inflectionOf: inflectionOf.lower!,
+    inflectionType: evidence.inflectionType,
+    provenance: evidence.provenance,
+    confidence: evidence.confidence
+  };
+}
+
+function mergeMorphology(evidence: MorphologyEvidence[]): { morphology?: MorphologyEvidence; morphologyEvidence: MorphologyEvidence[]; conflict: boolean } {
+  const normalized = evidence.map(normalizedMorphology).filter((m): m is MorphologyEvidence => Boolean(m));
+  const sorted = normalized.sort((a, b) => canonical(a).localeCompare(canonical(b)));
+  const keys = new Set(sorted.map(m => canonical({ lemma: m.lemma, inflectionOf: m.inflectionOf, inflectionType: m.inflectionType })));
+  return { morphology: keys.size === 1 ? sorted[0] : undefined, morphologyEvidence: sorted, conflict: keys.size > 1 };
 }
 
 export async function buildDictionary(inputs: SourceWordInput[], version = 'dict-qa-seed-v1'): Promise<DictionaryArtifact> {
@@ -31,6 +55,7 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
     const lexicalEvidence = grouped.flatMap(g => g.lexical ?? []);
     const frequencySignals = grouped.flatMap(g => g.frequency ?? []);
     const policyOverrides = grouped.flatMap(g => g.policy ?? []);
+    const morphology = mergeMorphology(lexicalEvidence.flatMap(e => e.morphology ? [e.morphology] : e.lemma ? [{ contractVersion: 'morphology-v1' as const, sourceId: e.sourceId, token: e.token, lemma: e.lemma, inflectionOf: e.lemma, inflectionType: 'base' as const, provenance: 'legacy-lexical-lemma', confidence: 'medium' as const }] : []));
     const flags = {
       properNoun: lexicalEvidence.some(e => e.flags?.properNoun),
       abbreviation: lexicalEvidence.some(e => e.flags?.abbreviation),
@@ -38,7 +63,8 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
       archaic: lexicalEvidence.some(e => e.flags?.archaic),
       technical: lexicalEvidence.some(e => e.flags?.technical),
       invalidToken: !n.ok,
-      sourceConflict: new Set(lexicalEvidence.map(e => e.token.toLocaleLowerCase('en-US'))).size > 1 && lexicalEvidence.length > 1
+      sourceConflict: new Set(lexicalEvidence.map(e => e.token.toLocaleLowerCase('en-US'))).size > 1 && lexicalEvidence.length > 1,
+      morphologyConflict: morphology.conflict
     };
     const upper = n.ok ? n.upper! : key.toLocaleUpperCase('en-US');
     const record: WordRecord = {
@@ -46,7 +72,9 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
       upper,
       signature: n.ok ? signatureOf(upper) : '',
       length: n.ok ? upper.length : key.length,
-      lemma: lexicalEvidence.find(e => e.lemma)?.lemma,
+      lemma: morphology.morphology?.lemma,
+      morphology: morphology.morphology,
+      morphologyEvidence: morphology.morphologyEvidence,
       pos: [...new Set(lexicalEvidence.flatMap(e => e.pos ?? []))].sort(),
       dialects: [...new Set(lexicalEvidence.flatMap(e => e.dialects ?? ['en']))].sort(),
       sources: [...new Set([...lexicalEvidence.map(e => e.sourceId), ...frequencySignals.map(f => f.sourceId), ...policyOverrides.map(p => p.sourceId)])].sort(),
@@ -74,5 +102,5 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
   }
   const sourceIds = [...new Set(records.flatMap(r => r.sources))].sort();
   const checksum = await sha256(canonical({ version, records }));
-  return { version, languagePolicy: 'en-v1-a-z-exact-token', sourceNote: 'QA seed data authored for tests from current game vocabulary plus common edge-case words; not a licensed production corpus.', records, manifest: { version, recordCount: records.length, checksum, sourceIds, blockedCount: records.filter(r => r.class === 'BLOCKED').length, reviewCount: records.filter(r => r.class === 'REVIEW').length } };
+  return { schemaVersion: 'dictionary-artifact-v2', version, languagePolicy: 'en-v1-a-z-exact-token', sourceNote: 'QA seed data authored for tests from current game vocabulary plus common edge-case words; not a licensed production corpus.', records, manifest: { version, recordCount: records.length, checksum, sourceIds, blockedCount: records.filter(r => r.class === 'BLOCKED').length, reviewCount: records.filter(r => r.class === 'REVIEW').length } };
 }

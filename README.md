@@ -22,7 +22,7 @@ npm run content:generate
 npm run content:verify
 ```
 
-Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`.
+Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`. Current LAB hardening includes index-driven candidate lookup (signature/count/bitmask subset checks), dictionary artifact schema `dictionary-artifact-v2`, versioned morphology metadata (`morphology-v1`) with conflict-to-REVIEW behavior, and independent LAB level/campaign hash recomputation in `npm run content:verify`.
 
 Browser smoke after building:
 

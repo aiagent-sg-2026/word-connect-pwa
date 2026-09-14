@@ -18,6 +18,7 @@
 - Added local JSON/CSV/TSV import adapter support and `data/qa-seed/words.json`, explicitly labeled QA seed data rather than a licensed production corpus.
 - Added `score-v1-provisional` with versioned weights/thresholds, short-word strictness, per-word explanations, and starter Golden Set evaluation. The ~2,000 human-reviewed Golden Set remains pending and Phase 5 is not production-complete.
 - Added signature index, exact multiset constructibility, deterministic seeded LAB generator, difficulty scoring, duplicate identity detection, campaign/level hashes, and verification commands. Generated LAB artifacts are separate from and do not replace `campaign-en-v1`.
+- Closed Phase 4–6 reviewer gaps locally: generator candidate discovery now uses reusable signature/count/bitmask index lookup per rack instead of per-anchor full-record constructibility scans; morphology uses explicit `morphology-v1` build-time metadata with bounded inflection types and deterministic conflict-to-REVIEW handling; `content:verify` independently recomputes every LAB level hash and campaign hash before accepting artifacts.
 
 ## Independent reviewer notes
 
@@ -33,5 +34,6 @@ P0 gaps found and fixed:
 
 Deferred / environment-only limitations:
 
+- Phase 4/5/6 remain LAB/provisional rather than production-complete: no licensed production corpus, no ~2,000-word human Golden Set, and QA seed corpus currently generates 94 unique LAB levels for the default seed/scale.
 - Cold installed-PWA airplane launch and iOS standalone status-bar behavior require physical/device-level validation outside this VM.
 - Update prompt path is implemented with deterministic helper tests and Chromium smoke coverage for the built shell. Full Safari multi-client lifecycle behavior (tabs plus installed PWA across process boundaries) remains a device/browser-lifecycle verification item, not faked in this VM.

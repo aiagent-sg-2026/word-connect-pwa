@@ -3,7 +3,21 @@ export type ReasonCode =
   | 'OK_TARGET' | 'OK_BONUS' | 'OK_ACCEPT_ONLY'
   | 'POLICY_OVERRIDE' | 'LOW_TARGET_SCORE' | 'LOW_BONUS_SCORE'
   | 'SHORT_TARGET_STRICT' | 'PROPER_NOUN' | 'ABBREVIATION'
-  | 'UNSAFE_EXACT_TOKEN' | 'INVALID_TOKEN' | 'SOURCE_CONFLICT' | 'REVIEW_REQUIRED';
+  | 'UNSAFE_EXACT_TOKEN' | 'INVALID_TOKEN' | 'SOURCE_CONFLICT' | 'MORPHOLOGY_CONFLICT' | 'REVIEW_REQUIRED';
+
+export type InflectionType = 'base' | 'plural' | 'past' | 'gerund' | 'comparative' | 'superlative' | 'other';
+export type MorphologyConfidence = 'low' | 'medium' | 'high';
+
+export interface MorphologyEvidence {
+  contractVersion: 'morphology-v1';
+  sourceId: string;
+  token: string;
+  lemma: string;
+  inflectionOf: string;
+  inflectionType: InflectionType;
+  provenance: string;
+  confidence: MorphologyConfidence;
+}
 
 export interface LexicalEvidence {
   sourceId: string;
@@ -11,6 +25,7 @@ export interface LexicalEvidence {
   confidence: number;
   pos?: string[];
   lemma?: string;
+  morphology?: MorphologyEvidence;
   dialects?: string[];
   flags?: Partial<Record<'properNoun' | 'abbreviation' | 'archaic' | 'technical', boolean>>;
 }
@@ -45,7 +60,9 @@ export interface WordRecord {
   frequency: number;
   commonness: number;
   familiarity: number;
-  flags: { properNoun: boolean; abbreviation: boolean; offensive: boolean; archaic: boolean; technical: boolean; invalidToken: boolean; sourceConflict: boolean; };
+  morphology?: MorphologyEvidence;
+  morphologyEvidence: MorphologyEvidence[];
+  flags: { properNoun: boolean; abbreviation: boolean; offensive: boolean; archaic: boolean; technical: boolean; invalidToken: boolean; sourceConflict: boolean; morphologyConflict: boolean; };
   lexicalEvidence: LexicalEvidence[];
   frequencySignals: FrequencySignal[];
   policyOverrides: PolicyOverride[];
@@ -56,6 +73,7 @@ export interface WordRecord {
 }
 
 export interface DictionaryArtifact {
+  schemaVersion: 'dictionary-artifact-v2';
   version: string;
   languagePolicy: 'en-v1-a-z-exact-token';
   sourceNote: string;

@@ -5,7 +5,9 @@ import type { WordRecord } from './types.ts';
 
 export const GENERATOR_VERSION = 'generator-v1-lab-provisional';
 
-export interface SignatureIndexEntry { signature: string; words: string[]; counts: Record<string, number>; bitmask: number; }
+export interface SignatureIndexEntry { signature: string; words: string[]; counts: Record<string, number>; bitmask: number; length: number; }
+export interface CandidateLookup { entries: SignatureIndexEntry[]; byWord: Map<string, WordRecord>; }
+export interface LookupStats { indexEntriesVisited: number; candidateWordsReturned: number; }
 export interface GeneratorReport { requested: number; generated: number; skipped: string[]; duplicateCandidates: string[]; campaignHash: string; }
 
 export function bitmaskOf(word: string): number {
@@ -17,12 +19,43 @@ export function bitmaskOf(word: string): number {
 export function buildSignatureIndex(records: WordRecord[]): Map<string, SignatureIndexEntry> {
   const index = new Map<string, SignatureIndexEntry>();
   for (const r of records.filter(r => r.class !== 'BLOCKED' && r.class !== 'REVIEW' && r.signature)) {
-    const e = index.get(r.signature) ?? { signature: r.signature, words: [], counts: countsOf(r.upper), bitmask: bitmaskOf(r.upper) };
+    const e = index.get(r.signature) ?? { signature: r.signature, words: [], counts: countsOf(r.upper), bitmask: bitmaskOf(r.upper), length: r.length };
     e.words.push(r.upper);
     e.words.sort();
     index.set(r.signature, e);
   }
   return new Map([...index.entries()].sort(([a], [b]) => a.localeCompare(b)));
+}
+
+function isCountsSubset(needed: Record<string, number>, available: Record<string, number>): boolean {
+  for (const [ch, n] of Object.entries(needed)) if ((available[ch] ?? 0) < n) return false;
+  return true;
+}
+
+export function buildCandidateLookup(records: WordRecord[]): CandidateLookup {
+  const index = buildSignatureIndex(records);
+  const byWord = new Map(records.map(r => [r.upper, r]));
+  const entries = [...index.values()].sort((a, b) => a.length - b.length || a.signature.localeCompare(b.signature));
+  return { entries, byWord };
+}
+
+export function findCandidatesForRack(lookup: CandidateLookup, rack: readonly string[], stats?: LookupStats): WordRecord[] {
+  const rackUpper = rack.map(l => l.toLocaleUpperCase('en-US'));
+  const rackCounts = countsOf(rackUpper.join(''));
+  const rackMask = bitmaskOf(rackUpper.join(''));
+  const found: WordRecord[] = [];
+  for (const entry of lookup.entries) {
+    stats && (stats.indexEntriesVisited += 1);
+    if (entry.length > rackUpper.length) break;
+    if ((entry.bitmask & ~rackMask) !== 0) continue;
+    if (!isCountsSubset(entry.counts, rackCounts)) continue;
+    for (const word of entry.words) {
+      const record = lookup.byWord.get(word);
+      if (record) found.push(record);
+    }
+  }
+  stats && (stats.candidateWordsReturned += found.length);
+  return found.sort((a, b) => a.upper.localeCompare(b.upper));
 }
 
 function seedRank(seed: string, value: unknown): number {
@@ -38,7 +71,7 @@ function seededOrder<T>(items: T[], seed: string): T[] {
   return [...items].sort((a, b) => seedRank(seed, a) - seedRank(seed, b) || canonical(a).localeCompare(canonical(b)));
 }
 
-async function levelHash(level: LevelContract): Promise<string> {
+export async function computeGeneratedLevelHash(level: LevelContract): Promise<string> {
   const copy = { ...level } as Record<string, unknown>;
   delete copy.hash;
   return sha256(canonical(copy));
@@ -49,6 +82,7 @@ export async function generateLabCampaign(records: WordRecord[], opts: { seed: s
   const contentVersion = 'content-lab-qa-v1';
   const dictionaryVersion = 'dict-qa-seed-v1';
   const scoringVersion = 'score-v1-provisional';
+  const lookup = buildCandidateLookup(records);
   const eligibleAnchors = records.filter(r => r.class === 'TARGET' && r.length >= 3 && r.length <= 7);
   const levels: LevelContract[] = [];
   const identities = new Set<string>();
@@ -58,7 +92,7 @@ export async function generateLabCampaign(records: WordRecord[], opts: { seed: s
   for (const anchor of seededOrder(eligibleAnchors, opts.seed)) {
     if (levels.length >= opts.maxLevels) break;
     const rack = anchor.upper.split('');
-    const candidates = records.filter(r => r.signature && canConstructExact(r.upper, rack));
+    const candidates = findCandidatesForRack(lookup, rack);
     const targets = seededOrder(candidates.filter(r => r.class === 'TARGET' && r.length >= 3).map(r => r.upper), opts.seed).slice(0, 8).sort();
     const bonus = seededOrder(candidates.filter(r => r.class === 'BONUS').map(r => r.upper), opts.seed).slice(0, 8).sort();
     const acceptOnly = candidates.filter(r => r.class === 'ACCEPT_ONLY').map(r => r.upper).sort();
@@ -70,7 +104,7 @@ export async function generateLabCampaign(records: WordRecord[], opts: { seed: s
     identities.add(identity);
     const difficultyRaw = Math.min(5, Math.max(1, Math.ceil((anchor.length + targets.length / 2 + bonus.length / 4) / 2.3))) as 1|2|3|4|5;
     const level: LevelContract = { campaignVersion, contentVersion, dictionaryVersion, scoringVersion, generatorVersion: GENERATOR_VERSION, levelId: `LAB${String(i).padStart(3, '0')}`, revision: 1, letters: rack, targets: targets.sort(), bonus, acceptOnly, difficulty: difficultyRaw, hash: '' };
-    level.hash = await levelHash(level);
+    level.hash = await computeGeneratedLevelHash(level);
     levels.push(level); i++;
   }
   const campaignHash = await sha256(canonical({ campaignVersion, contentVersion, levels: levels.map(l => l.hash) }));

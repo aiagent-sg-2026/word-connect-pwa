@@ -1,6 +1,6 @@
 import './styles/app.css';
 import { CAMPAIGN } from './content/campaign';
-import { bootstrapData, exportSave, getLevel, getProfile, getProgress, importSave, resetAll, setCurrentLevel, submitWord, useHint } from './db/store';
+import { bootstrapData, exportSave, getLevel, getProfile, getProgress, hasActiveMaterialTransaction, importSave, resetAll, setCurrentLevel, submitWord, useHint } from './db/store';
 import { tileWord } from './game/logic';
 import { askWaitingWorkerToActivate, bootOk, registerServiceWorker } from './pwa/register';
 import type { LevelContract, ProfileRecord, ProgressRecord } from './types';
@@ -55,13 +55,17 @@ function bindEvents() {
   document.querySelector('#submit')?.addEventListener('click', submitSelected);
   document.querySelector('#clear')?.addEventListener('click', () => { selected=[]; render('Cleared'); });
   document.querySelector('#shuffle')?.addEventListener('click', () => { level = {...level, letters:[...level.letters].sort(()=>Math.random()-0.5)}; selected=[]; render('Shuffled'); });
-  document.querySelector('#hint')?.addEventListener('click', async () => { const res = await useHint(level); profile = res.profile; render(res.hint ? `Try ${res.hint.length} letters: ${res.hint[0]}…` : 'No hint available'); });
+  document.querySelector('#hint')?.addEventListener('click', async () => { const res = await useHint(level); profile = res.profile; render(res.hint && res.charged ? `Try ${res.hint.length} letters: ${res.hint[0]}…` : res.hint ? 'Need 10 coins for a hint' : 'No hint available'); });
   document.querySelector('#next')?.addEventListener('click', async () => { const i = CAMPAIGN.levels.findIndex(l=>l.levelId===level.levelId); const next = CAMPAIGN.levels[Math.min(i+1, CAMPAIGN.levels.length-1)]; await setCurrentLevel(next.levelId); selected=[]; await loadState(next.levelId); render('Next puzzle'); });
   document.querySelector('#export')?.addEventListener('click', async () => { const blob = new Blob([JSON.stringify(await exportSave(), null, 2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'word-connect-save-v1.json'; a.click(); URL.revokeObjectURL(a.href); });
   document.querySelector<HTMLInputElement>('#import')?.addEventListener('change', async e => { const input = e.currentTarget as HTMLInputElement | null; const file = input?.files?.[0]; if (!file) return; try { await importSave(JSON.parse(await file.text())); await loadState(); render('Save imported'); } catch { render('Import failed validation'); } });
   document.querySelector('#reset')?.addEventListener('click', async () => { if (confirm('Reset all local Word Connect data? This cannot be undone unless you exported a save.')) { await resetAll(); await loadState(CAMPAIGN.levels[0].levelId); render('Reset complete'); } });
   document.querySelector('#later')?.addEventListener('click', () => { waitingReg = undefined; render('Update postponed'); });
-  document.querySelector('#updateNow')?.addEventListener('click', () => waitingReg && askWaitingWorkerToActivate(waitingReg));
+  document.querySelector('#updateNow')?.addEventListener('click', () => {
+    if (!waitingReg) return;
+    const started = askWaitingWorkerToActivate(waitingReg, { swipeEnded: !dragging, progressSaved: true, materialTransactionActive: hasActiveMaterialTransaction(), compatibilityStaged: true, allClientsReady: document.visibilityState === 'visible' });
+    if (!started) render('Update will wait until this window is ready');
+  });
 }
 
 async function submitSelected() {

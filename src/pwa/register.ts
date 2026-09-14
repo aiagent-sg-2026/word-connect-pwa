@@ -1,3 +1,5 @@
+import { announceUpdate, claimUpdateOwner, isUpdateSafe, type UpdateSafetyState } from './updateCoordinator';
+
 declare const __BUILD_ID__: string;
 
 type UpdateHandlers = { onWaiting: (registration: ServiceWorkerRegistration) => void; onOfflineReady: () => void };
@@ -23,8 +25,12 @@ export function registerServiceWorker(handlers: UpdateHandlers): void {
   });
 }
 
-export function askWaitingWorkerToActivate(reg: ServiceWorkerRegistration): void {
-  reg.waiting?.postMessage({ type: 'SKIP_WAITING_IF_SAFE' });
+export function askWaitingWorkerToActivate(reg: ServiceWorkerRegistration, state: UpdateSafetyState): boolean {
+  const owner = claimUpdateOwner();
+  if (!owner || !isUpdateSafe(state)) return false;
+  announceUpdate({ type: 'UPDATE_ACTIVATING', buildId: __BUILD_ID__, owner });
+  reg.waiting?.postMessage({ type: 'SKIP_WAITING_IF_SAFE', safe: true, buildId: __BUILD_ID__, owner });
+  return true;
 }
 
 export function bootOk(): void {

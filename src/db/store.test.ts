@@ -49,7 +49,21 @@ describe('indexeddb persistence', () => {
     const save = await exportSave();
     await deleteDb(); await bootstrapData();
     await expect(importSave(save)).resolves.toBeUndefined();
-    await expect(importSave({envelope:'word-connect-save-v1', campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
+    await expect(importSave({envelope:'word-connect-save-v1', campaignVersion: CAMPAIGN.campaignVersion, campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
+  });
+  it('rejects invalid import before mutating existing save data', async () => {
+    await bootstrapData();
+    const before = (await getProfile()).coins;
+    const invalid: any = await exportSave();
+    invalid.data.profiles[0].coins = -100;
+    await expect(importSave(invalid)).rejects.toThrow('REC_IMPORT_INVALID');
+    expect((await getProfile()).coins).toBe(before);
+  });
+  it('rejects imported progress with forged content hash or duplicate found words', async () => {
+    await bootstrapData();
+    const invalid: any = await exportSave();
+    invalid.data.progress.push({ profileId: 'local', campaignVersion: CAMPAIGN.campaignVersion, levelId: 'L001', levelRevision: 1, levelHash: 'forged', foundTargets: ['CAT', 'CAT'], foundBonus: [], completed: false, updatedAt: 'x' });
+    await expect(importSave(invalid)).rejects.toThrow('REC_IMPORT_INVALID');
   });
   it('migration fixture can replay from v1 marker safely', async () => {
     await bootstrapData();

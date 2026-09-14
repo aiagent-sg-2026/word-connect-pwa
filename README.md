@@ -25,7 +25,7 @@ npm run preview -- --host 127.0.0.1 --port 4175
 SMOKE_URL=http://127.0.0.1:4175 npm run smoke
 ```
 
-The smoke check verifies the built app in Chromium at 390x844, 834x1112, 1280x900, 1440x900, and 320px narrow; checks for no horizontal overflow/page errors; plays a target through the tap fallback; then proves a warm offline reload.
+The smoke check verifies the built app in Chromium at 390x844, 834x1112, 1280x900, 1440x900, and 320px narrow; checks for no horizontal overflow/page errors; plays a target through the tap fallback; then proves a warm offline reload. Unit tests also cover content integrity, migration replay, no duplicate rewards, validate-first save import, and deterministic update safe-gate helpers.
 
 ## Install/offline behavior
 

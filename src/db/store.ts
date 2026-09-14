@@ -6,12 +6,16 @@ import type { LevelContract, ProfileRecord, ProgressRecord, SettingsRecord, Word
 
 type AnyDb = IDBPDatabase<any>;
 export const DB_NAME = 'word-connect-db';
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 export const PROFILE_ID = 'local';
-export const SCHEMA_SIGNATURE = 'v2:meta,profiles,levels,progress,economyEvents,settings,statsDaily,achievements,gameEvents,migrationLog,saveSnapshots';
+export const SAVE_DATA_VERSION = 2;
+export const SCHEMA_SIGNATURE = 'v3:meta,profiles,levels,progress,economyEvents,settings,statsDaily,achievements,gameEvents,migrationLog,saveSnapshots';
 
 let dbp: Promise<AnyDb> | undefined;
 let materialTransactions = 0;
+declare const __BUILD_ID__: string;
+declare const __APP_VERSION__: string;
+const buildMeta = () => ({ appVersion: typeof __APP_VERSION__ === 'undefined' ? '0.1.0' : __APP_VERSION__, buildId: typeof __BUILD_ID__ === 'undefined' ? 'test' : __BUILD_ID__ });
 const now = () => new Date().toISOString();
 export const hasActiveMaterialTransaction = () => materialTransactions > 0;
 async function material<T>(work: () => Promise<T>): Promise<T> { materialTransactions++; try { return await work(); } finally { materialTransactions--; } }
@@ -52,17 +56,52 @@ export async function verifySchema(db?: AnyDb): Promise<void> {
   await tx.done;
 }
 
+async function migrateSaveData(db: AnyDb): Promise<void> {
+  const current = (await db.get('meta', 'saveDataVersion'))?.value ?? 1;
+  if (current >= SAVE_DATA_VERSION) return;
+  const tx = db.transaction(['meta','profiles','migrationLog'], 'readwrite');
+  const profile = await tx.objectStore('profiles').get(PROFILE_ID) as (Partial<ProfileRecord> & { profileId: string }) | undefined;
+  if (profile && !profile.campaignVersion) {
+    await tx.objectStore('profiles').put({ ...profile, campaignVersion: CAMPAIGN.campaignVersion, updatedAt: profile.updatedAt || now() });
+    await tx.objectStore('migrationLog').put({ id: `save-v${current}-to-${SAVE_DATA_VERSION}-profile-campaign`, from: current, to: SAVE_DATA_VERSION, profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, completedAt: now() });
+  } else {
+    await tx.objectStore('migrationLog').put({ id: `save-v${current}-to-${SAVE_DATA_VERSION}-noop`, from: current, to: SAVE_DATA_VERSION, completedAt: now() });
+  }
+  await tx.objectStore('meta').put({ id: 'saveDataVersion', value: SAVE_DATA_VERSION });
+  await tx.done;
+}
+
+async function assertNoCampaignOverwrite(db: AnyDb): Promise<void> {
+  const tx = db.transaction('levels', 'readonly');
+  for (const level of CAMPAIGN.levels) {
+    const existing = await tx.objectStore('levels').get([level.campaignVersion, level.levelId]) as LevelContract | undefined;
+    if (existing && (existing.hash !== level.hash || existing.revision !== level.revision)) throw new Error('REC_CONTENT_IMMUTABLE_CONFLICT');
+  }
+  await tx.done;
+}
+
 export async function bootstrapData(): Promise<void> {
   await validateCampaign();
   const db = await openGameDb();
   await verifySchema(db);
+  await assertNoCampaignOverwrite(db);
+  await migrateSaveData(db);
   const tx = db.transaction(['meta','profiles','levels','progress','settings'], 'readwrite');
+  const metaBuild = buildMeta();
   tx.objectStore('meta').put({ id: 'schemaSignature', value: SCHEMA_SIGNATURE });
+  tx.objectStore('meta').put({ id: 'appVersion', value: metaBuild.appVersion });
+  tx.objectStore('meta').put({ id: 'lastSuccessfulBuild', value: metaBuild.buildId });
+  tx.objectStore('meta').put({ id: 'pendingBuild', value: null });
+  tx.objectStore('meta').put({ id: 'dbSchemaVersion', value: DB_VERSION });
+  tx.objectStore('meta').put({ id: 'saveDataVersion', value: SAVE_DATA_VERSION });
   tx.objectStore('meta').put({ id: 'activeContentVersion', value: CAMPAIGN.contentVersion });
+  tx.objectStore('meta').put({ id: 'dictionaryVersion', value: CAMPAIGN.levels[0].dictionaryVersion });
+  tx.objectStore('meta').put({ id: 'scoringVersion', value: CAMPAIGN.levels[0].scoringVersion });
+  tx.objectStore('meta').put({ id: 'generatorVersion', value: CAMPAIGN.levels[0].generatorVersion });
   tx.objectStore('meta').put({ id: 'campaignHash', value: CAMPAIGN.campaignHash });
   let profile = await tx.objectStore('profiles').get(PROFILE_ID) as ProfileRecord | undefined;
   if (!profile) {
-    profile = { profileId: PROFILE_ID, coins: 25, hintsUsed: 0, currentLevelId: CAMPAIGN.levels[0].levelId, createdAt: now(), updatedAt: now() };
+    profile = { profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, coins: 25, hintsUsed: 0, currentLevelId: CAMPAIGN.levels[0].levelId, createdAt: now(), updatedAt: now() };
     await tx.objectStore('profiles').put(profile);
     await tx.objectStore('settings').put({ id: PROFILE_ID, profileId: PROFILE_ID, sound: true, haptics: true, reducedMotion: matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false } as SettingsRecord & {id:string});
   }
@@ -140,16 +179,35 @@ export async function useHint(level: LevelContract): Promise<{hint?: string; pro
 
 export async function setCurrentLevel(levelId: string): Promise<void> { const db = await openGameDb(); const p = await getProfile(); p.currentLevelId = levelId; p.updatedAt = now(); await db.put('profiles', p); }
 
-export async function exportSave(): Promise<object> { const db = await openGameDb(); const dump: Record<string, unknown[]> = {}; for (const s of ['meta','profiles','progress','settings','economyEvents','statsDaily']) dump[s] = await db.getAll(s); return { envelope: 'word-connect-save-v1', exportedAt: now(), campaignVersion: CAMPAIGN.campaignVersion, campaignHash: CAMPAIGN.campaignHash, data: dump }; }
+function stable(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`;
+  if (value && typeof value === 'object') return `{${Object.keys(value as Record<string, unknown>).sort().map(k => `${JSON.stringify(k)}:${stable((value as Record<string, unknown>)[k])}`).join(',')}}`;
+  return JSON.stringify(value);
+}
+async function digestPayload(value: unknown): Promise<string> {
+  const bytes = new TextEncoder().encode(stable(value));
+  const hash = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function withoutIntegrity(envelope: any): any { const { integrity, ...rest } = envelope || {}; return rest; }
+
+export async function exportSave(): Promise<object> {
+  const db = await openGameDb();
+  const dump: Record<string, unknown[]> = {};
+  for (const s of ['meta','profiles','progress','settings','economyEvents','statsDaily']) dump[s] = await db.getAll(s);
+  const envelope = { envelope: 'word-connect-save-v2', exportedAt: now(), campaignVersion: CAMPAIGN.campaignVersion, campaignHash: CAMPAIGN.campaignHash, saveDataVersion: SAVE_DATA_VERSION, data: dump };
+  return { ...envelope, integrity: { algorithm: 'SHA-256', digest: await digestPayload(envelope) } };
+}
 
 function requireArray(data: Record<string, unknown>, store: string): unknown[] { const value = data[store]; if (!Array.isArray(value)) throw new Error('REC_IMPORT_INVALID'); return value; }
-function validateSaveEnvelope(envelope: any): Record<string, unknown[]> {
-  if (!envelope || envelope.envelope !== 'word-connect-save-v1' || envelope.campaignVersion !== CAMPAIGN.campaignVersion || envelope.campaignHash !== CAMPAIGN.campaignHash || !envelope.data) throw new Error('REC_IMPORT_INVALID');
+async function validateSaveEnvelope(envelope: any): Promise<Record<string, unknown[]>> {
+  if (!envelope || envelope.envelope !== 'word-connect-save-v2' || envelope.campaignVersion !== CAMPAIGN.campaignVersion || envelope.campaignHash !== CAMPAIGN.campaignHash || envelope.saveDataVersion !== SAVE_DATA_VERSION || !envelope.data || envelope.integrity?.algorithm !== 'SHA-256') throw new Error('REC_IMPORT_INVALID');
+  if (envelope.integrity.digest !== await digestPayload(withoutIntegrity(envelope))) throw new Error('REC_IMPORT_INTEGRITY');
   const data = envelope.data as Record<string, unknown>;
   const out: Record<string, unknown[]> = {};
   for (const store of ['profiles','progress','settings','economyEvents','statsDaily']) out[store] = requireArray(data, store);
   const profiles = out.profiles as ProfileRecord[];
-  if (profiles.length !== 1 || profiles[0].profileId !== PROFILE_ID || !Number.isFinite(profiles[0].coins) || profiles[0].coins < 0 || !CAMPAIGN.levels.some(l => l.levelId === profiles[0].currentLevelId)) throw new Error('REC_IMPORT_INVALID');
+  if (profiles.length !== 1 || profiles[0].profileId !== PROFILE_ID || profiles[0].campaignVersion !== CAMPAIGN.campaignVersion || !Number.isFinite(profiles[0].coins) || profiles[0].coins < 0 || !CAMPAIGN.levels.some(l => l.levelId === profiles[0].currentLevelId)) throw new Error('REC_IMPORT_INVALID');
   const byId = new Map(CAMPAIGN.levels.map(l => [l.levelId, l]));
   for (const p of out.progress as ProgressRecord[]) {
     const level = byId.get(p.levelId);
@@ -162,7 +220,7 @@ function validateSaveEnvelope(envelope: any): Record<string, unknown[]> {
 }
 
 export async function importSave(envelope: any): Promise<void> {
-  const data = validateSaveEnvelope(envelope);
+  const data = await validateSaveEnvelope(envelope);
   const snapshot = await exportSave();
   await material(async () => {
     const db = await openGameDb();

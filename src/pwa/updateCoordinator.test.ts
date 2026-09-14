@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { claimUpdateOwner, isUpdateSafe } from './updateCoordinator';
+import { claimUpdateOwner, currentClientReady, isUpdateSafe, setReadinessProbe } from './updateCoordinator';
 
 describe('service worker update coordination helpers', () => {
   beforeEach(() => localStorage.clear());
@@ -20,5 +20,14 @@ describe('service worker update coordination helpers', () => {
     expect(claimUpdateOwner(2000, 'tab-b')).toBeUndefined();
     expect(claimUpdateOwner(32_000, 'tab-b')).toBe('tab-b');
     vi.restoreAllMocks();
+  });
+
+  it('readiness probe fails closed on unready or throwing clients', async () => {
+    setReadinessProbe(() => false);
+    await expect(currentClientReady()).resolves.toBe(false);
+    setReadinessProbe(() => { throw new Error('not ready'); });
+    await expect(currentClientReady()).resolves.toBe(false);
+    setReadinessProbe(() => true);
+    await expect(currentClientReady()).resolves.toBe(true);
   });
 });

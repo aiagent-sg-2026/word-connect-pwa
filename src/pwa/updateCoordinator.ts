@@ -6,9 +6,16 @@ export type UpdateSafetyState = {
   allClientsReady: boolean;
 };
 
+export type ReadinessProbe = () => boolean | Promise<boolean>;
+
 const CHANNEL = 'word-connect-update';
 const LOCK_KEY = 'word-connect-update-owner';
 const LOCK_MS = 30_000;
+
+let readinessProbe: ReadinessProbe = () => true;
+
+export function setReadinessProbe(probe: ReadinessProbe): void { readinessProbe = probe; }
+export async function currentClientReady(): Promise<boolean> { try { return await readinessProbe(); } catch { return false; } }
 
 export function isUpdateSafe(state: UpdateSafetyState): boolean {
   return state.swipeEnded && state.progressSaved && !state.materialTransactionActive && state.compatibilityStaged && state.allClientsReady;

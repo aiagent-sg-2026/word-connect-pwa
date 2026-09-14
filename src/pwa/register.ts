@@ -1,4 +1,4 @@
-import { announceUpdate, claimUpdateOwner, isUpdateSafe, type UpdateSafetyState } from './updateCoordinator';
+import { announceUpdate, claimUpdateOwner, currentClientReady, isUpdateSafe, type UpdateSafetyState } from './updateCoordinator';
 
 declare const __BUILD_ID__: string;
 
@@ -7,6 +7,10 @@ type UpdateHandlers = { onWaiting: (registration: ServiceWorkerRegistration) => 
 let refreshing = false;
 export function registerServiceWorker(handlers: UpdateHandlers): void {
   if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.addEventListener('message', async event => {
+    if (event.data?.type !== 'WC_READY_REQUEST') return;
+    event.ports[0]?.postMessage({ type: 'WC_READY_RESPONSE', ready: await currentClientReady(), buildId: __BUILD_ID__ });
+  });
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshing) return;
     refreshing = true;
@@ -14,7 +18,7 @@ export function registerServiceWorker(handlers: UpdateHandlers): void {
     location.reload();
   });
   window.addEventListener('load', async () => {
-    const reg = await navigator.serviceWorker.register(`/sw.js?build=${encodeURIComponent(__BUILD_ID__)}`);
+    const reg = await navigator.serviceWorker.register('/sw.js');
     if (reg.waiting) handlers.onWaiting(reg);
     reg.addEventListener('updatefound', () => {
       const installing = reg.installing;
@@ -25,7 +29,7 @@ export function registerServiceWorker(handlers: UpdateHandlers): void {
   });
 }
 
-export function askWaitingWorkerToActivate(reg: ServiceWorkerRegistration, state: UpdateSafetyState): boolean {
+export async function askWaitingWorkerToActivate(reg: ServiceWorkerRegistration, state: UpdateSafetyState): Promise<boolean> {
   const owner = claimUpdateOwner();
   if (!owner || !isUpdateSafe(state)) return false;
   announceUpdate({ type: 'UPDATE_ACTIVATING', buildId: __BUILD_ID__, owner });

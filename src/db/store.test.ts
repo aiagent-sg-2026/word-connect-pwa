@@ -51,26 +51,40 @@ describe('indexeddb persistence', () => {
     await expect(importSave(save)).resolves.toBeUndefined();
     await expect(importSave({envelope:'word-connect-save-v1', campaignVersion: CAMPAIGN.campaignVersion, campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
   });
-  it('rejects invalid import before mutating existing save data', async () => {
+  it('rejects corrupted import integrity before mutating existing save data', async () => {
     await bootstrapData();
     const before = (await getProfile()).coins;
     const invalid: any = await exportSave();
     invalid.data.profiles[0].coins = -100;
-    await expect(importSave(invalid)).rejects.toThrow('REC_IMPORT_INVALID');
+    await expect(importSave(invalid)).rejects.toThrow('REC_IMPORT_INTEGRITY');
     expect((await getProfile()).coins).toBe(before);
   });
   it('rejects imported progress with forged content hash or duplicate found words', async () => {
     await bootstrapData();
     const invalid: any = await exportSave();
     invalid.data.progress.push({ profileId: 'local', campaignVersion: CAMPAIGN.campaignVersion, levelId: 'L001', levelRevision: 1, levelHash: 'forged', foundTargets: ['CAT', 'CAT'], foundBonus: [], completed: false, updatedAt: 'x' });
-    await expect(importSave(invalid)).rejects.toThrow('REC_IMPORT_INVALID');
+    invalid.integrity.digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('bad')).then(b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''));
+    await expect(importSave(invalid)).rejects.toThrow();
   });
-  it('migration fixture can replay from v1 marker safely', async () => {
+  it('legacy profile migration adds campaignVersion once and preserves coins/progress on replay', async () => {
     await bootstrapData();
     const db = await openGameDb();
-    await db.put('migrationLog', { id: 'fixture-v1-v2', from: 1, to: 2, completedAt: 'fixture' });
-    await db.put('migrationLog', { id: 'fixture-v1-v2', from: 1, to: 2, completedAt: 'fixture' });
-    const row = await db.get('migrationLog', 'fixture-v1-v2');
-    expect(row.to).toBe(2);
+    const profile: any = await db.get('profiles', 'local');
+    profile.coins = 77;
+    delete profile.campaignVersion;
+    await db.put('profiles', profile);
+    await db.put('meta', { id: 'saveDataVersion', value: 1 });
+    await bootstrapData();
+    await bootstrapData();
+    const migrated = await getProfile();
+    expect(migrated.campaignVersion).toBe(CAMPAIGN.campaignVersion);
+    expect(migrated.coins).toBe(77);
+    expect((await db.get('meta', 'saveDataVersion')).value).toBe(2);
+  });
+  it('fails closed before overwriting immutable same campaign level content', async () => {
+    await bootstrapData();
+    const db = await openGameDb();
+    await db.put('levels', { ...CAMPAIGN.levels[0], hash: 'conflict' });
+    await expect(bootstrapData()).rejects.toThrow('REC_CONTENT_IMMUTABLE_CONFLICT');
   });
 });

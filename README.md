@@ -25,12 +25,12 @@ npm run preview -- --host 127.0.0.1 --port 4175
 SMOKE_URL=http://127.0.0.1:4175 npm run smoke
 ```
 
-The smoke check verifies the built app in Chromium at 390x844, 834x1112, 1280x900, 1440x900, and 320px narrow; checks for no horizontal overflow/page errors; plays a target through the tap fallback; then proves a warm offline reload. Unit tests also cover content integrity, migration replay, no duplicate rewards, validate-first save import, and deterministic update safe-gate helpers.
+The smoke check verifies the built app in Chromium at 390x844, 834x1112, 1280x900, 1440x900, and 320px narrow; checks for no horizontal overflow/page errors; plays targets through tap and pointer-swipe input; then proves a warm offline reload after clearing ordinary HTTP cache. Unit tests also cover content integrity, legacy save migration replay, immutable campaign conflict fail-closed behavior, no duplicate rewards, SHA-256 save integrity rejection before mutation, and deterministic update safe-gate/readiness helpers.
 
 ## Install/offline behavior
 
 1. Run `npm run build` and serve with `npm run preview` or any HTTPS/static host.
-2. Open the app once online so the Service Worker and runtime assets cache.
+2. Open the app once online so the generated Service Worker precaches the exact built HTML/manifest/icons/hashed JS/CSS shell assets.
 3. Install from the browser PWA prompt/menu.
 4. Reopen or reload offline; the app shell, content, and IndexedDB save continue to work locally.
 

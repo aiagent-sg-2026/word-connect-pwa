@@ -38,6 +38,7 @@ export interface ProgressRecord {
 
 export interface ProfileRecord {
   profileId: string;
+  campaignVersion: string;
   coins: number;
   hintsUsed: number;
   currentLevelId: string;

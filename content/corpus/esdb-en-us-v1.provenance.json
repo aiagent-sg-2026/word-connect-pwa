@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "lexical-corpus-provenance-v1",
+  "source": {
+    "name": "English Speller Database (ESDB, formerly SCOWLv2)",
+    "url": "https://github.com/en-wl/wordlist.git",
+    "tag": "v2",
+    "revision": "1e5b7d3a72f47a71da5d28686c1dd4b397178485",
+    "retrievalDate": "2026-09-15",
+    "licenseNoticeFile": "THIRD_PARTY_NOTICES/ESDB-Copyright.txt",
+    "sourceDbChecksumSha256": "fea8ff5ae270b1a8f043aeb12418dceb8ce48192144a4018982921512424e94d",
+    "sourceRowsChecksumSha256": "20efe22543111952131888097afcbb92f85f171caffead60875a5d17f7c72715"
+  },
+  "extraction": {
+    "command": "npm run corpus:build:production",
+    "cacheDir": ".cache/esdb",
+    "config": {
+      "sizeMax": 60,
+      "spellings": [
+        "_",
+        "A"
+      ],
+      "regions": [
+        "",
+        "US"
+      ],
+      "variantLevelMax": 1,
+      "selectedInputCap": 12000,
+      "selection": "deterministic hash selection retaining 3-letter and review-gate examples",
+      "excludedMainPosClasses": [
+        "abbr",
+        "abbr?",
+        "name",
+        "name?",
+        "person",
+        "place",
+        "surname",
+        "trademark"
+      ],
+      "excludedMainPosCategories": [
+        "nonword",
+        "special",
+        "wordpart"
+      ],
+      "accents": "preserve-at-source; unsupported game tokens rejected/review-gated, never deaccented",
+      "frequency": "none; ESDB size bucket converted only to commonness heuristic esdb-size-v1"
+    }
+  },
+  "derived": {
+    "artifactPath": "content/corpus/dictionary-esdb-en-us-v1.json",
+    "artifactChecksumSha256": "f372b36113e5a1d992c7e461d0d8799702be72c3b8baba8401f5abcd8e179321",
+    "dictionaryChecksum": "40d6dcd6b40c6cae623438537e0b047eea4aceb80b6338d8900dffa18569ced4",
+    "recordCount": 12000,
+    "selectedInputCount": 12000,
+    "classCounts": {
+      "TARGET": 11028,
+      "BONUS": 350,
+      "ACCEPT_ONLY": 0,
+      "REVIEW": 622,
+      "BLOCKED": 0
+    },
+    "report": {
+      "inputRows": 94157,
+      "uniqueInputs": 82672,
+      "acceptedInputs": 82514,
+      "duplicateNormalizations": 11485,
+      "rejected": {},
+      "byLength": {
+        "1": 26,
+        "2": 227,
+        "3": 902,
+        "4": 2888,
+        "5": 5513,
+        "6": 8865,
+        "7": 12220,
+        "8": 13244,
+        "9": 12049,
+        "10": 9812,
+        "11": 6996,
+        "12": 4574,
+        "13": 2673,
+        "14": 1332,
+        "15": 684,
+        "16": 289,
+        "17": 139,
+        "18": 46,
+        "19": 22,
+        "20": 7,
+        "21": 2,
+        "22": 3,
+        "23": 1
+      },
+      "byCommonnessSize": {
+        "35": 42486,
+        "40": 7048,
+        "50": 23260,
+        "60": 21363
+      },
+      "byDialect": {
+        "en": 90376,
+        "en-US": 3781
+      },
+      "byClassHint": {
+        "REVIEW": 185,
+        "LEXICAL": 82487
+      }
+    }
+  }
+}

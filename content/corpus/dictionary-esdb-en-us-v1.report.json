@@ -1,0 +1,55 @@
+{
+  "inputRows": 94157,
+  "uniqueInputs": 82672,
+  "acceptedInputs": 82514,
+  "duplicateNormalizations": 11485,
+  "rejected": {},
+  "byLength": {
+    "1": 26,
+    "2": 227,
+    "3": 902,
+    "4": 2888,
+    "5": 5513,
+    "6": 8865,
+    "7": 12220,
+    "8": 13244,
+    "9": 12049,
+    "10": 9812,
+    "11": 6996,
+    "12": 4574,
+    "13": 2673,
+    "14": 1332,
+    "15": 684,
+    "16": 289,
+    "17": 139,
+    "18": 46,
+    "19": 22,
+    "20": 7,
+    "21": 2,
+    "22": 3,
+    "23": 1
+  },
+  "byCommonnessSize": {
+    "35": 42486,
+    "40": 7048,
+    "50": 23260,
+    "60": 21363
+  },
+  "byDialect": {
+    "en": 90376,
+    "en-US": 3781
+  },
+  "byClassHint": {
+    "REVIEW": 185,
+    "LEXICAL": 82487
+  },
+  "classCounts": {
+    "TARGET": 11028,
+    "BONUS": 350,
+    "ACCEPT_ONLY": 0,
+    "REVIEW": 622,
+    "BLOCKED": 0
+  },
+  "artifactSha": "f372b36113e5a1d992c7e461d0d8799702be72c3b8baba8401f5abcd8e179321",
+  "dictionaryChecksum": "40d6dcd6b40c6cae623438537e0b047eea4aceb80b6338d8900dffa18569ced4"
+}

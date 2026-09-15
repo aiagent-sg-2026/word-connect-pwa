@@ -1,6 +1,6 @@
 Dictionary dict-qa-seed-v1
 Records: 187
-Checksum: 574c4579a008649d0ce65e03cfb97e589f027035d732f8bfae76721af7bdedfb
+Checksum: 1e7b6746f45812e8bb6fc19813b535ec09ec16b77ac2e65387855a1280905eaf
 Source note: QA seed data authored for tests from current game vocabulary plus common edge-case words; not a licensed production corpus.
 
 Class counts:

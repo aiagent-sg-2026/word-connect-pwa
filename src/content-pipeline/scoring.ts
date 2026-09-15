@@ -3,7 +3,7 @@ import type { ReasonCode, ScoreBreakdown, WordRecord } from './types.ts';
 export const SCORE_POLICY_V1_PROVISIONAL = {
   version: 'score-v1-provisional',
   status: 'provisional-until-2000-human-golden-set',
-  targetWeights: { frequency: 0.38, lexicalConfidence: 0.18, morphology: 0.12, gameplayQuality: 0.12, dialectNeutrality: 0.10, stability: 0.10 },
+  targetWeights: { commonness: 0.38, lexicalConfidence: 0.18, morphology: 0.12, gameplayQuality: 0.12, dialectNeutrality: 0.10, stability: 0.10 },
   bonusWeights: { lexicalConfidence: 0.30, morphology: 0.20, gameplayQuality: 0.20, dialect: 0.15, raritySweetSpot: 0.15 },
   thresholds: { target: 0.68, target3: 0.78, bonus: 0.42 },
   penalties: { properNoun: 1, abbreviation: 1, offensive: 1, archaic: 0.15, technical: 0.12 }
@@ -26,7 +26,7 @@ export function hardGateReasons(record: Pick<WordRecord, 'flags'>): ReasonCode[]
 
 export function scoreTarget(record: WordRecord): ScoreBreakdown {
   const features = {
-    frequency: clamp(record.frequency),
+    commonness: clamp(Math.max(record.frequency, record.commonness)),
     lexicalConfidence: avg(record.lexicalEvidence.map(e => e.confidence), 0),
     morphology: record.flags.morphologyConflict || record.flags.morphologyInvalid ? 0 : record.morphology?.inflectionType === 'base' ? 0.94 : record.morphology ? 0.82 : record.flags.technical || record.flags.archaic ? 0.55 : 0.9,
     gameplayQuality: clamp((record.length - 2) / 4),
@@ -47,7 +47,8 @@ export function scoreTarget(record: WordRecord): ScoreBreakdown {
 }
 
 export function scoreBonus(record: WordRecord): ScoreBreakdown {
-  const raritySweetSpot = 1 - Math.abs(record.frequency - 0.42) / 0.42;
+  const rarityBasis = Math.max(record.frequency, record.commonness);
+  const raritySweetSpot = 1 - Math.abs(rarityBasis - 0.42) / 0.42;
   const features = {
     lexicalConfidence: avg(record.lexicalEvidence.map(e => e.confidence), 0),
     morphology: record.flags.morphologyConflict || record.flags.morphologyInvalid ? 0 : record.morphology?.inflectionType === 'base' ? 0.92 : record.morphology ? 0.84 : record.flags.technical || record.flags.archaic ? 0.6 : 0.88,

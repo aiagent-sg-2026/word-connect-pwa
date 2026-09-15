@@ -37,3 +37,10 @@ Deferred / environment-only limitations:
 - Phase 4/5/6 remain LAB/provisional rather than production-complete: no licensed production corpus, no ~2,000-word human Golden Set, Golden queue is DRAFT (187/2,000; shortfall 1,813; 0 resolved human words), and QA seed corpus currently generates 94 unique LAB levels for the default seed/scale.
 - Cold installed-PWA airplane launch and iOS standalone status-bar behavior require physical/device-level validation outside this VM.
 - Update prompt path is implemented with deterministic helper tests and Chromium smoke coverage for the built shell. Full Safari multi-client lifecycle behavior (tabs plus installed PWA across process boundaries) remains a device/browser-lifecycle verification item, not faked in this VM.
+
+## ESDB production corpus integration
+
+- Added reproducible ESDB v2 import pipeline pinned to `en-wl/wordlist` commit `1e5b7d3a72f47a71da5d28686c1dd4b397178485` with ignored `.cache/esdb`, deterministic SQLite extraction, copied copyright notice, machine-readable provenance, and derived dictionary artifact.
+- Production corpus artifact currently has 12,000 dictionary records and uses ESDB size only as `esdb-size-v1` commonness heuristic; no corpus frequency is fabricated and no wordfreq bulk export is used.
+- Added `npm run golden:queue:production`; generated production queue has candidateCount 2,000, shortfall 0, readiness DRAFT, and zero human reviews/resolved items. Publish without human reviews remains fail-closed.
+- Runtime campaign/PWA content remains separate from build-time corpus/Golden artifacts; `campaign-en-v1` is unchanged.

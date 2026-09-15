@@ -1,0 +1,82 @@
+{
+  "targetCount": 2000,
+  "fixedHumanGoldenTarget": 2000,
+  "candidateCount": 2000,
+  "shortfall": 0,
+  "reviews": {
+    "zero": 2000,
+    "one": 0,
+    "twoPlus": 0,
+    "agreementRate": null,
+    "unresolvedDisagreements": 0,
+    "adjudicatedCount": 0,
+    "resolvedCount": 0
+  },
+  "coverage": {
+    "classes": {
+      "REVIEW": 194,
+      "BONUS": 211,
+      "TARGET": 1595
+    },
+    "lengths": {
+      "1": 1,
+      "2": 28,
+      "3": 375,
+      "4": 104,
+      "5": 168,
+      "6": 166,
+      "7": 221,
+      "8": 249,
+      "9": 218,
+      "10": 179,
+      "11": 125,
+      "12": 72,
+      "13": 48,
+      "14": 31,
+      "15": 6,
+      "16": 4,
+      "17": 4,
+      "18": 1
+    },
+    "strata": {
+      "length:medium": 272,
+      "class:REVIEW": 194,
+      "band:low-mid-score": 360,
+      "not-3-letter": 1625,
+      "morphology:none": 191,
+      "dialect:en": 1942,
+      "flag:invalidToken": 13,
+      "review-required": 194,
+      "length:long": 1324,
+      "flag:abbreviation|flag:invalidToken": 1,
+      "length:short": 404,
+      "class:BONUS": 211,
+      "band:boundary": 503,
+      "short-3-letter": 375,
+      "morphology:base": 1097,
+      "flag:none": 1806,
+      "review-not-required": 1806,
+      "flag:invalidToken|flag:morphologyInvalid": 4,
+      "flag:abbreviation|flag:morphologyConflict": 2,
+      "class:TARGET": 1595,
+      "band:high-score": 1137,
+      "morphology:plural": 424,
+      "flag:properNoun": 3,
+      "flag:invalidToken|flag:properNoun": 1,
+      "flag:invalidToken|flag:morphologyInvalid|flag:properNoun": 2,
+      "dialect:en-US": 57,
+      "morphology:past": 114,
+      "morphology:other": 69,
+      "morphology:gerund": 105,
+      "flag:morphologyConflict": 168,
+      "dialect:multi": 1
+    }
+  },
+  "gates": {
+    "fixedTargetMet": true,
+    "targetCountNotLowered": true,
+    "allResolved": false,
+    "queueChecksumFrozen": true
+  },
+  "readiness": "DRAFT"
+}

@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .vite/
+.cache/
+content/corpus/.esdb-rows.tmp.json
 .DS_Store
 .env
 .env.*

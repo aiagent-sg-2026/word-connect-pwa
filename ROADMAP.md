@@ -93,3 +93,8 @@ Exit gate: explicit product approval, independent security/privacy review, and n
 ## Recommended first implementation milestone
 
 **M1 = 20-Level Offline Vertical Slice.** Prove installable PWA + airplane-mode play + swipe/tap input + IndexedDB progress + coins/hints transaction + immutable hand-authored 20 levels + update waiting prompt + one migration fixture + recovery shell. Do not begin M1 during this documentation bootstrap.
+
+## Production corpus / Human Golden status update
+
+- ESDB en-US v1 acquisition/import is implemented as build-time tooling (`npm run corpus:build:production`) from pinned upstream commit `1e5b7d3a72f47a71da5d28686c1dd4b397178485`; notices/provenance are preserved under `THIRD_PARTY_NOTICES/` and `content/corpus/`.
+- Production Human Golden queue command is `npm run golden:queue:production`; queue is DRAFT with 2,000 candidates, shortfall 0, and 0 human reviews. Phase 5 remains blocked on real independent human review/adjudication before READY/publish.

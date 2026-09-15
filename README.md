@@ -17,6 +17,8 @@ Vite dev uses local HTTPS via `@vitejs/plugin-basic-ssl` for PWA-compatible deve
 npm test
 npm run build
 npm run dictionary:build
+npm run corpus:build:production
+npm run golden:queue:production
 npm run score:eval
 npm run content:generate
 npm run content:verify
@@ -30,7 +32,7 @@ npm run golden:publish:draft
 npm run golden:eval
 ```
 
-Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` and Human Golden workflow artifacts under `content/golden/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`. Current LAB hardening includes index-driven candidate lookup (signature/count/bitmask subset checks), dictionary artifact schema `dictionary-artifact-v2`, versioned morphology metadata (`morphology-v1`) with bounded original QA seed coverage, fail-closed invalid/mismatched/conflicting morphology to REVIEW behavior, independent LAB level/campaign hash recomputation in `npm run content:verify`, and Human Golden Set V1 queue/review/import/publish/eval gates documented in `docs/human-golden-workflow-v1.md`. Golden queue and published artifacts are recomputed/checksum-verified before use; production READY requires the fixed 2,000-human target and strict two-reviewer/adjudication invariants. Current queue count is 187, shortfall is 1,813, and human reviewed/resolved count is 0; Phase 5 human data is DRAFT, not READY.
+Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` and Human Golden workflow artifacts under `content/golden/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`. Current LAB hardening includes index-driven candidate lookup (signature/count/bitmask subset checks), dictionary artifact schema `dictionary-artifact-v2`, versioned morphology metadata (`morphology-v1`) with bounded original QA seed coverage, fail-closed invalid/mismatched/conflicting morphology to REVIEW behavior, independent LAB level/campaign hash recomputation in `npm run content:verify`, and Human Golden Set V1 queue/review/import/publish/eval gates documented in `docs/human-golden-workflow-v1.md`. Golden queue and published artifacts are recomputed/checksum-verified before use; production READY requires the fixed 2,000-human target and strict two-reviewer/adjudication invariants. QA seed queue count remains 187 with shortfall 1,813. Production corpus import now builds from pinned official ESDB (`en-wl/wordlist` v2 commit `1e5b7d3a72f47a71da5d28686c1dd4b397178485`) into `content/corpus/dictionary-esdb-en-us-v1.json`; provenance is in `content/corpus/esdb-en-us-v1.provenance.json` and notices are in `THIRD_PARTY_NOTICES/`. The ESDB-derived production Human Golden queue command is `npm run golden:queue:production`; current candidateCount is 2,000, shortfall 0, human reviewed/resolved count 0, readiness DRAFT (not READY). ESDB size/commonness is a provisional commonness heuristic only, never corpus frequency.
 
 Browser smoke after building:
 

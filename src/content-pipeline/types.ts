@@ -31,15 +31,16 @@ export interface LexicalEvidence {
 }
 
 export interface FrequencySignal { sourceId: string; value: number; scale: '0..1'; }
+export interface CommonnessSignal { sourceId: string; value: number; scale: '0..1'; heuristic: 'esdb-size-v1'; note?: string; }
 export interface PolicyOverride { sourceId: string; class?: WordClass; reasons: ReasonCode[]; note?: string; }
 
 export interface SourceWordInput {
   word: string;
   lexical?: LexicalEvidence[];
   frequency?: FrequencySignal[];
+  commonness?: CommonnessSignal[];
   policy?: PolicyOverride[];
 }
-
 export interface ScoreBreakdown {
   version: string;
   score: number;
@@ -72,6 +73,7 @@ export interface WordRecord {
   flags: { properNoun: boolean; abbreviation: boolean; offensive: boolean; archaic: boolean; technical: boolean; invalidToken: boolean; sourceConflict: boolean; morphologyConflict: boolean; morphologyInvalid: boolean; };
   lexicalEvidence: LexicalEvidence[];
   frequencySignals: FrequencySignal[];
+  commonnessSignals: CommonnessSignal[];
   policyOverrides: PolicyOverride[];
   targetScore?: ScoreBreakdown;
   bonusScore?: ScoreBreakdown;

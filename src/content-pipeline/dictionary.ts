@@ -59,7 +59,7 @@ function mergeMorphology(evidence: MorphologyEvidence[], currentToken: string): 
   return { morphology: keys.size === 1 ? sorted[0] : undefined, morphologyEvidence: sorted, errors, conflict: keys.size > 1 };
 }
 
-export async function buildDictionary(inputs: SourceWordInput[], version = 'dict-qa-seed-v1'): Promise<DictionaryArtifact> {
+export async function buildDictionary(inputs: SourceWordInput[], version = 'dict-qa-seed-v1', sourceNote = 'QA seed data authored for tests from current game vocabulary plus common edge-case words; not a licensed production corpus.'): Promise<DictionaryArtifact> {
   const byWord = new Map<string, SourceWordInput[]>();
   for (const input of inputs) {
     const n = normalizeEnglishV1(input.word);
@@ -71,6 +71,7 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
     const n = normalizeEnglishV1(key);
     const lexicalEvidence = grouped.flatMap(g => g.lexical ?? []);
     const frequencySignals = grouped.flatMap(g => g.frequency ?? []);
+    const commonnessSignals = grouped.flatMap(g => g.commonness ?? []);
     const policyOverrides = grouped.flatMap(g => g.policy ?? []);
     const morphologyInput = lexicalEvidence.flatMap(e => e.morphology ? [e.morphology] : e.lemma ? [{ contractVersion: 'morphology-v1' as const, sourceId: e.sourceId, token: e.token, lemma: e.lemma, inflectionOf: e.lemma, inflectionType: 'base' as const, provenance: 'legacy-lexical-lemma', confidence: 'medium' as const }] : []);
     const morphology = mergeMorphology(morphologyInput, n.ok ? n.lower! : key);
@@ -97,19 +98,19 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
       morphologyErrors: morphology.errors,
       pos: [...new Set(lexicalEvidence.flatMap(e => e.pos ?? []))].sort(),
       dialects: [...new Set(lexicalEvidence.flatMap(e => e.dialects ?? ['en']))].sort(),
-      sources: [...new Set([...lexicalEvidence.map(e => e.sourceId), ...frequencySignals.map(f => f.sourceId), ...policyOverrides.map(p => p.sourceId), ...morphologyInput.map(m => m.sourceId)])].sort(),
-      frequency: Number((frequencySignals.reduce((s, f) => s + f.value, 0) / Math.max(1, frequencySignals.length)).toFixed(4)),
-      commonness: 0,
+      sources: [...new Set([...lexicalEvidence.map(e => e.sourceId), ...frequencySignals.map(f => f.sourceId), ...commonnessSignals.map(c => c.sourceId), ...policyOverrides.map(p => p.sourceId), ...morphologyInput.map(m => m.sourceId)])].sort(),
+      frequency: frequencySignals.length ? Number((frequencySignals.reduce((s, f) => s + f.value, 0) / frequencySignals.length).toFixed(4)) : 0,
+      commonness: commonnessSignals.length ? Number((commonnessSignals.reduce((s, c) => s + c.value, 0) / commonnessSignals.length).toFixed(4)) : 0,
       familiarity: 0,
       flags,
       lexicalEvidence,
       frequencySignals,
+      commonnessSignals,
       policyOverrides,
       class: 'REVIEW',
       reasons: []
     };
-    record.commonness = record.frequency;
-    record.familiarity = Math.max(record.frequency, lexicalEvidence.length ? 0.5 : 0);
+    record.familiarity = Math.max(record.frequency, record.commonness, lexicalEvidence.length ? 0.5 : 0);
     record.targetScore = scoreTarget(record);
     record.bonusScore = scoreBonus(record);
     record.class = chooseClass(record);
@@ -122,5 +123,5 @@ export async function buildDictionary(inputs: SourceWordInput[], version = 'dict
   }
   const sourceIds = [...new Set(records.flatMap(r => r.sources))].sort();
   const checksum = await sha256(canonical({ version, records }));
-  return { schemaVersion: 'dictionary-artifact-v2', version, languagePolicy: 'en-v1-a-z-exact-token', sourceNote: 'QA seed data authored for tests from current game vocabulary plus common edge-case words; not a licensed production corpus.', records, manifest: { version, recordCount: records.length, checksum, sourceIds, blockedCount: records.filter(r => r.class === 'BLOCKED').length, reviewCount: records.filter(r => r.class === 'REVIEW').length } };
+  return { schemaVersion: 'dictionary-artifact-v2', version, languagePolicy: 'en-v1-a-z-exact-token', sourceNote, records, manifest: { version, recordCount: records.length, checksum, sourceIds, blockedCount: records.filter(r => r.class === 'BLOCKED').length, reviewCount: records.filter(r => r.class === 'REVIEW').length } };
 }

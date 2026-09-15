@@ -8,7 +8,9 @@
     "retrievalDate": "2026-09-15",
     "licenseNoticeFile": "THIRD_PARTY_NOTICES/ESDB-Copyright.txt",
     "sourceDbChecksumSha256": "fea8ff5ae270b1a8f043aeb12418dceb8ce48192144a4018982921512424e94d",
-    "sourceRowsChecksumSha256": "20efe22543111952131888097afcbb92f85f171caffead60875a5d17f7c72715"
+    "sourceRowsChecksumSha256": "20efe22543111952131888097afcbb92f85f171caffead60875a5d17f7c72715",
+    "licenseNoticeChecksumSha256": "71bffd4b74ad47fff01c8b3c666e77da92737854e568850d8728024e0a53f304",
+    "integrityManifest": "content/corpus/esdb-en-us-v1.integrity.json"
   },
   "extraction": {
     "command": "npm run corpus:build:production",

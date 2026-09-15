@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "esdb-integrity-manifest-v1",
+  "source": {
+    "revision": "1e5b7d3a72f47a71da5d28686c1dd4b397178485",
+    "dbSha256": "fea8ff5ae270b1a8f043aeb12418dceb8ce48192144a4018982921512424e94d",
+    "rowsSha256": "20efe22543111952131888097afcbb92f85f171caffead60875a5d17f7c72715",
+    "licenseNoticeSha256": "71bffd4b74ad47fff01c8b3c666e77da92737854e568850d8728024e0a53f304"
+  }
+}

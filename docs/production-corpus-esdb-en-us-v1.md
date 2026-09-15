@@ -16,6 +16,7 @@ No wordfreq or bulk frequency export is used. ESDB size is converted only to `co
 Notices and provenance:
 
 - Notice: `THIRD_PARTY_NOTICES/ESDB-Copyright.txt`
+- Pinned integrity manifest: `content/corpus/esdb-en-us-v1.integrity.json` (revision, `scowl.db`, deterministic extracted rows, and notice SHA-256 values)
 - Machine-readable manifest: `content/corpus/esdb-en-us-v1.provenance.json`
 - Derived dictionary: `content/corpus/dictionary-esdb-en-us-v1.json`
 

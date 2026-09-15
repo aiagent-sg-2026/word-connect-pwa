@@ -31,8 +31,12 @@ jobs:
         run: npm ci
       - name: Test
         run: npm test
-      - name: Build
+      - name: Build game
         run: npm run build
+      - name: Build and verify Human Golden Reviewer
+        run: npm run reviewer:verify
+      - name: Assemble Pages artifact
+        run: mkdir -p dist/reviewer && cp -a reviewer-dist/. dist/reviewer/
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { copyFileSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const base = '/word-connect-reviewer/';
+const base = '/word-connect-pwa/reviewer/';
 const buildId = process.env.BUILD_ID || new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
 
 function reviewerServiceWorker() {

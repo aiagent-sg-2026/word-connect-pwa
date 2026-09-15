@@ -3,7 +3,7 @@ export type ReasonCode =
   | 'OK_TARGET' | 'OK_BONUS' | 'OK_ACCEPT_ONLY'
   | 'POLICY_OVERRIDE' | 'LOW_TARGET_SCORE' | 'LOW_BONUS_SCORE'
   | 'SHORT_TARGET_STRICT' | 'PROPER_NOUN' | 'ABBREVIATION'
-  | 'UNSAFE_EXACT_TOKEN' | 'INVALID_TOKEN' | 'SOURCE_CONFLICT' | 'MORPHOLOGY_CONFLICT' | 'REVIEW_REQUIRED';
+  | 'UNSAFE_EXACT_TOKEN' | 'INVALID_TOKEN' | 'SOURCE_CONFLICT' | 'MORPHOLOGY_CONFLICT' | 'MORPHOLOGY_INVALID' | 'REVIEW_REQUIRED';
 
 export type InflectionType = 'base' | 'plural' | 'past' | 'gerund' | 'comparative' | 'superlative' | 'other';
 export type MorphologyConfidence = 'low' | 'medium' | 'high';
@@ -48,6 +48,12 @@ export interface ScoreBreakdown {
   reasons: ReasonCode[];
 }
 
+export interface MorphologyError {
+  sourceId: string;
+  evidence: MorphologyEvidence;
+  errors: string[];
+}
+
 export interface WordRecord {
   word: string;
   upper: string;
@@ -62,7 +68,8 @@ export interface WordRecord {
   familiarity: number;
   morphology?: MorphologyEvidence;
   morphologyEvidence: MorphologyEvidence[];
-  flags: { properNoun: boolean; abbreviation: boolean; offensive: boolean; archaic: boolean; technical: boolean; invalidToken: boolean; sourceConflict: boolean; morphologyConflict: boolean; };
+  morphologyErrors: MorphologyError[];
+  flags: { properNoun: boolean; abbreviation: boolean; offensive: boolean; archaic: boolean; technical: boolean; invalidToken: boolean; sourceConflict: boolean; morphologyConflict: boolean; morphologyInvalid: boolean; };
   lexicalEvidence: LexicalEvidence[];
   frequencySignals: FrequencySignal[];
   policyOverrides: PolicyOverride[];

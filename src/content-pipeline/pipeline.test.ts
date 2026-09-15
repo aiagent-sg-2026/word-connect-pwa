@@ -68,6 +68,32 @@ describe('content pipeline', () => {
     expect(canConstructExact('MONO', ['M','O','O','N'])).toBe(true);
   });
 
+  it('fail-closes invalid, mismatched, and conflicting morphology before policy overrides', async () => {
+    const morph = (token: string, lemma = 'cat', inflectionOf = 'cat', inflectionType = 'plural') => ({ contractVersion: 'morphology-v1' as const, sourceId: 'morph-hard-gate', token, lemma, inflectionOf, inflectionType: inflectionType as never, provenance: 'qa-test', confidence: 'high' as const });
+    const make = (morphology: ReturnType<typeof morph>) => ({ word: 'cats', lexical: [{ sourceId: 'lex', token: 'cats', confidence: 1, morphology }], frequency: [{ sourceId: 'freq', value: 1, scale: '0..1' as const }], policy: [{ sourceId: 'policy', class: 'TARGET' as const, reasons: ['POLICY_OVERRIDE' as const] }] });
+    const mismatched = (await buildDictionary([make(morph('dogs'))])).records[0];
+    expect(mismatched.class).toBe('REVIEW');
+    expect(mismatched.reasons).toContain('MORPHOLOGY_INVALID');
+    expect(mismatched.morphologyErrors[0].errors).toContain('token mismatch');
+    const invalidToken = (await buildDictionary([make(morph("can't"))])).records[0];
+    expect(invalidToken.class).toBe('REVIEW');
+    expect(invalidToken.morphologyErrors[0].errors).toContain('invalid token');
+    const invalidLemma = (await buildDictionary([make(morph('cats', "can't"))])).records[0];
+    expect(invalidLemma.class).toBe('REVIEW');
+    expect(invalidLemma.morphologyErrors[0].errors).toContain('invalid lemma');
+    const invalidInflectionOf = (await buildDictionary([make(morph('cats', 'cat', 'cat-dog'))])).records[0];
+    expect(invalidInflectionOf.class).toBe('REVIEW');
+    expect(invalidInflectionOf.morphologyErrors[0].errors).toContain('invalid inflectionOf');
+    const invalidShape = (await buildDictionary([make(morph('cats', 'cat', 'cat', 'unsupported'))])).records[0];
+    expect(invalidShape.class).toBe('REVIEW');
+    expect(invalidShape.morphologyErrors[0].errors).toContain('unsupported inflectionType');
+    for (const r of [mismatched, invalidToken, invalidLemma, invalidInflectionOf, invalidShape]) {
+      expect(r.flags.morphologyInvalid).toBe(true);
+      expect(r.reasons).toContain('POLICY_OVERRIDE');
+      expect(r.sources).toContain('morph-hard-gate');
+    }
+  });
+
   it('formalizes morphology metadata and reviews conflicting evidence safely', async () => {
     const d = await buildDictionary([
       { word: 'play', lexical: [{ sourceId: 'lex-a', token: 'play', confidence: 0.95, pos: ['verb'], morphology: { contractVersion: 'morphology-v1', sourceId: 'morph-a', token: 'play', lemma: 'play', inflectionOf: 'play', inflectionType: 'base', provenance: 'qa-seed', confidence: 'high' } }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] },
@@ -87,6 +113,8 @@ describe('content pipeline', () => {
     expect(by.get('AXES')?.flags.morphologyConflict).toBe(true);
     expect(by.get('AXES')?.class).toBe('REVIEW');
     expect(by.get('AXES')?.reasons).toContain('MORPHOLOGY_CONFLICT');
+    expect(by.get('PLAY')?.sources).toContain('morph-a');
+    expect(d.manifest.sourceIds).toContain('morph-a');
   });
 
   it('verifier hash helpers reject tampered lab level and campaign hashes', async () => {
@@ -99,10 +127,15 @@ describe('content pipeline', () => {
   });
 
   it('generates deterministic constructible duplicate-free lab campaigns and rejects forbidden targets', async () => {
-    const d = await buildDictionary(fixture);
-    const a = await generateLabCampaign(d.records, { seed: 'same', maxLevels: 10 });
-    const b = await generateLabCampaign(d.records, { seed: 'same', maxLevels: 10 });
-    const c = await generateLabCampaign(d.records, { seed: 'different', maxLevels: 10 });
+    const d = await buildDictionary([
+      ...fixture,
+      { word: 'moon', lexical: [{ sourceId: 'lex', token: 'moon', confidence: 0.95, dialects: ['en'] }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] },
+      { word: 'mono', lexical: [{ sourceId: 'lex', token: 'mono', confidence: 0.95, dialects: ['en'] }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'BONUS', reasons: ['OK_BONUS'] }] },
+      { word: 'star', lexical: [{ sourceId: 'lex', token: 'star', confidence: 0.95, dialects: ['en'] }], frequency: [{ sourceId: 'freq', value: 0.9, scale: '0..1' }], policy: [{ sourceId: 'policy', class: 'TARGET', reasons: ['OK_TARGET'] }] }
+    ]);
+    const a = await generateLabCampaign(d.records, { seed: 'same', maxLevels: 3 });
+    const b = await generateLabCampaign(d.records, { seed: 'same', maxLevels: 3 });
+    const c = await generateLabCampaign(d.records, { seed: 'different', maxLevels: 3 });
     expect(canonical(a.campaign)).toBe(canonical(b.campaign));
     expect(await sha256(canonical(a.campaign))).toBe(await sha256(canonical(b.campaign)));
     expect(canonical(a.campaign)).not.toBe(canonical(c.campaign));

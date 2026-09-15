@@ -17,6 +17,7 @@ export function hardGateReasons(record: Pick<WordRecord, 'flags'>): ReasonCode[]
   if (record.flags.invalidToken) r.push('INVALID_TOKEN');
   if (record.flags.sourceConflict) r.push('SOURCE_CONFLICT');
   if (record.flags.morphologyConflict) r.push('MORPHOLOGY_CONFLICT');
+  if (record.flags.morphologyInvalid) r.push('MORPHOLOGY_INVALID');
   if (record.flags.properNoun) r.push('PROPER_NOUN');
   if (record.flags.abbreviation) r.push('ABBREVIATION');
   if (record.flags.offensive) r.push('UNSAFE_EXACT_TOKEN');
@@ -27,7 +28,7 @@ export function scoreTarget(record: WordRecord): ScoreBreakdown {
   const features = {
     frequency: clamp(record.frequency),
     lexicalConfidence: avg(record.lexicalEvidence.map(e => e.confidence), 0),
-    morphology: record.flags.morphologyConflict ? 0 : record.morphology?.inflectionType === 'base' ? 0.94 : record.morphology ? 0.82 : record.flags.technical || record.flags.archaic ? 0.55 : 0.9,
+    morphology: record.flags.morphologyConflict || record.flags.morphologyInvalid ? 0 : record.morphology?.inflectionType === 'base' ? 0.94 : record.morphology ? 0.82 : record.flags.technical || record.flags.archaic ? 0.55 : 0.9,
     gameplayQuality: clamp((record.length - 2) / 4),
     dialectNeutrality: record.dialects.length <= 1 || record.dialects.includes('en') ? 1 : 0.72,
     stability: record.policyOverrides.length ? 0.85 : 0.95
@@ -49,7 +50,7 @@ export function scoreBonus(record: WordRecord): ScoreBreakdown {
   const raritySweetSpot = 1 - Math.abs(record.frequency - 0.42) / 0.42;
   const features = {
     lexicalConfidence: avg(record.lexicalEvidence.map(e => e.confidence), 0),
-    morphology: record.flags.morphologyConflict ? 0 : record.morphology?.inflectionType === 'base' ? 0.92 : record.morphology ? 0.84 : record.flags.technical || record.flags.archaic ? 0.6 : 0.88,
+    morphology: record.flags.morphologyConflict || record.flags.morphologyInvalid ? 0 : record.morphology?.inflectionType === 'base' ? 0.92 : record.morphology ? 0.84 : record.flags.technical || record.flags.archaic ? 0.6 : 0.88,
     gameplayQuality: clamp((record.length - 1) / 5),
     dialect: record.dialects.length <= 1 ? 0.95 : 0.75,
     raritySweetSpot: clamp(raritySweetSpot)

@@ -7,7 +7,7 @@
         "token": "CAT",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -15,6 +15,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "cat",
+          "lemma": "cat",
+          "inflectionOf": "cat",
+          "inflectionType": "base",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -414,7 +424,7 @@
         "token": "RATS",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -422,6 +432,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "rats",
+          "lemma": "rat",
+          "inflectionOf": "rat",
+          "inflectionType": "plural",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -599,7 +619,7 @@
         "token": "RAT",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -607,6 +627,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "rat",
+          "lemma": "rat",
+          "inflectionOf": "rat",
+          "inflectionType": "base",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -1413,7 +1443,7 @@
         "token": "TONES",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -1421,6 +1451,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "tones",
+          "lemma": "tone",
+          "inflectionOf": "tone",
+          "inflectionType": "plural",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -1450,7 +1490,7 @@
         "token": "NOTES",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -1458,6 +1498,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "notes",
+          "lemma": "note",
+          "inflectionOf": "note",
+          "inflectionType": "plural",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -1487,7 +1537,7 @@
         "token": "TONE",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -1495,6 +1545,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "tone",
+          "lemma": "tone",
+          "inflectionOf": "tone",
+          "inflectionType": "base",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -1524,7 +1584,7 @@
         "token": "NOTE",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "noun"
         ],
         "dialects": [
           "en"
@@ -1532,6 +1592,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "note",
+          "lemma": "note",
+          "inflectionOf": "note",
+          "inflectionType": "base",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -4188,7 +4258,7 @@
         "token": "LANCED",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "verb"
         ],
         "dialects": [
           "en"
@@ -4196,6 +4266,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "lanced",
+          "lemma": "lance",
+          "inflectionOf": "lance",
+          "inflectionType": "past",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],
@@ -4299,7 +4379,7 @@
         "token": "LANCE",
         "confidence": 0.9,
         "pos": [
-          "unknown"
+          "verb"
         ],
         "dialects": [
           "en"
@@ -4307,6 +4387,16 @@
         "flags": {
           "properNoun": false,
           "abbreviation": false
+        },
+        "morphology": {
+          "contractVersion": "morphology-v1",
+          "sourceId": "qa-seed-morphology-v1",
+          "token": "lance",
+          "lemma": "lance",
+          "inflectionOf": "lance",
+          "inflectionType": "base",
+          "provenance": "qa-seed-original-bounded-fixture",
+          "confidence": "high"
         }
       }
     ],

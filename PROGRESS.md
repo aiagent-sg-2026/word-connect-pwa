@@ -18,7 +18,7 @@
 - Added local JSON/CSV/TSV import adapter support and `data/qa-seed/words.json`, explicitly labeled QA seed data rather than a licensed production corpus.
 - Added `score-v1-provisional` with versioned weights/thresholds, short-word strictness, per-word explanations, and starter Golden Set evaluation. The ~2,000 human-reviewed Golden Set remains pending and Phase 5 is not production-complete.
 - Added signature index, exact multiset constructibility, deterministic seeded LAB generator, difficulty scoring, duplicate identity detection, campaign/level hashes, and verification commands. Generated LAB artifacts are separate from and do not replace `campaign-en-v1`.
-- Closed Phase 4–6 reviewer gaps locally: generator candidate discovery now uses reusable signature/count/bitmask index lookup per rack instead of per-anchor full-record constructibility scans; morphology uses explicit `morphology-v1` build-time metadata with bounded inflection types and deterministic conflict-to-REVIEW handling; `content:verify` independently recomputes every LAB level hash and campaign hash before accepting artifacts.
+- Closed Phase 4–6 reviewer gaps locally: generator candidate discovery now uses reusable signature/count/bitmask index lookup per rack instead of per-anchor full-record constructibility scans; morphology uses explicit `morphology-v1` build-time metadata with bounded inflection types, bounded original QA seed fixtures, and deterministic invalid/mismatched/conflict-to-REVIEW handling; `content:verify` independently recomputes every LAB level hash and campaign hash before accepting artifacts.
 
 ## Independent reviewer notes
 

@@ -40,11 +40,12 @@ export async function validateCampaign(campaign: CampaignManifest = CAMPAIGN): P
     if (ids.has(level.levelId)) throw new Error(`duplicate level ${level.levelId}`);
     ids.add(level.levelId);
     if (level.campaignVersion !== campaign.campaignVersion) throw new Error(`campaign mismatch ${level.levelId}`);
+    if (level.contentVersion !== campaign.contentVersion) throw new Error(`content mismatch ${level.levelId}`);
     const computed = await computeLevelHash(level);
     if (computed !== level.hash) throw new Error(`hash mismatch ${level.levelId}`);
     const words = [...level.targets, ...level.bonus, ...level.acceptOnly].map(normalizeWord);
     if (new Set(words).size !== words.length) throw new Error(`duplicate word ${level.levelId}`);
-    for (const word of [...level.targets, ...level.bonus]) if (!canConstruct(word, level.letters)) throw new Error(`unconstructible word ${level.levelId}:${word}`);
+    for (const word of words) if (!canConstruct(word, level.letters)) throw new Error(`unconstructible word ${level.levelId}:${word}`);
   }
   const campaignHash = await sha256(canonical({ campaignVersion: campaign.campaignVersion, contentVersion: campaign.contentVersion, levels: campaign.levels.map(l => l.hash) }));
   if (campaignHash !== campaign.campaignHash) throw new Error('campaign hash mismatch');

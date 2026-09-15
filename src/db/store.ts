@@ -1,5 +1,5 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import { CAMPAIGN } from '../content/campaign';
+import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import { validateCampaign } from '../content/validate';
 import { resolveOutcome, targetHint } from '../game/logic';
 import type { LevelContract, ProfileRecord, ProgressRecord, SettingsRecord, WordOutcome } from '../types';
@@ -56,14 +56,24 @@ export async function verifySchema(db?: AnyDb): Promise<void> {
   await tx.done;
 }
 
+const knownCampaigns = [CAMPAIGN, ...LEGACY_CAMPAIGNS];
+const knownCampaignByVersion = new Map(knownCampaigns.map(c => [c.campaignVersion, c]));
+
+function assertKnownCampaignVersion(version: string): void {
+  if (!knownCampaignByVersion.has(version)) throw new Error('REC_CAMPAIGN_VERSION_UNSUPPORTED');
+}
+
 async function migrateSaveData(db: AnyDb): Promise<void> {
   const current = (await db.get('meta', 'saveDataVersion'))?.value ?? 1;
   if (current >= SAVE_DATA_VERSION) return;
   const tx = db.transaction(['meta','profiles','migrationLog'], 'readwrite');
   const profile = await tx.objectStore('profiles').get(PROFILE_ID) as (Partial<ProfileRecord> & { profileId: string }) | undefined;
   if (profile && !profile.campaignVersion) {
-    await tx.objectStore('profiles').put({ ...profile, campaignVersion: CAMPAIGN.campaignVersion, updatedAt: profile.updatedAt || now() });
-    await tx.objectStore('migrationLog').put({ id: `save-v${current}-to-${SAVE_DATA_VERSION}-profile-campaign`, from: current, to: SAVE_DATA_VERSION, profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, completedAt: now() });
+    await tx.objectStore('profiles').put({ ...profile, campaignVersion: LEGACY_CAMPAIGNS[0]?.campaignVersion ?? CAMPAIGN.campaignVersion, updatedAt: profile.updatedAt || now() });
+    await tx.objectStore('migrationLog').put({ id: `save-v${current}-to-${SAVE_DATA_VERSION}-profile-campaign`, from: current, to: SAVE_DATA_VERSION, profileId: PROFILE_ID, campaignVersion: LEGACY_CAMPAIGNS[0]?.campaignVersion ?? CAMPAIGN.campaignVersion, completedAt: now() });
+  } else if (profile?.campaignVersion) {
+    assertKnownCampaignVersion(profile.campaignVersion);
+    await tx.objectStore('migrationLog').put({ id: `save-v${current}-to-${SAVE_DATA_VERSION}-noop`, from: current, to: SAVE_DATA_VERSION, completedAt: now() });
   } else {
     await tx.objectStore('migrationLog').put({ id: `save-v${current}-to-${SAVE_DATA_VERSION}-noop`, from: current, to: SAVE_DATA_VERSION, completedAt: now() });
   }
@@ -73,10 +83,45 @@ async function migrateSaveData(db: AnyDb): Promise<void> {
 
 async function assertNoCampaignOverwrite(db: AnyDb): Promise<void> {
   const tx = db.transaction('levels', 'readonly');
-  for (const level of CAMPAIGN.levels) {
+  for (const campaign of knownCampaigns) for (const level of campaign.levels) {
     const existing = await tx.objectStore('levels').get([level.campaignVersion, level.levelId]) as LevelContract | undefined;
     if (existing && (existing.hash !== level.hash || existing.revision !== level.revision)) throw new Error('REC_CONTENT_IMMUTABLE_CONFLICT');
   }
+  await tx.done;
+}
+
+function assertProgressCompatible(progress: ProgressRecord, from: LevelContract, to: LevelContract): void {
+  if (progress.levelRevision !== from.revision || progress.levelHash !== from.hash) throw new Error('REC_CAMPAIGN_MIGRATION_INVALID_PROGRESS');
+  if (new Set(progress.foundTargets).size !== progress.foundTargets.length || new Set(progress.foundBonus).size !== progress.foundBonus.length) throw new Error('REC_CAMPAIGN_MIGRATION_INVALID_PROGRESS');
+  const targets = new Set(to.targets); const bonus = new Set(to.bonus);
+  if (!progress.foundTargets.every(w => targets.has(w)) || !progress.foundBonus.every(w => bonus.has(w))) throw new Error('REC_CAMPAIGN_MIGRATION_INVALID_PROGRESS');
+  if (progress.completed !== (progress.foundTargets.length === to.targets.length)) throw new Error('REC_CAMPAIGN_MIGRATION_INVALID_PROGRESS');
+}
+
+async function migrateActiveCampaign(db: AnyDb): Promise<void> {
+  const profile = await db.get('profiles', PROFILE_ID) as ProfileRecord | undefined;
+  if (!profile) return;
+  assertKnownCampaignVersion(profile.campaignVersion);
+  if (profile.campaignVersion === CAMPAIGN.campaignVersion) return;
+  const source = knownCampaignByVersion.get(profile.campaignVersion)!;
+  const sourceById = new Map(source.levels.map(l => [l.levelId, l]));
+  const targetById = new Map(CAMPAIGN.levels.map(l => [l.levelId, l]));
+  if (!targetById.has(profile.currentLevelId)) throw new Error('REC_CAMPAIGN_MIGRATION_INVALID_PROFILE');
+  const oldProgress = await db.getAll('progress') as ProgressRecord[];
+  const carried = oldProgress.filter(p => p.profileId === PROFILE_ID && p.campaignVersion === source.campaignVersion).map(p => {
+    const from = sourceById.get(p.levelId); const to = targetById.get(p.levelId);
+    if (!from || !to) throw new Error('REC_CAMPAIGN_MIGRATION_INVALID_PROGRESS');
+    assertProgressCompatible(p, from, to);
+    return { ...p, campaignVersion: CAMPAIGN.campaignVersion, levelRevision: to.revision, levelHash: to.hash, updatedAt: now() } satisfies ProgressRecord;
+  });
+  const tx = db.transaction(['profiles','progress','migrationLog'], 'readwrite');
+  await tx.objectStore('profiles').put({ ...profile, campaignVersion: CAMPAIGN.campaignVersion, currentLevelId: profile.currentLevelId, updatedAt: now() });
+  for (const p of carried) {
+    const existing = await tx.objectStore('progress').get([PROFILE_ID, CAMPAIGN.campaignVersion, p.levelId]) as ProgressRecord | undefined;
+    if (existing && (existing.levelHash !== p.levelHash || existing.levelRevision !== p.levelRevision)) throw new Error('REC_CONTENT_MISMATCH');
+    await tx.objectStore('progress').put(existing ?? p);
+  }
+  await tx.objectStore('migrationLog').put({ id: `campaign-${source.campaignVersion}-to-${CAMPAIGN.campaignVersion}`, from: source.campaignVersion, to: CAMPAIGN.campaignVersion, profileId: PROFILE_ID, completedAt: now() });
   await tx.done;
 }
 
@@ -86,6 +131,7 @@ export async function bootstrapData(): Promise<void> {
   await verifySchema(db);
   await assertNoCampaignOverwrite(db);
   await migrateSaveData(db);
+  await migrateActiveCampaign(db);
   const tx = db.transaction(['meta','profiles','levels','progress','settings'], 'readwrite');
   const metaBuild = buildMeta();
   tx.objectStore('meta').put({ id: 'schemaSignature', value: SCHEMA_SIGNATURE });
@@ -104,6 +150,8 @@ export async function bootstrapData(): Promise<void> {
     profile = { profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, coins: 25, hintsUsed: 0, currentLevelId: CAMPAIGN.levels[0].levelId, createdAt: now(), updatedAt: now() };
     await tx.objectStore('profiles').put(profile);
     await tx.objectStore('settings').put({ id: PROFILE_ID, profileId: PROFILE_ID, sound: true, haptics: true, reducedMotion: matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false } as SettingsRecord & {id:string});
+  } else if (profile.campaignVersion !== CAMPAIGN.campaignVersion) {
+    throw new Error('REC_CAMPAIGN_VERSION_UNSUPPORTED');
   }
   for (const level of CAMPAIGN.levels) await tx.objectStore('levels').put(level);
   await tx.done;

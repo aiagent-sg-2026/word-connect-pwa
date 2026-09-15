@@ -3,7 +3,9 @@
 const BUILD_ID = 'dev-source-fallback';
 const SHELL = `wordgame-shell-${BUILD_ID}`;
 const RUNTIME = 'wordgame-runtime';
-const CRITICAL = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon-192.svg', '/icons/icon-512.svg'];
+const BASE_PATH = new URL(self.registration.scope).pathname;
+const INDEX_PATH = `${BASE_PATH}index.html`;
+const CRITICAL = [BASE_PATH, INDEX_PATH, `${BASE_PATH}manifest.webmanifest`, `${BASE_PATH}icons/icon-192.svg`, `${BASE_PATH}icons/icon-512.svg`];
 const READY_TIMEOUT_MS = 2500;
 
 self.addEventListener('install', event => {
@@ -41,7 +43,7 @@ async function boundedPut(cache, request, response) {
   const keys = await cache.keys();
   while (keys.length > 60) { const key = keys.shift(); if (key) await cache.delete(key); }
 }
-function criticalRequestFor(request, url) { return request.mode === 'navigate' ? '/index.html' : (CRITICAL.includes(url.pathname) ? url.pathname : undefined); }
+function criticalRequestFor(request, url) { if (!url.pathname.startsWith(BASE_PATH)) return undefined; return request.mode === 'navigate' ? INDEX_PATH : (CRITICAL.includes(url.pathname) ? url.pathname : undefined); }
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || event.request.method !== 'GET') return;
@@ -59,6 +61,6 @@ self.addEventListener('fetch', event => {
     const cached = await runtimeCache.match(event.request);
     if (cached) return cached;
     try { const response = await fetch(event.request); if (response.ok && response.type === 'basic') await boundedPut(runtimeCache, event.request, response.clone()); return response; }
-    catch { return event.request.mode === 'navigate' ? (await shellCache.match('/index.html')) || Response.error() : Response.error(); }
+    catch { return event.request.mode === 'navigate' ? (await shellCache.match(INDEX_PATH)) || Response.error() : Response.error(); }
   })());
 });

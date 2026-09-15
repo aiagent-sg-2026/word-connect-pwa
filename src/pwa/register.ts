@@ -18,7 +18,8 @@ export function registerServiceWorker(handlers: UpdateHandlers): void {
     location.reload();
   });
   window.addEventListener('load', async () => {
-    const reg = await navigator.serviceWorker.register('/sw.js');
+    const baseUrl = new URL(import.meta.env.BASE_URL, window.location.origin);
+    const reg = await navigator.serviceWorker.register(new URL('sw.js', baseUrl), { scope: baseUrl.pathname });
     if (reg.waiting) handlers.onWaiting(reg);
     reg.addEventListener('updatefound', () => {
       const installing = reg.installing;

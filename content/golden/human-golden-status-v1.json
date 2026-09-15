@@ -1,0 +1,59 @@
+{
+  "targetCount": 2000,
+  "candidateCount": 187,
+  "shortfall": 1813,
+  "reviews": {
+    "zero": 187,
+    "one": 0,
+    "twoPlus": 0,
+    "agreementRate": null,
+    "unresolvedDisagreements": 0,
+    "adjudicatedCount": 0,
+    "resolvedCount": 0
+  },
+  "coverage": {
+    "classes": {
+      "TARGET": 134,
+      "BONUS": 40,
+      "REVIEW": 5,
+      "ACCEPT_ONLY": 7,
+      "BLOCKED": 1
+    },
+    "lengths": {
+      "2": 5,
+      "3": 46,
+      "4": 73,
+      "5": 44,
+      "6": 18,
+      "7": 1
+    },
+    "strata": {
+      "length:medium": 117,
+      "class:TARGET": 134,
+      "band:high-score": 63,
+      "not-3-letter": 141,
+      "morphology:none": 178,
+      "dialect:en": 187,
+      "flag:none": 181,
+      "review-not-required": 182,
+      "length:short": 51,
+      "band:boundary": 51,
+      "short-3-letter": 46,
+      "class:BONUS": 40,
+      "class:REVIEW": 5,
+      "flag:properNoun": 1,
+      "review-required": 5,
+      "class:ACCEPT_ONLY": 7,
+      "band:low-mid-score": 73,
+      "length:long": 19,
+      "class:BLOCKED": 1,
+      "flag:offensive": 1,
+      "flag:invalidToken": 3,
+      "morphology:base": 5,
+      "morphology:past": 1,
+      "flag:abbreviation": 1,
+      "morphology:plural": 3
+    }
+  },
+  "readiness": "DRAFT"
+}

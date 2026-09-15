@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "published-human-golden-v1",
+  "manifest": {
+    "schemaVersion": "golden-manifest-v1",
+    "version": "human-golden-v1",
+    "readiness": "DRAFT",
+    "targetCount": 2000,
+    "itemCount": 0,
+    "unresolvedCount": 187,
+    "checksum": "b93f2572286685d3b8c4f515e21d3beedfdacb4df033b8115d0ea60bf9925cdb",
+    "queueChecksum": "df7f0f7182df6c606571901a416f046482b638d2fa8101d7f66a3f7247c30dc2",
+    "source": {
+      "dictionaryVersion": "dict-qa-seed-v1",
+      "dictionaryChecksum": "574c4579a008649d0ce65e03cfb97e589f027035d732f8bfae76721af7bdedfb",
+      "scoringVersion": "score-v1-provisional",
+      "evaluatorVersion": "human-golden-evaluator-v1",
+      "queueVersion": "human-golden-queue-v1",
+      "splitPolicyVersion": "golden-split-hash-70-15-15-v1",
+      "seed": "word-connect-human-golden-v1"
+    },
+    "splitPolicy": {
+      "version": "golden-split-hash-70-15-15-v1",
+      "train": 70,
+      "dev": 15,
+      "holdout": 15,
+      "protectedHoldout": true
+    },
+    "gates": {
+      "targetCountMet": false,
+      "allResolved": false,
+      "noDuplicates": true,
+      "queueChecksumFrozen": true,
+      "splitIntegrity": true
+    }
+  },
+  "items": []
+}

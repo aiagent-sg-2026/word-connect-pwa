@@ -1,0 +1,5 @@
+{
+  "schemaVersion": "human-golden-adjudication-batch-v1",
+  "note": "Template only. Human adjudicators append explicit adjudications for unresolved disagreements.",
+  "adjudications": []
+}

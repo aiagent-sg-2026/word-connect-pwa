@@ -20,9 +20,15 @@ npm run dictionary:build
 npm run score:eval
 npm run content:generate
 npm run content:verify
+npm run golden:queue
+npm run golden:review:export
+npm run golden:review:validate
+npm run golden:status
+npm run golden:publish:draft
+npm run golden:eval
 ```
 
-Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`. Current LAB hardening includes index-driven candidate lookup (signature/count/bitmask subset checks), dictionary artifact schema `dictionary-artifact-v2`, versioned morphology metadata (`morphology-v1`) with bounded original QA seed coverage, fail-closed invalid/mismatched/conflicting morphology to REVIEW behavior, and independent LAB level/campaign hash recomputation in `npm run content:verify`.
+Phase 4–6 tooling is build-time only. It emits deterministic LAB/QA artifacts under `content/lab/` and Human Golden workflow artifacts under `content/golden/` from `data/qa-seed/words.json`, an original bounded QA seed lexicon derived from current hand-authored vocabulary plus authored edge-case/common words. It is not a licensed production corpus and does not replace runtime `campaign-en-v1`. Current LAB hardening includes index-driven candidate lookup (signature/count/bitmask subset checks), dictionary artifact schema `dictionary-artifact-v2`, versioned morphology metadata (`morphology-v1`) with bounded original QA seed coverage, fail-closed invalid/mismatched/conflicting morphology to REVIEW behavior, independent LAB level/campaign hash recomputation in `npm run content:verify`, and Human Golden Set V1 queue/review/publish/eval gates documented in `docs/human-golden-workflow-v1.md`. Current queue count is 187, shortfall is 1,813, and human reviewed/resolved count is 0; Phase 5 human data is DRAFT/PARTIAL, not READY.
 
 Browser smoke after building:
 

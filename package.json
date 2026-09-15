@@ -12,7 +12,14 @@
     "dictionary:build": "node scripts/dictionary-build.mjs",
     "score:eval": "node scripts/score-eval.mjs",
     "content:generate": "node scripts/content-generate.mjs",
-    "content:verify": "node scripts/content-verify.mjs"
+    "content:verify": "node scripts/content-verify.mjs",
+    "golden:queue": "node scripts/golden.mjs queue",
+    "golden:review:export": "node scripts/golden.mjs review:export",
+    "golden:review:validate": "node scripts/golden.mjs review:validate",
+    "golden:status": "node scripts/golden.mjs status",
+    "golden:publish": "node scripts/golden.mjs publish",
+    "golden:publish:draft": "node scripts/golden.mjs publish --draft",
+    "golden:eval": "node scripts/golden.mjs eval"
   },
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "latest",

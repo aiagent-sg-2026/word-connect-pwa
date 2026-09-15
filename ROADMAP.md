@@ -36,7 +36,7 @@ Exit gate: versioned build artifact contains only classified, explainable record
 
 Tasks: implement proposed TargetScore/BonusScore, stricter short-word thresholds, curate roughly 2,000 judgments, and record scoring version.
 
-Status: `score-v1-provisional` implemented with explicit versioned config and `npm run score:eval` against `starter-golden-v1`. The starter set is deterministic QA coverage only; the ~2,000 human-reviewed Golden Set exit gate is not complete.
+Status: `score-v1-provisional` implemented with explicit versioned config and `npm run score:eval` against `starter-golden-v1`. Human Golden Set Workflow V1 is implemented as build-time tooling (`golden:queue`, blind export, validate, status, publish, eval) with versioned contracts, checksum gates, two-reviewer/adjudication policy, deterministic 70/15/15 split, and frozen evaluator rule. The current QA seed dictionary yields only 187 candidates, shortfall 1,813; current human reviewed/resolved count is 0. The starter 11 judgments remain non-production QA coverage only; the ~2,000 human-reviewed Golden Set exit gate is not complete.
 
 Exit gate: human Golden Set calibration report and reproducible score build.
 

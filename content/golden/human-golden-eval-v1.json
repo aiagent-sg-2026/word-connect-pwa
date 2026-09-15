@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "golden-evaluator-report-v1",
+  "evaluatorVersion": "human-golden-evaluator-v1",
+  "readiness": "DRAFT",
+  "goldenChecksum": "b93f2572286685d3b8c4f515e21d3beedfdacb4df033b8115d0ea60bf9925cdb",
+  "dictionaryChecksum": "574c4579a008649d0ce65e03cfb97e589f027035d732f8bfae76721af7bdedfb",
+  "scoringVersion": "score-v1-provisional",
+  "metrics": {
+    "warning": "NOT_READY/PARTIAL: metrics are workflow checks, not production calibration proof",
+    "overallAccuracy": null,
+    "perClass": {
+      "TARGET": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "support": 0
+      },
+      "BONUS": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "support": 0
+      },
+      "ACCEPT_ONLY": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "support": 0
+      },
+      "BLOCKED": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "support": 0
+      },
+      "REVIEW": {
+        "precision": 0,
+        "recall": 0,
+        "f1": 0,
+        "support": 0
+      }
+    },
+    "confusionMatrix": {
+      "TARGET": {
+        "TARGET": 0,
+        "BONUS": 0,
+        "ACCEPT_ONLY": 0,
+        "BLOCKED": 0,
+        "REVIEW": 0
+      },
+      "BONUS": {
+        "TARGET": 0,
+        "BONUS": 0,
+        "ACCEPT_ONLY": 0,
+        "BLOCKED": 0,
+        "REVIEW": 0
+      },
+      "ACCEPT_ONLY": {
+        "TARGET": 0,
+        "BONUS": 0,
+        "ACCEPT_ONLY": 0,
+        "BLOCKED": 0,
+        "REVIEW": 0
+      },
+      "BLOCKED": {
+        "TARGET": 0,
+        "BONUS": 0,
+        "ACCEPT_ONLY": 0,
+        "BLOCKED": 0,
+        "REVIEW": 0
+      },
+      "REVIEW": {
+        "TARGET": 0,
+        "BONUS": 0,
+        "ACCEPT_ONLY": 0,
+        "BLOCKED": 0,
+        "REVIEW": 0
+      }
+    },
+    "target": {
+      "precision": 0,
+      "recall": 0,
+      "f1": 0,
+      "support": 0
+    },
+    "threeLetter": {
+      "accuracy": null,
+      "support": 0
+    },
+    "bySplit": {
+      "train": {
+        "accuracy": null,
+        "support": 0
+      },
+      "dev": {
+        "accuracy": null,
+        "support": 0
+      },
+      "holdout": {
+        "accuracy": null,
+        "support": 0
+      }
+    },
+    "unresolvedCount": 187,
+    "missingCount": 0
+  }
+}

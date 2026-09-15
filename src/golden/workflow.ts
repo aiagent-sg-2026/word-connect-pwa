@@ -38,6 +38,37 @@ function strataFor(r: WordRecord): string[] {
   ];
 }
 
+export function queueChecksum(queue: Omit<GoldenQueueArtifact, 'checksum'> & { checksum?: string }): string {
+  return sha256({ ...queue, checksum: undefined });
+}
+
+export function validateQueue(queue: GoldenQueueArtifact): string[] {
+  const errors: string[] = [];
+  if (queue.schemaVersion !== 'golden-queue-v1') errors.push('queue: invalid schemaVersion');
+  const sourceQueueVersion = queue.source?.queueVersion;
+  if (sourceQueueVersion !== GOLDEN_QUEUE_VERSION) errors.push('queue: invalid source queueVersion');
+  if (!queue.checksum || queue.checksum !== queueChecksum(queue)) errors.push('queue: checksum mismatch');
+  if (!Number.isInteger(queue.targetCount) || queue.targetCount < 0) errors.push('queue: invalid targetCount');
+  if (queue.candidateCount !== queue.candidates?.length) errors.push('queue: candidateCount mismatch');
+  if (queue.shortfall !== Math.max(0, queue.targetCount - queue.candidateCount)) errors.push('queue: shortfall mismatch');
+  const seen = new Set<string>();
+  for (const [i, c] of (queue.candidates ?? []).entries()) {
+    const p = `queue.candidates[${i}]`;
+    if (c.schemaVersion !== 'golden-candidate-v1') errors.push(`${p}: invalid schemaVersion`);
+    if (c.queueVersion !== sourceQueueVersion) errors.push(`${p}: queueVersion mismatch`);
+    if (c.source?.queueVersion !== sourceQueueVersion || c.source?.dictionaryChecksum !== queue.source?.dictionaryChecksum) errors.push(`${p}: source mismatch`);
+    if (c.upper !== upper(c.word)) errors.push(`${p}: upper mismatch`);
+    if (c.length !== [...c.upper].length) errors.push(`${p}: length mismatch`);
+    if (seen.has(c.upper)) errors.push(`${p}: duplicate word`); seen.add(c.upper);
+  }
+  return errors;
+}
+
+export function assertValidQueue(queue: GoldenQueueArtifact): void {
+  const errors = validateQueue(queue);
+  if (errors.length) throw new Error(errors.join('\n'));
+}
+
 export function buildGoldenQueue(dictionary: DictionaryArtifact, targetCount = HUMAN_GOLDEN_TARGET): GoldenQueueArtifact {
   const source = sourceOf(dictionary);
   const unique = new Map<string, WordRecord>();
@@ -49,21 +80,22 @@ export function buildGoldenQueue(dictionary: DictionaryArtifact, targetCount = H
   });
   const selected = candidates.slice(0, targetCount).sort((a,b) => a.upper.localeCompare(b.upper));
   const unsigned = { schemaVersion: 'golden-queue-v1' as const, targetCount, candidateCount: selected.length, shortfall: Math.max(0, targetCount - selected.length), generatedAt: '1970-01-01T00:00:00.000Z', checksum: '', source, candidates: selected };
-  return { ...unsigned, checksum: sha256({ ...unsigned, checksum: undefined }) };
+  return { ...unsigned, checksum: queueChecksum(unsigned) };
 }
 
 export function exportBlindPacket(queue: GoldenQueueArtifact) {
-  const rows = queue.candidates.map(c => ({ queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, word: c.upper, length: c.length, strata: c.strata.filter(s => !s.startsWith('class:') && !s.startsWith('band:')), reviewerId: '', reviewedAt: '', source: 'human-review-v1', class: '', confidence: '', reason: '', note: '' }));
-  return { schemaVersion: 'blind-human-review-packet-v1', queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, candidateCount: queue.candidateCount, instructions: 'Fill reviewerId, reviewedAt ISO timestamp, source=human-review-v1, class TARGET/BONUS/ACCEPT_ONLY/BLOCKED/REVIEW, confidence 0..1. Packet intentionally omits model predicted class and scores.', rows };
+  assertValidQueue(queue);
+  const rows = queue.candidates.map(c => ({ queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, word: c.upper, candidateId: c.candidateId, length: c.length, reviewerId: '', reviewedAt: '', source: 'human-review-v1', class: '', confidence: '', note: '' }));
+  return { schemaVersion: 'blind-human-review-packet-v1', queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, candidateCount: queue.candidateCount, instructions: 'Fill reviewerId, reviewedAt ISO timestamp, source=human-review-v1, class TARGET/BONUS/ACCEPT_ONLY/BLOCKED/REVIEW, confidence 0..1, optional note. Packet intentionally omits scorer outputs and policy strata.', rows };
 }
 export function toCsv(rows: Record<string, unknown>[]): string {
-  const headers = Object.keys(rows[0] ?? { queueVersion:'', queueChecksum:'', word:'', length:'', strata:'', reviewerId:'', reviewedAt:'', source:'', class:'', confidence:'', reason:'', note:'' });
+  const headers = Object.keys(rows[0] ?? { queueVersion:'', queueChecksum:'', word:'', candidateId:'', length:'', reviewerId:'', reviewedAt:'', source:'', class:'', confidence:'', note:'' });
   const cell = (v: unknown) => `"${(Array.isArray(v) ? v.join(';') : String(v ?? '')).replaceAll('"','""')}"`;
   return `${headers.join(',')}\n${rows.map(r => headers.map(h => cell(r[h])).join(',')).join('\n')}\n`;
 }
 
 export function validateReviews(queue: GoldenQueueArtifact, reviews: HumanReview[]): string[] {
-  const errors: string[] = []; const words = new Set(queue.candidates.map(c => c.upper)); const seen = new Set<string>();
+  const errors: string[] = [...validateQueue(queue)]; const words = new Set(queue.candidates.map(c => c.upper)); const seen = new Set<string>();
   reviews.forEach((r, i) => {
     const p = `review[${i}]`;
     if (r.schemaVersion !== 'human-golden-review-v1') errors.push(`${p}: invalid schemaVersion`);
@@ -80,8 +112,8 @@ export function validateReviews(queue: GoldenQueueArtifact, reviews: HumanReview
 }
 
 export function validateAdjudications(queue: GoldenQueueArtifact, reviews: HumanReview[], adjudications: GoldenAdjudication[]): string[] {
-  const errors: string[] = []; const words = new Set(queue.candidates.map(c => c.upper)); const reviewIdsByWord = new Map<string, Set<string>>();
-  for (const r of reviews) { const w = upper(r.word); reviewIdsByWord.set(w, new Set([...(reviewIdsByWord.get(w) ?? []), r.reviewerId])); }
+  const errors: string[] = [...validateQueue(queue), ...validateReviews(queue, reviews)]; const words = new Set(queue.candidates.map(c => c.upper)); const reviewsByWord = new Map<string, HumanReview[]>();
+  for (const r of reviews) { const w = upper(r.word); reviewsByWord.set(w, [...(reviewsByWord.get(w) ?? []), r]); }
   const seen = new Set<string>();
   adjudications.forEach((a, i) => {
     const p = `adjudication[${i}]`; const w = upper(String(a.word ?? ''));
@@ -93,14 +125,43 @@ export function validateAdjudications(queue: GoldenQueueArtifact, reviews: Human
     if (a.source !== 'human-adjudication-v1') errors.push(`${p}: missing human adjudication source`);
     if (!GOLDEN_CLASSES.includes(a.finalClass)) errors.push(`${p}: invalid finalClass`);
     if (!a.adjudicatedAt || Number.isNaN(Date.parse(a.adjudicatedAt))) errors.push(`${p}: invalid adjudicatedAt`);
-    if (!Array.isArray(a.sourceReviewerIds) || a.sourceReviewerIds.length < 1) errors.push(`${p}: missing sourceReviewerIds`);
-    const known = reviewIdsByWord.get(w) ?? new Set<string>();
+    const wordReviews = reviewsByWord.get(w) ?? [];
+    const known = new Set(wordReviews.map(r => r.reviewerId));
+    const sourceIds = Array.isArray(a.sourceReviewerIds) ? [...new Set(a.sourceReviewerIds)] : [];
+    if (sourceIds.length < 2) errors.push(`${p}: sourceReviewerIds must include at least two distinct reviewers`);
     for (const id of a.sourceReviewerIds ?? []) if (!known.has(id)) errors.push(`${p}: unknown sourceReviewerId ${id}`);
+    if (sourceIds.includes(a.adjudicatorId)) errors.push(`${p}: adjudicator must be distinct from source reviewers`);
+    if (known.size < 2) errors.push(`${p}: adjudication requires at least two distinct human reviews`);
+    const sourceClasses = new Set(wordReviews.filter(r => sourceIds.includes(r.reviewerId)).map(r => r.class));
+    if (sourceClasses.size < 2) errors.push(`${p}: adjudication requires an actual source-review disagreement`);
   });
   return errors;
 }
 
-export function parseReviewsJson(path: string): HumanReview[] { const v = JSON.parse(readFileSync(path, 'utf8')); return Array.isArray(v) ? v : v.reviews ?? v.rows ?? []; }
+export function parseCsv(text: string): Record<string, string>[] {
+  const rows: string[][] = []; let row: string[] = []; let cell = ''; let quoted = false;
+  for (let i = 0; i < text.length; i++) { const ch = text[i];
+    if (quoted) { if (ch === '"' && text[i+1] === '"') { cell += '"'; i++; } else if (ch === '"') quoted = false; else cell += ch; }
+    else if (ch === '"') quoted = true; else if (ch === ',') { row.push(cell); cell = ''; } else if (ch === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; } else if (ch !== '\r') cell += ch;
+  }
+  if (quoted) throw new Error('CSV has unterminated quoted field');
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  while (rows.length && rows[rows.length-1].every(c => c === '')) rows.pop();
+  const headers = rows.shift() ?? [];
+  return rows.map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ''])));
+}
+
+function rowToReview(r: Record<string, unknown>): HumanReview {
+  return { schemaVersion: (r.schemaVersion as HumanReview['schemaVersion']) ?? 'human-golden-review-v1', queueVersion: String(r.queueVersion ?? ''), queueChecksum: String(r.queueChecksum ?? ''), word: String(r.word ?? ''), reviewerId: String(r.reviewerId ?? ''), reviewedAt: String(r.reviewedAt ?? ''), source: String(r.source ?? '') as HumanReview['source'], class: String(r.class ?? '') as HumanReview['class'], confidence: typeof r.confidence === 'number' ? r.confidence : Number(r.confidence), reason: r.reason == null ? undefined : String(r.reason), note: r.note == null ? undefined : String(r.note) };
+}
+
+export function parseReviewsFile(path: string): HumanReview[] {
+  const text = readFileSync(path, 'utf8');
+  if (path.toLowerCase().endsWith('.csv')) return parseCsv(text).map(rowToReview);
+  const v = JSON.parse(text); const rows = Array.isArray(v) ? v : v.reviews ?? v.rows ?? [];
+  return rows.map(rowToReview);
+}
+export const parseReviewsJson = parseReviewsFile;
 
 export function resolveItems(queue: GoldenQueueArtifact, reviews: HumanReview[], adjudications: GoldenAdjudication[] = []): { items: FinalGoldenItem[]; unresolved: string[]; stats: ReturnType<typeof statusStats> } {
   const valid = [...validateReviews(queue, reviews), ...validateAdjudications(queue, reviews, adjudications)]; if (valid.length) throw new Error(valid.join('\n'));
@@ -110,8 +171,8 @@ export function resolveItems(queue: GoldenQueueArtifact, reviews: HumanReview[],
   for (const c of queue.candidates) {
     const rs = byWord.get(c.upper) ?? []; const classes = new Set(rs.map(r => r.class)); const adj = adjByWord.get(c.upper);
     let finalClass: WordClass | undefined; let adjudicatorId: string | undefined;
-    if (rs.length >= 2 && classes.size === 1) finalClass = rs[0].class;
-    else if (adj && rs.length >= 1 && adj.source === 'human-adjudication-v1' && GOLDEN_CLASSES.includes(adj.finalClass) && adj.queueChecksum === queue.checksum) { finalClass = adj.finalClass; adjudicatorId = adj.adjudicatorId; }
+    if (rs.length >= 2 && new Set(rs.map(r => r.reviewerId)).size >= 2 && classes.size === 1) finalClass = rs[0].class;
+    else if (adj && rs.length >= 2 && new Set(rs.map(r => r.reviewerId)).size >= 2 && classes.size > 1 && adj.source === 'human-adjudication-v1' && GOLDEN_CLASSES.includes(adj.finalClass) && adj.queueChecksum === queue.checksum) { finalClass = adj.finalClass; adjudicatorId = adj.adjudicatorId; }
     if (finalClass) items.push({ schemaVersion: 'final-golden-item-v1', word: c.upper, class: finalClass, split: splitFor(c.upper, finalClass), reviewerIds: rs.map(r => r.reviewerId).sort(), adjudicatorId, evidenceChecksum: sha256({ reviews: rs, adjudication: adj ?? null }) });
     else unresolved.push(c.upper);
   }
@@ -121,27 +182,47 @@ export function resolveItems(queue: GoldenQueueArtifact, reviews: HumanReview[],
 export function splitFor(word: string, klass: string): GoldenSplit { const n = hashInt(`${GOLDEN_SPLIT_POLICY_VERSION}:${GOLDEN_SEED}:${klass}:${upper(word)}`) % 10000; return n < 7000 ? 'train' : n < 8500 ? 'dev' : 'holdout'; }
 
 export function statusStats(queue: GoldenQueueArtifact, reviews: HumanReview[] = [], adjudications: GoldenAdjudication[] = []) {
+  const validation = [...validateReviews(queue, reviews), ...validateAdjudications(queue, reviews, adjudications)]; if (validation.length) throw new Error(validation.join('\n'));
   const byWord = new Map<string, HumanReview[]>(); for (const r of reviews) byWord.set(upper(r.word), [...(byWord.get(upper(r.word)) ?? []), r]);
-  let zero=0, one=0, twoPlus=0, agree=0, disagreements=0;
-  for (const c of queue.candidates) { const rs = byWord.get(c.upper) ?? []; if (rs.length===0) zero++; else if (rs.length===1) one++; else { twoPlus++; (new Set(rs.map(r=>r.class)).size === 1 ? agree++ : disagreements++); } }
-  const resolved = queue.candidates.length - zero - one - disagreements + adjudications.length;
+  const adjByWord = new Map(adjudications.map(a => [upper(a.word), a]));
+  let zero=0, one=0, twoPlus=0, agree=0, disagreements=0, resolved=0, adjudicatedResolved=0;
+  for (const c of queue.candidates) {
+    const rs = byWord.get(c.upper) ?? []; const distinct = new Set(rs.map(r=>r.reviewerId)).size; const classes = new Set(rs.map(r=>r.class));
+    if (distinct===0) zero++; else if (distinct===1) one++; else { twoPlus++; if (classes.size === 1) { agree++; resolved++; } else if (adjByWord.has(c.upper)) { adjudicatedResolved++; resolved++; } else disagreements++; }
+  }
   const coverage = { classes: countBy(queue.candidates.map(c => c.predictedClass)), lengths: countBy(queue.candidates.map(c => String(c.length))), strata: countBy(queue.candidates.flatMap(c => c.strata)) };
-  const readiness: GoldenReadiness = queue.candidateCount >= queue.targetCount && zero===0 && one===0 && disagreements===0 ? 'READY' : queue.candidateCount ? 'DRAFT' : 'NOT_READY';
-  return { targetCount: queue.targetCount, candidateCount: queue.candidateCount, shortfall: queue.shortfall, reviews: { zero, one, twoPlus, agreementRate: twoPlus ? Number((agree / twoPlus).toFixed(4)) : null, unresolvedDisagreements: disagreements, adjudicatedCount: adjudications.length, resolvedCount: Math.max(0, resolved) }, coverage, readiness };
+  const gates = readinessGates(queue, disagreements, zero, one);
+  const readiness: GoldenReadiness = Object.values(gates).every(Boolean) ? 'READY' : queue.candidateCount ? 'DRAFT' : 'NOT_READY';
+  return { targetCount: queue.targetCount, fixedHumanGoldenTarget: HUMAN_GOLDEN_TARGET, candidateCount: queue.candidateCount, shortfall: queue.shortfall, reviews: { zero, one, twoPlus, agreementRate: twoPlus ? Number((agree / twoPlus).toFixed(4)) : null, unresolvedDisagreements: disagreements, adjudicatedCount: adjudicatedResolved, resolvedCount: Math.max(0, resolved) }, coverage, gates, readiness };
 }
 const countBy = (xs: string[]) => xs.reduce<Record<string, number>>((m,x) => (m[x]=(m[x]??0)+1, m), {});
 
+function readinessGates(queue: GoldenQueueArtifact, unresolvedDisagreements: number, zero: number, one: number) {
+  return { fixedTargetMet: queue.candidateCount >= HUMAN_GOLDEN_TARGET, targetCountNotLowered: queue.targetCount >= HUMAN_GOLDEN_TARGET, allResolved: zero === 0 && one === 0 && unresolvedDisagreements === 0, queueChecksumFrozen: validateQueue(queue).length === 0 };
+}
+
 export function publishGolden(queue: GoldenQueueArtifact, reviews: HumanReview[], adjudications: GoldenAdjudication[] = [], opts: { draft?: boolean, version?: string } = {}): PublishedGoldenArtifact {
-  const { items, unresolved } = resolveItems(queue, reviews, adjudications);
+  const { items, unresolved, stats } = resolveItems(queue, reviews, adjudications);
   const duplicateGate = new Set(items.map(i => i.word)).size === items.length;
-  const gates = { targetCountMet: queue.candidateCount >= queue.targetCount, allResolved: unresolved.length === 0, noDuplicates: duplicateGate, queueChecksumFrozen: !!queue.checksum, splitIntegrity: items.every(i => ['train','dev','holdout'].includes(i.split)) };
+  const gates = { ...stats.gates, noDuplicates: duplicateGate, splitIntegrity: items.every(i => ['train','dev','holdout'].includes(i.split)) };
   const ready = Object.values(gates).every(Boolean); if (!ready && !opts.draft) throw new Error(`Golden Set is NOT_READY: ${JSON.stringify({ gates, unresolvedCount: unresolved.length, shortfall: queue.shortfall })}`);
-  const unsignedManifest = { schemaVersion: 'golden-manifest-v1' as const, version: opts.version ?? 'human-golden-v1', readiness: (ready ? 'READY' : (items.length ? 'PARTIAL' : 'DRAFT')) as GoldenReadiness, targetCount: queue.targetCount, itemCount: items.length, unresolvedCount: unresolved.length, checksum: '', queueChecksum: queue.checksum, source: queue.source, splitPolicy: { version: GOLDEN_SPLIT_POLICY_VERSION, train: 70, dev: 15, holdout: 15, protectedHoldout: true as const }, gates };
+  const unsignedManifest = { schemaVersion: 'golden-manifest-v1' as const, version: opts.version ?? 'human-golden-v1', readiness: stats.readiness, targetCount: queue.targetCount, itemCount: items.length, unresolvedCount: unresolved.length, checksum: '', queueChecksum: queue.checksum, source: queue.source, splitPolicy: { version: GOLDEN_SPLIT_POLICY_VERSION, train: 70, dev: 15, holdout: 15, protectedHoldout: true as const }, gates };
   const checksum = sha256({ manifest: { ...unsignedManifest, checksum: undefined }, items });
   return { schemaVersion: 'published-human-golden-v1', manifest: { ...unsignedManifest, checksum }, items };
 }
 
+export function validatePublishedGolden(golden: PublishedGoldenArtifact): string[] {
+  const errors: string[] = [];
+  if (golden.schemaVersion !== 'published-human-golden-v1') errors.push('golden: invalid schemaVersion');
+  if (golden.manifest?.schemaVersion !== 'golden-manifest-v1') errors.push('golden.manifest: invalid schemaVersion');
+  if (golden.manifest?.itemCount !== golden.items?.length) errors.push('golden.manifest: itemCount mismatch');
+  const expected = sha256({ manifest: { ...golden.manifest, checksum: undefined }, items: golden.items });
+  if (!golden.manifest?.checksum || golden.manifest.checksum !== expected) errors.push('golden.manifest: checksum mismatch');
+  return errors;
+}
+
 export function evaluateGolden(golden: PublishedGoldenArtifact, dictionary: DictionaryArtifact) {
+  const integrity = validatePublishedGolden(golden); if (integrity.length) throw new Error(integrity.join('\n'));
   const byWord = new Map(dictionary.records.map(r => [r.upper, r]));
   const rows = golden.items.map(i => ({ item: i, actual: byWord.get(i.word)?.class ?? 'MISSING' }));
   const classes = GOLDEN_CLASSES; const confusion: Record<string, Record<string, number>> = {}; for (const c of classes) confusion[c] = Object.fromEntries(classes.map(k => [k,0]));

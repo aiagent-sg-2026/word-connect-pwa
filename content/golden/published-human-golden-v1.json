@@ -7,7 +7,7 @@
     "targetCount": 2000,
     "itemCount": 0,
     "unresolvedCount": 187,
-    "checksum": "b93f2572286685d3b8c4f515e21d3beedfdacb4df033b8115d0ea60bf9925cdb",
+    "checksum": "938077ef1f95493b0375a0dccd70e67b711900cfe7057e83f449d458c2c19d91",
     "queueChecksum": "df7f0f7182df6c606571901a416f046482b638d2fa8101d7f66a3f7247c30dc2",
     "source": {
       "dictionaryVersion": "dict-qa-seed-v1",
@@ -26,10 +26,11 @@
       "protectedHoldout": true
     },
     "gates": {
-      "targetCountMet": false,
+      "fixedTargetMet": false,
+      "targetCountNotLowered": true,
       "allResolved": false,
-      "noDuplicates": true,
       "queueChecksumFrozen": true,
+      "noDuplicates": true,
       "splitIntegrity": true
     }
   },

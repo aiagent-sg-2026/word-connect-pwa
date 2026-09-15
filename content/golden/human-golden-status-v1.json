@@ -1,5 +1,6 @@
 {
   "targetCount": 2000,
+  "fixedHumanGoldenTarget": 2000,
   "candidateCount": 187,
   "shortfall": 1813,
   "reviews": {
@@ -54,6 +55,12 @@
       "flag:abbreviation": 1,
       "morphology:plural": 3
     }
+  },
+  "gates": {
+    "fixedTargetMet": false,
+    "targetCountNotLowered": true,
+    "allResolved": false,
+    "queueChecksumFrozen": true
   },
   "readiness": "DRAFT"
 }

@@ -3,7 +3,7 @@
   "queueVersion": "human-golden-queue-v1",
   "queueChecksum": "30e9d84fc23034ccb0eabac97f9e8f05b18f4218585e308b703346c2cd768ceb",
   "candidateCount": 2000,
-  "instructions": "Fill reviewerId, reviewedAt ISO timestamp, source=human-review-v1, class TARGET/BONUS/ACCEPT_ONLY/BLOCKED/REVIEW, confidence 0..1, optional note. Packet intentionally omits scorer outputs and policy strata.",
+  "instructions": "Fill reviewerId, reviewedAt ISO timestamp, source=human-review-v1, class TARGET/BONUS/ACCEPT_ONLY/BLOCKED/REVIEW, confidence 0..1, optional note. Packet intentionally omits model outputs and policy metadata.",
   "rows": [
     {
       "queueVersion": "human-golden-queue-v1",

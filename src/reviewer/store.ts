@@ -1,0 +1,13 @@
+import type { HumanReview } from '../golden/contracts.ts';
+
+const DB = 'word-connect-human-reviewer-v1';
+const VERSION = 1;
+type StoredReview = HumanReview & { id: string };
+type History = StoredReview & { changedAt: string };
+function open(): Promise<IDBDatabase> { return new Promise((resolve, reject) => { const r = indexedDB.open(DB, VERSION); r.onupgradeneeded = () => { r.result.createObjectStore('settings'); r.result.createObjectStore('reviews', { keyPath: 'id' }); r.result.createObjectStore('history', { autoIncrement: true }); }; r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); }); }
+async function tx<T>(stores: string[], mode: IDBTransactionMode, work: (t: IDBTransaction) => Promise<T>): Promise<T> { const db = await open(); const t = db.transaction(stores, mode); const result = await work(t); await new Promise<void>((resolve, reject) => { t.oncomplete = () => resolve(); t.onerror = () => reject(t.error); t.onabort = () => reject(t.error); }); db.close(); return result; }
+const request = <T>(r: IDBRequest<T>) => new Promise<T>((resolve, reject) => { r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); });
+export async function getReviewerId(): Promise<string> { return tx(['settings'], 'readonly', async t => String(await request(t.objectStore('settings').get('reviewerId') as IDBRequest<unknown>) || '')); }
+export async function setReviewerId(id: string): Promise<void> { const value=id.trim(); if (value.length < 3) throw new Error('Reviewer ID must be at least 3 characters'); await tx(['settings'], 'readwrite', async t => { t.objectStore('settings').put(value, 'reviewerId'); return undefined; }); }
+export async function getReviews(reviewerId: string, queueVersion: string, queueChecksum: string): Promise<HumanReview[]> { return tx(['reviews'], 'readonly', async t => (await request(t.objectStore('reviews').getAll() as IDBRequest<StoredReview[]>)).filter(r => r.reviewerId === reviewerId && r.queueVersion === queueVersion && r.queueChecksum === queueChecksum).map(({id: _id, ...r}) => r)); }
+export async function saveReview(review: HumanReview): Promise<void> { if (review.reviewerId.trim().length < 3 || !review.queueChecksum || !review.queueVersion) throw new Error('Review identity is invalid'); const stored = {...review, id: `${review.queueChecksum}\u0000${review.reviewerId}\u0000${review.word}`}; await tx(['reviews','history'], 'readwrite', async t => { t.objectStore('history').add({...stored, changedAt: new Date().toISOString()} satisfies History); t.objectStore('reviews').put(stored); return undefined; }); }

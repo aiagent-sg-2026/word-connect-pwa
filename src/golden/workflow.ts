@@ -86,7 +86,7 @@ export function buildGoldenQueue(dictionary: DictionaryArtifact, targetCount = H
 export function exportBlindPacket(queue: GoldenQueueArtifact) {
   assertValidQueue(queue);
   const rows = queue.candidates.map(c => ({ queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, word: c.upper, candidateId: c.candidateId, length: c.length, reviewerId: '', reviewedAt: '', source: 'human-review-v1', class: '', confidence: '', note: '' }));
-  return { schemaVersion: 'blind-human-review-packet-v1', queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, candidateCount: queue.candidateCount, instructions: 'Fill reviewerId, reviewedAt ISO timestamp, source=human-review-v1, class TARGET/BONUS/ACCEPT_ONLY/BLOCKED/REVIEW, confidence 0..1, optional note. Packet intentionally omits scorer outputs and policy strata.', rows };
+  return { schemaVersion: 'blind-human-review-packet-v1', queueVersion: queue.source.queueVersion, queueChecksum: queue.checksum, candidateCount: queue.candidateCount, instructions: 'Fill reviewerId, reviewedAt ISO timestamp, source=human-review-v1, class TARGET/BONUS/ACCEPT_ONLY/BLOCKED/REVIEW, confidence 0..1, optional note. Packet intentionally omits model outputs and policy metadata.', rows };
 }
 export function toCsv(rows: Record<string, unknown>[]): string {
   const headers = Object.keys(rows[0] ?? { queueVersion:'', queueChecksum:'', word:'', candidateId:'', length:'', reviewerId:'', reviewedAt:'', source:'', class:'', confidence:'', note:'' });

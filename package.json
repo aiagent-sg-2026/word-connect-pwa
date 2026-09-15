@@ -30,7 +30,8 @@
     "reviewer:prepare": "node scripts/reviewer-prepare.mjs",
     "reviewer:build": "tsc && vite build -c vite.reviewer.config.ts",
     "reviewer:verify": "npm run reviewer:prepare && npm run reviewer:build && node scripts/reviewer-verify.mjs",
-    "reviewer:smoke": "node scripts/reviewer-smoke.mjs"
+    "reviewer:smoke": "node scripts/reviewer-smoke.mjs",
+    "layout:verify": "node scripts/layout-verify.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "latest",

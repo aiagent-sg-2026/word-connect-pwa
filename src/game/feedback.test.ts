@@ -36,6 +36,30 @@ describe('feedback', () => {
     expect(() => createFeedbackController({ sound: true, haptics: true }).play('invalid')).not.toThrow();
   });
 
+  it('updates sound and haptics without creating another audio context', () => {
+    const factory = vi.fn(() => undefined as never);
+    const vibrate = vi.fn(() => true);
+    const controller = createFeedbackController({ sound: true, haptics: true, audioContextFactory: factory, vibrate });
+    controller.play('tile');
+    controller.updatePreferences({ sound: false, haptics: false });
+    controller.play('target');
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect(vibrate).toHaveBeenCalledTimes(1);
+    controller.updatePreferences({ sound: true, haptics: true });
+    controller.play('hint');
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect(vibrate).toHaveBeenCalledTimes(2);
+  });
+
+  it('primes audio once and safely contains adapter failures', () => {
+    const factory = vi.fn(() => { throw new Error('blocked'); });
+    const vibrate = vi.fn(() => { throw new Error('unsupported'); });
+    const controller = createFeedbackController({ sound: true, haptics: true, audioContextFactory: factory, vibrate });
+    expect(() => controller.prime()).not.toThrow();
+    expect(() => controller.play('target')).not.toThrow();
+    expect(factory).toHaveBeenCalledTimes(1);
+  });
+
   it('does not treat reduced motion as an audio or haptic disable', () => {
     const factory = vi.fn(() => undefined as never);
     const vibrate = vi.fn(() => true);

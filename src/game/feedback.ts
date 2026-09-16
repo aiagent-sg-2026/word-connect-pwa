@@ -39,31 +39,51 @@ function browserAudioContext(): AudioContextLike | undefined {
 }
 
 export function createFeedbackController(options: FeedbackControllerOptions = {}) {
-  const soundEnabled = options.sound ?? options.settings?.sound ?? true;
-  const hapticsEnabled = options.haptics ?? options.settings?.haptics ?? true;
+  let soundEnabled = options.sound ?? options.settings?.sound ?? true;
+  let hapticsEnabled = options.haptics ?? options.settings?.haptics ?? true;
   const vibrate = options.vibrate ?? (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function' ? navigator.vibrate.bind(navigator) : undefined);
   const makeAudio = options.audioContextFactory ?? browserAudioContext;
   let audio: AudioContextLike | undefined;
   let audioAttempted = false;
 
+  function ensureAudio(): AudioContextLike | undefined {
+    if (!soundEnabled) return undefined;
+    if (!audioAttempted) {
+      audioAttempted = true;
+      try { audio = makeAudio(); } catch { audio = undefined; }
+    }
+    return audio;
+  }
+
+  function prime(): void {
+    const context = ensureAudio();
+    if (context?.state === 'suspended') void context.resume().catch(() => undefined);
+  }
+
   function play(cue: FeedbackCue): void {
-    if (soundEnabled) {
-      if (!audioAttempted) { audioAttempted = true; audio = makeAudio(); }
-      if (audio) {
+    const context = ensureAudio();
+    if (context) {
+      try {
+        if (context.state === 'suspended') void context.resume().catch(() => undefined);
         const definition = AUDIO_DEFINITIONS[cue];
-        const oscillator = audio.createOscillator();
-        const gain = audio.createGain();
-        const start = audio.currentTime;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        const start = context.currentTime;
         oscillator.type = definition.type;
         oscillator.frequency.setValueAtTime(definition.frequency, start);
         gain.gain.setValueAtTime(0.06, start);
         gain.gain.exponentialRampToValueAtTime(0.001, start + definition.duration);
-        oscillator.connect(gain); gain.connect(audio.destination);
+        oscillator.connect(gain); gain.connect(context.destination);
         oscillator.start(start); oscillator.stop(start + definition.duration);
-      }
+      } catch {}
     }
-    if (hapticsEnabled) vibrate?.([...HAPTIC_PATTERNS[cue]]);
+    if (hapticsEnabled) { try { vibrate?.([...HAPTIC_PATTERNS[cue]]); } catch {} }
   }
 
-  return { play, get audioContext(): AudioContextLike | undefined { return audio; } };
+  function updatePreferences(preferences: Pick<SettingsRecord, 'sound' | 'haptics'>): void {
+    soundEnabled = preferences.sound;
+    hapticsEnabled = preferences.haptics;
+  }
+
+  return { play, prime, updatePreferences, get audioContext(): AudioContextLike | undefined { return audio; } };
 }

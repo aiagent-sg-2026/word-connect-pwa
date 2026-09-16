@@ -39,6 +39,8 @@ jobs:
         run: npx playwright install --with-deps chromium webkit
       - name: Verify single-viewport mobile gameplay
         run: npm run layout:verify
+      - name: Verify V1.1 gameplay integration in Chromium and WebKit
+        run: npm run v1.1:verify
       - name: Build and verify Human Golden Reviewer
         run: npm run reviewer:verify
       - name: Assemble Pages artifact

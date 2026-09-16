@@ -30,7 +30,9 @@ try {
       const hint = await check('hint', ['.sheet','.sheet-close','.hint-choice[data-hint-kind="letter"]','.hint-choice[data-hint-kind="first-letter"]','.hint-choice[data-hint-kind="word"]']);
       await page.click('.sheet-close');
       await page.click('#settings');
-      const settings = await check('settings', ['.sheet','.sheet-close','#export','.import','#reset','.build-meta']);
+      const settings = await check('settings', ['.sheet','.sheet-close','#export','.import','#reset','.build-meta','#setting-sound','#setting-haptics','#setting-reducedMotion']);
+      const settingSemantics = await page.evaluate(() => [...document.querySelectorAll('[data-setting]')].map(el => ({ role:el.getAttribute('role'), checked:el.getAttribute('aria-checked'), state:el.querySelector('.setting-state')?.textContent, size:[el.getBoundingClientRect().width,el.getBoundingClientRect().height] })));
+      if (settingSemantics.length !== 3 || settingSemantics.some(s => s.role !== 'switch' || !['true','false'].includes(s.checked || '') || !['On','Off'].includes(s.state || '') || s.size[0] < 44 || s.size[1] < 44)) throw new Error(`${engineName} ${width}x${height} setting semantics failed: ${JSON.stringify(settingSemantics)}`);
       if(errors.length||gameplay.bad.length||hint.bad.length||settings.bad.length) throw new Error(`${engineName} ${width}x${height} layout failed: ${JSON.stringify({errors,gameplay,hint,settings})}`);
       console.log(`layout ${engineName} ${width}x${height}: PASS (${gameplay.scroll[0]}x${gameplay.scroll[1]})`); await context.close();
     }

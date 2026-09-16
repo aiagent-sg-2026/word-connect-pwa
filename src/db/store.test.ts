@@ -4,6 +4,8 @@ import type { ProgressRecord } from '../types';
 import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, importSave, openGameDb, submitWord, useHint, verifySchema, PROFILE_ID } from './store';
 
 async function deleteDb() { await closeGameDb(); await new Promise<void>((resolve, reject) => { const r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = () => resolve(); r.onerror = () => reject(r.error); r.onblocked = () => resolve(); }); }
+function stable(value: unknown): string { if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value as Record<string, unknown>).sort().map(k => `${JSON.stringify(k)}:${stable((value as Record<string, unknown>)[k])}`).join(',')}}`; return JSON.stringify(value); }
+async function resign(save: any) { const { integrity, ...rest } = save; const bytes = new TextEncoder().encode(stable(rest)); const hash = await crypto.subtle.digest('SHA-256', bytes); save.integrity = { ...integrity, digest: [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('') }; return save; }
 async function seedProductionV1(progress: ProgressRecord[] = [{ ...baseV1Progress('L001'), foundTargets: ['CAT', 'ACT'], completed: true, completedAt: 'old-done' }]) {
   const v1 = LEGACY_CAMPAIGNS[0];
   const db = await openGameDb();
@@ -50,6 +52,20 @@ describe('indexeddb persistence', () => {
     const res = await useHint(CAMPAIGN.levels[0]);
     expect(res.hint).toBe('CAT');
     expect(res.profile.coins).toBe(15);
+    expect(res.progress.revealedWords).toEqual(['CAT']);
+    expect((await getProgress(CAMPAIGN.levels[0])).revealedWords).toEqual(['CAT']);
+  });
+  it('persists letter hints and never targets a solved word', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    await submitWord(level, 'CAT');
+    const res = await useHint(level, 'first-letter');
+    expect(res.hint).toBe('ACT');
+    expect(res.profile.coins).toBe(25); // 25 + 5 for CAT - 5 for the hint
+    expect(res.progress.revealedLetters?.ACT).toEqual([0]);
+    await closeGameDb();
+    await bootstrapData();
+    expect((await getProgress(level)).revealedLetters?.ACT).toEqual([0]);
   });
   it('accept-only TSAR on L004 gives no coins and no progression', async () => {
     await bootstrapData();
@@ -67,15 +83,24 @@ describe('indexeddb persistence', () => {
     await getProgress(level);
     await expect(getProgress({...level, hash:'changed'})).rejects.toThrow('REC_CONTENT_MISMATCH');
   });
-  it('exports and validates import atomically', async () => {
+  it('exports and validates import atomically with durable hint state', async () => {
     await bootstrapData();
     await submitWord(CAMPAIGN.levels[0], 'CAT');
+    await useHint(CAMPAIGN.levels[0], 'first-letter');
     const save: any = await exportSave();
     expect(save.campaignVersion).toBe('campaign-en-v2');
     expect(save.campaignHash).toBe(CAMPAIGN.campaignHash);
     await deleteDb(); await bootstrapData();
     await expect(importSave(save)).resolves.toBeUndefined();
+    expect((await getProgress(CAMPAIGN.levels[0])).revealedLetters?.ACT).toEqual([0]);
     await expect(importSave({envelope:'word-connect-save-v1', campaignVersion: CAMPAIGN.campaignVersion, campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
+  });
+  it('rejects signed imports with unsafe revealed hint state', async () => {
+    await bootstrapData();
+    await useHint(CAMPAIGN.levels[0], 'first-letter');
+    const invalid: any = await exportSave();
+    invalid.data.progress[0].revealedLetters = { DOG: [0], CAT: [99] };
+    await expect(importSave(await resign(invalid))).rejects.toThrow('REC_IMPORT_INVALID');
   });
   it('rejects corrupted import integrity before mutating existing save data', async () => {
     await bootstrapData();

@@ -1,7 +1,7 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import { validateCampaign } from '../content/validate';
-import { resolveOutcome, targetHint } from '../game/logic';
+import { resolveOutcome } from '../game/logic';
 import type { LevelContract, ProfileRecord, ProgressRecord, SettingsRecord, WordOutcome } from '../types';
 
 type AnyDb = IDBPDatabase<any>;
@@ -175,7 +175,7 @@ export async function getProgress(level: LevelContract): Promise<ProgressRecord>
   const key = [PROFILE_ID, level.campaignVersion, level.levelId];
   let p = await db.get('progress', key) as ProgressRecord | undefined;
   if (!p) {
-    p = { profileId: PROFILE_ID, campaignVersion: level.campaignVersion, levelId: level.levelId, levelRevision: level.revision, levelHash: level.hash, foundTargets: [], foundBonus: [], completed: false, updatedAt: now() };
+    p = { profileId: PROFILE_ID, campaignVersion: level.campaignVersion, levelId: level.levelId, levelRevision: level.revision, levelHash: level.hash, foundTargets: [], foundBonus: [], completed: false, revealedLetters: {}, revealedWords: [], updatedAt: now() };
     await db.put('progress', p);
   }
   if (p.levelRevision !== level.revision || p.levelHash !== level.hash) throw new Error('REC_CONTENT_MISMATCH');
@@ -209,19 +209,35 @@ export async function submitWord(level: LevelContract, word: string): Promise<{p
   });
 }
 
-export async function useHint(level: LevelContract): Promise<{hint?: string; profile: ProfileRecord; progress: ProgressRecord; charged: boolean}> {
+export type HintKind = 'letter' | 'first-letter' | 'word';
+export const HINT_COSTS: Record<HintKind, number> = { letter: 3, 'first-letter': 5, word: 10 };
+
+export async function useHint(level: LevelContract, kind: HintKind = 'word'): Promise<{hint?: string; profile: ProfileRecord; progress: ProgressRecord; charged: boolean; kind: HintKind}> {
   return material(async () => {
     const db = await openGameDb();
     const tx = db.transaction(['profiles','progress','economyEvents'], 'readwrite');
     const profile = await tx.objectStore('profiles').get(PROFILE_ID) as ProfileRecord;
     let progress = await tx.objectStore('progress').get([PROFILE_ID, level.campaignVersion, level.levelId]) as ProgressRecord | undefined;
-    progress ||= { profileId: PROFILE_ID, campaignVersion: level.campaignVersion, levelId: level.levelId, levelRevision: level.revision, levelHash: level.hash, foundTargets: [], foundBonus: [], completed: false, updatedAt: now() };
+    progress ||= { profileId: PROFILE_ID, campaignVersion: level.campaignVersion, levelId: level.levelId, levelRevision: level.revision, levelHash: level.hash, foundTargets: [], foundBonus: [], completed: false, revealedLetters: {}, revealedWords: [], updatedAt: now() };
     if (progress.levelHash !== level.hash || progress.levelRevision !== level.revision) throw new Error('REC_CONTENT_MISMATCH');
-    const hint = targetHint(level, progress);
+    const hint = level.targets.find(word => {
+      if (progress.foundTargets.includes(word) || progress.revealedWords?.includes(word)) return false;
+      const indexes = progress.revealedLetters?.[word] || [];
+      if (kind === 'word') return true;
+      if (kind === 'first-letter') return !indexes.includes(0);
+      return indexes.length < word.length;
+    });
     let charged = false;
-    if (hint && profile.coins >= 10) { charged = true; profile.coins -= 10; profile.hintsUsed++; profile.updatedAt = now(); await tx.objectStore('profiles').put(profile); await tx.objectStore('progress').put(progress); await tx.objectStore('economyEvents').add({ profileId: PROFILE_ID, levelId: level.levelId, kind: 'HINT', coinsDelta: -10, hint, createdAt: now() }); }
+    const cost = HINT_COSTS[kind];
+    if (hint && profile.coins >= cost) {
+      charged = true; profile.coins -= cost; profile.hintsUsed++; profile.updatedAt = now();
+      progress.revealedLetters ||= {}; progress.revealedWords ||= [];
+      if (kind === 'word') progress.revealedWords = [...new Set([...progress.revealedWords, hint])];
+      else { const indexes = progress.revealedLetters[hint] || []; const next = kind === 'first-letter' ? 0 : Array.from({ length: hint.length }, (_, i) => i).find(i => !indexes.includes(i))!; progress.revealedLetters[hint] = [...new Set([...indexes, next])].filter(i => i >= 0 && i < hint.length).sort((a,b)=>a-b); }
+      progress.updatedAt = now(); await tx.objectStore('profiles').put(profile); await tx.objectStore('progress').put(progress); await tx.objectStore('economyEvents').add({ profileId: PROFILE_ID, levelId: level.levelId, kind: 'HINT', coinsDelta: -cost, hint, hintKind: kind, createdAt: now() });
+    }
     await tx.done;
-    return { hint, profile, progress, charged };
+    return { hint, profile, progress, charged, kind };
   });
 }
 
@@ -263,6 +279,13 @@ async function validateSaveEnvelope(envelope: any): Promise<Record<string, unkno
     const targetSet = new Set(level.targets); const bonusSet = new Set(level.bonus);
     if (new Set(p.foundTargets).size !== p.foundTargets.length || new Set(p.foundBonus).size !== p.foundBonus.length) throw new Error('REC_IMPORT_INVALID');
     if (!p.foundTargets.every(w => targetSet.has(w)) || !p.foundBonus.every(w => bonusSet.has(w))) throw new Error('REC_IMPORT_INVALID');
+    if (p.revealedWords !== undefined && (!Array.isArray(p.revealedWords) || new Set(p.revealedWords).size !== p.revealedWords.length || !p.revealedWords.every(w => targetSet.has(w)))) throw new Error('REC_IMPORT_INVALID');
+    if (p.revealedLetters !== undefined) {
+      if (!p.revealedLetters || typeof p.revealedLetters !== 'object' || Array.isArray(p.revealedLetters)) throw new Error('REC_IMPORT_INVALID');
+      for (const [word, indexes] of Object.entries(p.revealedLetters)) {
+        if (!targetSet.has(word) || !Array.isArray(indexes) || new Set(indexes).size !== indexes.length || !indexes.every(i => Number.isInteger(i) && i >= 0 && i < word.length)) throw new Error('REC_IMPORT_INVALID');
+      }
+    }
   }
   return out;
 }

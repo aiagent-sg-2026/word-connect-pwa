@@ -32,6 +32,9 @@ export interface ProgressRecord {
   foundTargets: string[];
   foundBonus: string[];
   completed: boolean;
+  /** Durable paid-hint state. Optional keeps existing saves backward compatible. */
+  revealedLetters?: Record<string, number[]>;
+  revealedWords?: string[];
   completedAt?: string;
   updatedAt: string;
 }

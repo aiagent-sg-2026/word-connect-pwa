@@ -1,4 +1,5 @@
 import type { LevelContract, ProgressRecord, WordOutcome } from '../types';
+import { rewardFor } from './economy';
 import { normalizeWord } from '../content/validate';
 
 export function levelSets(level: LevelContract) {
@@ -25,8 +26,8 @@ export function resolveOutcome(level: LevelContract, progress: ProgressRecord, w
   const w = normalizeWord(word);
   const sets = levelSets(level);
   if ((progress.foundTargets.includes(w) && sets.target.has(w)) || (progress.foundBonus.includes(w) && sets.bonus.has(w))) return { kind: 'ALREADY_FOUND', word: w, coinsDelta: 0, message: 'Already found' };
-  if (sets.target.has(w)) return { kind: 'TARGET', word: w, coinsDelta: 5, message: 'Great!' };
-  if (sets.bonus.has(w)) return { kind: 'BONUS', word: w, coinsDelta: 1, message: 'Bonus word!' };
+  if (sets.target.has(w)) return { kind: 'TARGET', word: w, coinsDelta: rewardFor('TARGET'), message: 'Great!' };
+  if (sets.bonus.has(w)) return { kind: 'BONUS', word: w, coinsDelta: rewardFor('BONUS'), message: 'Bonus word!' };
   if (sets.acceptOnly.has(w)) return { kind: 'ACCEPT_ONLY', word: w, coinsDelta: 0, message: 'Valid word, not in puzzle' };
   return { kind: 'INVALID', word: w, coinsDelta: 0, message: 'Not in this puzzle' };
 }

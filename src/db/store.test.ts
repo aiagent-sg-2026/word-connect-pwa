@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import type { ProgressRecord } from '../types';
-import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, getSettings, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
+import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, getSettings, getStats, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
 
 async function deleteDb() { await closeGameDb(); await new Promise<void>((resolve, reject) => { const r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = () => resolve(); r.onerror = () => reject(r.error); r.onblocked = () => resolve(); }); }
 function stable(value: unknown): string { if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value as Record<string, unknown>).sort().map(k => `${JSON.stringify(k)}:${stable((value as Record<string, unknown>)[k])}`).join(',')}}`; return JSON.stringify(value); }
@@ -49,6 +49,33 @@ describe('indexeddb persistence', () => {
     expect(res.outcome.kind).toBe('ALREADY_FOUND');
     expect(res.profile.coins).toBe(30);
   });
+  it('persists combo transitions and aggregate stats for all outcomes', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    await submitWord(level, 'CAT');
+    expect((await getProfile()).combo).toBe(1);
+    await submitWord(level, 'AT');
+    expect((await getProfile()).combo).toBe(2);
+    await submitWord(level, 'ZZZ');
+    expect((await getProfile()).combo).toBe(0);
+    await submitWord(level, 'CAT');
+    expect((await getProfile()).combo).toBe(0);
+    const stats = await getStats();
+    expect(stats).toMatchObject({ submissions: 4, targets: 1, bonus: 1, invalid: 1, alreadyFound: 1, bestCombo: 2 });
+    expect(await (await openGameDb()).getAll('gameEvents')).toHaveLength(4);
+  });
+  it('backfills a missing v3 aggregate from durable daily, economy, and completed progress', async () => {
+    await bootstrapData();
+    const db = await openGameDb();
+    await db.delete('statsAggregate', PROFILE_ID);
+    await db.put('statsDaily', { profileId: PROFILE_ID, date: '2026-09-16', submissions: 4, targets: 2, bonus: 1 });
+    await db.put('economyEvents', { profileId: PROFILE_ID, levelId: 'L001', word: 'CAT', kind: 'TARGET', coinsDelta: 5, createdAt: 'old' });
+    await db.put('economyEvents', { profileId: PROFILE_ID, levelId: 'L001', word: 'ACT', kind: 'TARGET', coinsDelta: 25, createdAt: 'old' });
+    await db.put('economyEvents', { profileId: PROFILE_ID, levelId: 'L001', kind: 'HINT', hint: 'CAT', hintKind: 'word', coinsDelta: -10, createdAt: 'old' });
+    await db.put('progress', { profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, levelId: 'L001', levelRevision: CAMPAIGN.levels[0].revision, levelHash: CAMPAIGN.levels[0].hash, foundTargets: ['CAT', 'ACT'], foundBonus: [], completed: true, updatedAt: 'old' });
+    await bootstrapData();
+    expect(await getStats()).toMatchObject({ submissions: 4, targets: 2, bonus: 1, levelsCompleted: 1, coinsEarned: 30, coinsSpent: 10, acceptOnly: 0, invalid: 0, alreadyFound: 0, bestCombo: 0 });
+  });
   it('completion reward is not duplicated after reload/replay', async () => {
     await bootstrapData();
     const level = CAMPAIGN.levels[0];
@@ -65,6 +92,7 @@ describe('indexeddb persistence', () => {
     expect(res.profile.coins).toBe(15);
     expect(res.progress.revealedWords).toEqual(['CAT']);
     expect((await getProgress(CAMPAIGN.levels[0])).revealedWords).toEqual(['CAT']);
+    expect((await getStats()).coinsSpent).toBe(10);
   });
   it('persists letter hints and never targets a solved word', async () => {
     await bootstrapData();
@@ -148,6 +176,29 @@ describe('indexeddb persistence', () => {
     await expect(importSave(save)).resolves.toBeUndefined();
     expect((await getProgress(CAMPAIGN.levels[0])).revealedLetters?.ACT).toEqual([0]);
     await expect(importSave({envelope:'word-connect-save-v1', campaignVersion: CAMPAIGN.campaignVersion, campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
+  });
+  it('does not export diagnostic game events and preserves aggregate stats through import', async () => {
+    await bootstrapData();
+    await submitWord(CAMPAIGN.levels[0], 'CAT');
+    await useHint(CAMPAIGN.levels[0], 'letter');
+    const save: any = await exportSave();
+    expect(save.data.gameEvents).toBeUndefined();
+    const expected = await getStats();
+    await deleteDb(); await bootstrapData(); await importSave(save);
+    expect(await getStats()).toMatchObject({ submissions: expected.submissions, coinsSpent: expected.coinsSpent, bestCombo: expected.bestCombo });
+  });
+  it('reconstructs aggregate history when importing a legacy v2 save without statsAggregate', async () => {
+    await bootstrapData();
+    await submitWord(CAMPAIGN.levels[0], 'CAT');
+    await useHint(CAMPAIGN.levels[0], 'word');
+    await submitWord(CAMPAIGN.levels[0], 'ACT');
+    const save: any = await exportSave();
+    delete save.data.statsAggregate;
+    await resign(save);
+    await deleteDb();
+    await bootstrapData();
+    await importSave(save);
+    expect(await getStats()).toMatchObject({ submissions: 2, targets: 2, bonus: 0, levelsCompleted: 1, coinsEarned: 30, coinsSpent: 10, acceptOnly: 0, invalid: 0, alreadyFound: 0, bestCombo: 0 });
   });
   it('preserves settings through signed export and import', async () => {
     await bootstrapData();

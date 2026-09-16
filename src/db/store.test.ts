@@ -67,6 +67,49 @@ describe('indexeddb persistence', () => {
     await bootstrapData();
     expect((await getProgress(level)).revealedLetters?.ACT).toEqual([0]);
   });
+  it('charges 3 coins for a letter hint and reveals letters sequentially durably', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    const first = await useHint(level, 'letter');
+    expect(first.hint).toBe('CAT');
+    expect(first.charged).toBe(true);
+    expect(first.profile.coins).toBe(22);
+    expect(first.progress.revealedLetters?.CAT).toEqual([0]);
+    const second = await useHint(level, 'letter');
+    expect(second.hint).toBe('CAT');
+    expect(second.profile.coins).toBe(19);
+    expect(second.progress.revealedLetters?.CAT).toEqual([0, 1]);
+    await closeGameDb();
+    await bootstrapData();
+    expect((await getProgress(level)).revealedLetters?.CAT).toEqual([0, 1]);
+  });
+  it('does not charge or mutate when there are insufficient coins for a hint', async () => {
+    await bootstrapData();
+    const db = await openGameDb();
+    const profile: any = await db.get('profiles', PROFILE_ID);
+    profile.coins = 2;
+    await db.put('profiles', profile);
+    const level = CAMPAIGN.levels[0];
+    const beforeProgress = await getProgress(level);
+    const result = await useHint(level, 'letter');
+    expect(result.hint).toBe('CAT');
+    expect(result.charged).toBe(false);
+    expect(result.profile.coins).toBe(2);
+    expect(result.progress).toEqual(beforeProgress);
+    expect(await getProfile()).toEqual(profile);
+  });
+  it('skips a fully letter-revealed target for Reveal Word', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    await useHint(level, 'letter');
+    await useHint(level, 'letter');
+    await useHint(level, 'letter');
+    const result = await useHint(level, 'word');
+    expect(result.hint).toBe('ACT');
+    expect(result.charged).toBe(true);
+    expect(result.progress.revealedWords).toEqual(['ACT']);
+    expect(result.profile.coins).toBe(6);
+  });
   it('accept-only TSAR on L004 gives no coins and no progression', async () => {
     await bootstrapData();
     const before = await getProfile();
@@ -100,6 +143,21 @@ describe('indexeddb persistence', () => {
     await useHint(CAMPAIGN.levels[0], 'first-letter');
     const invalid: any = await exportSave();
     invalid.data.progress[0].revealedLetters = { DOG: [0], CAT: [99] };
+    await expect(importSave(await resign(invalid))).rejects.toThrow('REC_IMPORT_INVALID');
+  });
+  it('rejects malformed progress records without mutating the existing save', async () => {
+    await bootstrapData();
+    const before = await getProfile();
+    await getProgress(CAMPAIGN.levels[0]);
+    const invalid: any = await exportSave();
+    invalid.data.progress[0].foundTargets = undefined;
+    await expect(importSave(await resign(invalid))).rejects.toThrow('REC_IMPORT_INVALID');
+    expect(await getProfile()).toEqual(before);
+  });
+  it('rejects null progress entries with REC_IMPORT_INVALID', async () => {
+    await bootstrapData();
+    const invalid: any = await exportSave();
+    invalid.data.progress.push(null);
     await expect(importSave(await resign(invalid))).rejects.toThrow('REC_IMPORT_INVALID');
   });
   it('rejects corrupted import integrity before mutating existing save data', async () => {

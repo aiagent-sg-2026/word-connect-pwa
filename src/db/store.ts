@@ -223,7 +223,7 @@ export async function useHint(level: LevelContract, kind: HintKind = 'word'): Pr
     const hint = level.targets.find(word => {
       if (progress.foundTargets.includes(word) || progress.revealedWords?.includes(word)) return false;
       const indexes = progress.revealedLetters?.[word] || [];
-      if (kind === 'word') return true;
+      if (kind === 'word') return indexes.length < word.length;
       if (kind === 'first-letter') return !indexes.includes(0);
       return indexes.length < word.length;
     });
@@ -274,12 +274,13 @@ async function validateSaveEnvelope(envelope: any): Promise<Record<string, unkno
   if (profiles.length !== 1 || profiles[0].profileId !== PROFILE_ID || profiles[0].campaignVersion !== CAMPAIGN.campaignVersion || !Number.isFinite(profiles[0].coins) || profiles[0].coins < 0 || !CAMPAIGN.levels.some(l => l.levelId === profiles[0].currentLevelId)) throw new Error('REC_IMPORT_INVALID');
   const byId = new Map(CAMPAIGN.levels.map(l => [l.levelId, l]));
   for (const p of out.progress as ProgressRecord[]) {
+    if (!p || typeof p !== 'object') throw new Error('REC_IMPORT_INVALID');
     const level = byId.get(p.levelId);
-    if (!level || p.profileId !== PROFILE_ID || p.campaignVersion !== CAMPAIGN.campaignVersion || p.levelRevision !== level.revision || p.levelHash !== level.hash) throw new Error('REC_IMPORT_INVALID');
+    if (!level || p.profileId !== PROFILE_ID || p.campaignVersion !== CAMPAIGN.campaignVersion || p.levelRevision !== level.revision || p.levelHash !== level.hash || !Array.isArray(p.foundTargets) || !Array.isArray(p.foundBonus) || typeof p.completed !== 'boolean') throw new Error('REC_IMPORT_INVALID');
     const targetSet = new Set(level.targets); const bonusSet = new Set(level.bonus);
     if (new Set(p.foundTargets).size !== p.foundTargets.length || new Set(p.foundBonus).size !== p.foundBonus.length) throw new Error('REC_IMPORT_INVALID');
-    if (!p.foundTargets.every(w => targetSet.has(w)) || !p.foundBonus.every(w => bonusSet.has(w))) throw new Error('REC_IMPORT_INVALID');
-    if (p.revealedWords !== undefined && (!Array.isArray(p.revealedWords) || new Set(p.revealedWords).size !== p.revealedWords.length || !p.revealedWords.every(w => targetSet.has(w)))) throw new Error('REC_IMPORT_INVALID');
+    if (!p.foundTargets.every(w => typeof w === 'string' && targetSet.has(w)) || !p.foundBonus.every(w => typeof w === 'string' && bonusSet.has(w))) throw new Error('REC_IMPORT_INVALID');
+    if (p.revealedWords !== undefined && (!Array.isArray(p.revealedWords) || new Set(p.revealedWords).size !== p.revealedWords.length || !p.revealedWords.every(w => typeof w === 'string' && targetSet.has(w)))) throw new Error('REC_IMPORT_INVALID');
     if (p.revealedLetters !== undefined) {
       if (!p.revealedLetters || typeof p.revealedLetters !== 'object' || Array.isArray(p.revealedLetters)) throw new Error('REC_IMPORT_INVALID');
       for (const [word, indexes] of Object.entries(p.revealedLetters)) {

@@ -33,8 +33,10 @@ jobs:
         run: npm test
       - name: Build game
         run: npm run build
-      - name: Install Chromium for mobile layout gate
-        run: npx playwright install --with-deps chromium
+      - name: Verify protected content integrity
+        run: npm run content:verify
+      - name: Install browsers for mobile layout gate
+        run: npx playwright install --with-deps chromium webkit
       - name: Verify single-viewport mobile gameplay
         run: npm run layout:verify
       - name: Build and verify Human Golden Reviewer

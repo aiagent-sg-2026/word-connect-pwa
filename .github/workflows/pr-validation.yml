@@ -1,0 +1,51 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-validation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Build game
+        run: npm run build
+
+      - name: Verify protected content integrity
+        run: npm run content:verify
+
+      - name: Install browsers for mobile gates
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Verify single-viewport mobile gameplay
+        run: npm run layout:verify
+
+      - name: Verify V1.1 gameplay integration in Chromium and WebKit
+        run: npm run v1.1:verify
+
+      - name: Build and verify Human Golden Reviewer
+        run: npm run reviewer:verify

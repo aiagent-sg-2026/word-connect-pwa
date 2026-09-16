@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import type { ProgressRecord } from '../types';
-import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, importSave, openGameDb, submitWord, useHint, verifySchema, PROFILE_ID } from './store';
+import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, getSettings, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
 
 async function deleteDb() { await closeGameDb(); await new Promise<void>((resolve, reject) => { const r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = () => resolve(); r.onerror = () => reject(r.error); r.onblocked = () => resolve(); }); }
 function stable(value: unknown): string { if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value as Record<string, unknown>).sort().map(k => `${JSON.stringify(k)}:${stable((value as Record<string, unknown>)[k])}`).join(',')}}`; return JSON.stringify(value); }
@@ -27,6 +27,17 @@ describe('indexeddb persistence', () => {
     await bootstrapData();
     await expect(verifySchema(await openGameDb())).resolves.toBeUndefined();
     expect((await getProfile()).coins).toBe(25);
+  });
+  it('persists settings updates across database reopen and recreates missing settings conservatively', async () => {
+    await bootstrapData();
+    expect(await getSettings()).toMatchObject({ profileId: PROFILE_ID, sound: true, haptics: true, reducedMotion: false });
+    await updateSettings({ sound: false, reducedMotion: true });
+    await closeGameDb();
+    await bootstrapData();
+    expect(await getSettings()).toMatchObject({ sound: false, haptics: true, reducedMotion: true });
+    const db = await openGameDb();
+    await db.delete('settings', PROFILE_ID);
+    expect(await getSettings()).toMatchObject({ sound: true, haptics: true, reducedMotion: false });
   });
   it('commits target progress and coins once; replay gives no duplicate reward', async () => {
     await bootstrapData();
@@ -137,6 +148,23 @@ describe('indexeddb persistence', () => {
     await expect(importSave(save)).resolves.toBeUndefined();
     expect((await getProgress(CAMPAIGN.levels[0])).revealedLetters?.ACT).toEqual([0]);
     await expect(importSave({envelope:'word-connect-save-v1', campaignVersion: CAMPAIGN.campaignVersion, campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
+  });
+  it('preserves settings through signed export and import', async () => {
+    await bootstrapData();
+    await updateSettings({ sound: false, haptics: false, reducedMotion: true });
+    const save = await exportSave();
+    await deleteDb(); await bootstrapData();
+    await importSave(save);
+    expect(await getSettings()).toEqual({ profileId: PROFILE_ID, sound: false, haptics: false, reducedMotion: true });
+  });
+  it('rejects signed invalid settings without mutating the existing settings', async () => {
+    await bootstrapData();
+    await updateSettings({ sound: false });
+    const before = await getSettings();
+    const invalid: any = await exportSave();
+    invalid.data.settings[0].sound = 'yes';
+    await expect(importSave(await resign(invalid))).rejects.toThrow('REC_IMPORT_INVALID');
+    expect(await getSettings()).toEqual(before);
   });
   it('rejects signed imports with unsafe revealed hint state', async () => {
     await bootstrapData();

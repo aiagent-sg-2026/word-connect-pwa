@@ -17,6 +17,15 @@ declare const __BUILD_ID__: string;
 declare const __APP_VERSION__: string;
 const buildMeta = () => ({ appVersion: typeof __APP_VERSION__ === 'undefined' ? '0.1.0' : __APP_VERSION__, buildId: typeof __BUILD_ID__ === 'undefined' ? 'test' : __BUILD_ID__ });
 const now = () => new Date().toISOString();
+const defaultReducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const defaultSettings = (): SettingsRecord => ({ profileId: PROFILE_ID, sound: true, haptics: true, reducedMotion: defaultReducedMotion() });
+function isSettingsRecord(value: unknown): value is SettingsRecord {
+  const settings = value as Partial<SettingsRecord> | null;
+  return !!settings && typeof settings === 'object' && settings.profileId === PROFILE_ID && typeof settings.sound === 'boolean' && typeof settings.haptics === 'boolean' && typeof settings.reducedMotion === 'boolean';
+}
+function assertSettingsRecord(value: unknown): asserts value is SettingsRecord {
+  if (!isSettingsRecord(value)) throw new Error('REC_SETTINGS_INVALID');
+}
 export const hasActiveMaterialTransaction = () => materialTransactions > 0;
 async function material<T>(work: () => Promise<T>): Promise<T> { materialTransactions++; try { return await work(); } finally { materialTransactions--; } }
 
@@ -149,10 +158,11 @@ export async function bootstrapData(): Promise<void> {
   if (!profile) {
     profile = { profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, coins: 25, hintsUsed: 0, currentLevelId: CAMPAIGN.levels[0].levelId, createdAt: now(), updatedAt: now() };
     await tx.objectStore('profiles').put(profile);
-    await tx.objectStore('settings').put({ id: PROFILE_ID, profileId: PROFILE_ID, sound: true, haptics: true, reducedMotion: matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false } as SettingsRecord & {id:string});
   } else if (profile.campaignVersion !== CAMPAIGN.campaignVersion) {
     throw new Error('REC_CAMPAIGN_VERSION_UNSUPPORTED');
   }
+  const settings = await tx.objectStore('settings').get(PROFILE_ID);
+  if (settings === undefined) await tx.objectStore('settings').put({ id: PROFILE_ID, ...defaultSettings() });
   for (const level of CAMPAIGN.levels) await tx.objectStore('levels').put(level);
   await tx.done;
 }
@@ -168,6 +178,33 @@ export async function getProfile(): Promise<ProfileRecord> {
   const p = await db.get('profiles', PROFILE_ID) as ProfileRecord | undefined;
   if (!p) throw new Error('REC_PROFILE_MISSING');
   return p;
+}
+
+export async function getSettings(): Promise<SettingsRecord> {
+  const db = await openGameDb();
+  const tx = db.transaction(['profiles', 'settings'], 'readwrite');
+  const profile = await tx.objectStore('profiles').get(PROFILE_ID);
+  if (!profile) throw new Error('REC_PROFILE_MISSING');
+  const existing = await tx.objectStore('settings').get(PROFILE_ID);
+  const settings = existing === undefined ? { id: PROFILE_ID, ...defaultSettings() } : existing;
+  assertSettingsRecord(settings);
+  if (existing === undefined) await tx.objectStore('settings').put(settings);
+  await tx.done;
+  return { profileId: settings.profileId, sound: settings.sound, haptics: settings.haptics, reducedMotion: settings.reducedMotion };
+}
+
+export async function updateSettings(patch: Partial<Pick<SettingsRecord, 'sound' | 'haptics' | 'reducedMotion'>>): Promise<SettingsRecord> {
+  if (!patch || typeof patch !== 'object' || Object.keys(patch).some(key => !['sound', 'haptics', 'reducedMotion'].includes(key)) || Object.values(patch).some(value => typeof value !== 'boolean')) throw new Error('REC_SETTINGS_INVALID');
+  const db = await openGameDb();
+  const tx = db.transaction(['profiles', 'settings'], 'readwrite');
+  if (!(await tx.objectStore('profiles').get(PROFILE_ID))) throw new Error('REC_PROFILE_MISSING');
+  const existing = await tx.objectStore('settings').get(PROFILE_ID);
+  const current = existing === undefined ? { id: PROFILE_ID, ...defaultSettings() } : existing;
+  assertSettingsRecord(current);
+  const updated = { ...current, ...patch, profileId: PROFILE_ID };
+  await tx.objectStore('settings').put(updated);
+  await tx.done;
+  return { profileId: updated.profileId, sound: updated.sound, haptics: updated.haptics, reducedMotion: updated.reducedMotion };
 }
 
 export async function getProgress(level: LevelContract): Promise<ProgressRecord> {
@@ -272,6 +309,8 @@ async function validateSaveEnvelope(envelope: any): Promise<Record<string, unkno
   for (const store of ['profiles','progress','settings','economyEvents','statsDaily']) out[store] = requireArray(data, store);
   const profiles = out.profiles as ProfileRecord[];
   if (profiles.length !== 1 || profiles[0].profileId !== PROFILE_ID || profiles[0].campaignVersion !== CAMPAIGN.campaignVersion || !Number.isFinite(profiles[0].coins) || profiles[0].coins < 0 || !CAMPAIGN.levels.some(l => l.levelId === profiles[0].currentLevelId)) throw new Error('REC_IMPORT_INVALID');
+  const settings = out.settings;
+  if (settings.length !== 1 || !isSettingsRecord(settings[0])) throw new Error('REC_IMPORT_INVALID');
   const byId = new Map(CAMPAIGN.levels.map(l => [l.levelId, l]));
   for (const p of out.progress as ProgressRecord[]) {
     if (!p || typeof p !== 'object') throw new Error('REC_IMPORT_INVALID');

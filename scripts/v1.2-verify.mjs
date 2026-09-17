@@ -29,6 +29,7 @@ try {
     await word(page, 'CAT');
     if (await page.locator('.candidate').textContent().then(text => !text.includes('Great!'))) throw new Error(`${name}: target result missing`);
     if (await page.getByRole('status').count() !== 1 || !(await page.getByRole('status').textContent()).includes('First target')) throw new Error(`${name}: achievement unlock toast missing`);
+    if (await page.locator('.achievement-toast-medal').count() !== 1 || await page.locator('.achievement-toast-eyebrow').textContent() !== 'Achievement unlocked') throw new Error(`${name}: achievement unlock presentation incomplete`);
     await word(page, 'AT');
     if (await page.locator('.candidate').textContent().then(text => !text.includes('Combo ×2'))) throw new Error(`${name}: combo feedback missing`);
     await page.reload({ waitUntil: 'networkidle' }); await settle(page);
@@ -38,7 +39,10 @@ try {
     await page.locator('.sheet-close').click(); await settle(page); await page.getByRole('button', { name: 'Hint' }).click(); await page.locator('[data-hint-kind="letter"]').click(); await page.waitForTimeout(60);
     await page.getByRole('button', { name: 'Open settings' }).click(); await page.getByRole('button', { name: 'Player Stats' }).click();
     if (!(await page.locator('.stats-list').textContent()).includes('Coins spent')) throw new Error(`${name}: hint spend stat missing`);
-    await page.locator('.sheet-close').click(); await settle(page); await word(page, 'ACT');
+    await page.locator('.sheet-close').click(); await settle(page);
+    await page.getByRole('button', { name: 'Open settings' }).click(); await page.locator('#setting-reducedMotion').click(); await page.locator('.sheet-close').click(); await settle(page); await word(page, 'ACT');
+    const reducedToastMotion = await page.locator('.achievement-toast').evaluate(el => getComputedStyle(el).animationName);
+    if (reducedToastMotion !== 'none') throw new Error(`${name}: achievement toast ignored reduced motion`);
     if (await page.locator('[data-celebration="true"]').count() !== 1 || !(await page.locator('.complete').textContent()).includes('Best combo')) throw new Error(`${name}: completion summary missing`);
     await page.getByRole('button', { name: 'Open settings' }).click();
     await page.getByRole('button', { name: 'Achievements' }).first().click();

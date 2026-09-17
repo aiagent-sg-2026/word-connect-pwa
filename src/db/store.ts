@@ -3,8 +3,9 @@ import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import { validateCampaign } from '../content/validate';
 import { resolveOutcome } from '../game/logic';
 import { nextCombo } from '../game/progression';
+import { eligibleAchievements } from '../game/achievements';
 import { ECONOMY, hintCost } from '../game/economy';
-import type { LevelContract, ProfileRecord, ProgressRecord, SettingsRecord, StatsAggregateRecord, WordOutcome } from '../types';
+import type { AchievementRecord, LevelContract, ProfileRecord, ProgressRecord, SettingsRecord, StatsAggregateRecord, WordOutcome } from '../types';
 
 type AnyDb = IDBPDatabase<any>;
 export const DB_NAME = 'word-connect-db';
@@ -22,6 +23,7 @@ const now = () => new Date().toISOString();
 const defaultReducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const defaultSettings = (): SettingsRecord => ({ profileId: PROFILE_ID, sound: true, haptics: true, reducedMotion: defaultReducedMotion() });
 const emptyAggregate = (): StatsAggregateRecord => ({ profileId: PROFILE_ID, submissions: 0, targets: 0, bonus: 0, acceptOnly: 0, invalid: 0, alreadyFound: 0, levelsCompleted: 0, coinsEarned: 0, coinsSpent: 0, bestCombo: 0, updatedAt: now() });
+const achievementIds = new Set(['first-target','combo-3','combo-5','first-level','bonus-finder','coins-50','coins-100']);
 function isSettingsRecord(value: unknown): value is SettingsRecord {
   const settings = value as Partial<SettingsRecord> | null;
   return !!settings && typeof settings === 'object' && settings.profileId === PROFILE_ID && typeof settings.sound === 'boolean' && typeof settings.haptics === 'boolean' && typeof settings.reducedMotion === 'boolean';
@@ -180,6 +182,7 @@ export async function bootstrapData(): Promise<void> {
   if (profile.combo === undefined || profile.bestCombo === undefined) await tx.objectStore('profiles').put({ ...profile, combo: profile.combo ?? 0, bestCombo: profile.bestCombo ?? 0 });
   for (const level of CAMPAIGN.levels) await tx.objectStore('levels').put(level);
   await tx.done;
+  await backfillAchievements(db);
 }
 
 export function getLevel(levelId: string): LevelContract {
@@ -199,6 +202,24 @@ export async function getStats(): Promise<StatsAggregateRecord> {
   const db = await openGameDb();
   const value = await db.get('statsAggregate', PROFILE_ID) as StatsAggregateRecord | undefined;
   return value ?? emptyAggregate();
+}
+
+export async function getAchievements(): Promise<AchievementRecord[]> {
+  const db = await openGameDb();
+  return (await db.getAll('achievements') as AchievementRecord[]).filter(a => a.profileId === PROFILE_ID);
+}
+
+async function backfillAchievements(db: AnyDb): Promise<void> {
+  const profile = await db.get('profiles', PROFILE_ID) as ProfileRecord | undefined;
+  if (!profile) return;
+  const stats = (await db.get('statsAggregate', PROFILE_ID) as StatsAggregateRecord | undefined) ?? emptyAggregate();
+  const progress = (await db.getAll('progress') as ProgressRecord[]).filter(p => p.profileId === PROFILE_ID && p.campaignVersion === CAMPAIGN.campaignVersion);
+  const existing = new Set((await db.getAll('achievements') as AchievementRecord[]).filter(a => a.profileId === PROFILE_ID).map(a => a.id));
+  const eligible = eligibleAchievements(profile, stats, progress).filter(id => !existing.has(id));
+  if (!eligible.length) return;
+  const tx = db.transaction('achievements', 'readwrite');
+  for (const id of eligible) await tx.store.put({ id, profileId: PROFILE_ID, unlockedAt: now() });
+  await tx.done;
 }
 
 export async function getSettings(): Promise<SettingsRecord> {
@@ -240,10 +261,10 @@ export async function getProgress(level: LevelContract): Promise<ProgressRecord>
   return p;
 }
 
-export async function submitWord(level: LevelContract, word: string): Promise<{profile: ProfileRecord; progress: ProgressRecord; outcome: WordOutcome}> {
+export async function submitWord(level: LevelContract, word: string): Promise<{profile: ProfileRecord; progress: ProgressRecord; outcome: WordOutcome; unlocked: string[]}> {
   return material(async () => {
     const db = await openGameDb();
-    const tx = db.transaction(['profiles','progress','economyEvents','statsDaily','statsAggregate','gameEvents'], 'readwrite');
+    const tx = db.transaction(['profiles','progress','economyEvents','statsDaily','statsAggregate','gameEvents','achievements'], 'readwrite');
     const profile = await tx.objectStore('profiles').get(PROFILE_ID) as ProfileRecord;
     let progress = await tx.objectStore('progress').get([PROFILE_ID, level.campaignVersion, level.levelId]) as ProgressRecord | undefined;
     progress ||= { profileId: PROFILE_ID, campaignVersion: level.campaignVersion, levelId: level.levelId, levelRevision: level.revision, levelHash: level.hash, foundTargets: [], foundBonus: [], completed: false, updatedAt: now() };
@@ -272,8 +293,12 @@ export async function submitWord(level: LevelContract, word: string): Promise<{p
     aggregate.levelsCompleted += firstComplete ? 1 : 0; aggregate.coinsEarned += Math.max(0, outcome.coinsDelta) + (firstComplete ? ECONOMY.completionReward : 0); aggregate.bestCombo = Math.max(aggregate.bestCombo, combo); aggregate.updatedAt = now();
     await tx.objectStore('statsAggregate').put(aggregate);
     await tx.objectStore('gameEvents').add({ profileId: PROFILE_ID, levelId: level.levelId, word: outcome.word, outcome: outcome.kind, comboBefore, comboAfter: combo, createdAt: now() });
+    const existing = new Set((await tx.objectStore('achievements').getAll() as AchievementRecord[]).filter(a => a.profileId === PROFILE_ID).map(a => a.id));
+    const progressRows = (await tx.objectStore('progress').getAll() as ProgressRecord[]).filter(p => p.profileId === PROFILE_ID && p.campaignVersion === CAMPAIGN.campaignVersion);
+    const unlocked = eligibleAchievements(profile, aggregate, progressRows).filter(id => !existing.has(id));
+    for (const id of unlocked) await tx.objectStore('achievements').put({ id, profileId: PROFILE_ID, unlockedAt: now() });
     await tx.done;
-    return { profile, progress, outcome };
+    return { profile, progress, outcome, unlocked };
   });
 }
 
@@ -359,7 +384,7 @@ export async function exportSave(): Promise<object> {
   const db = await openGameDb();
   const dump: Record<string, unknown[]> = {};
   // gameEvents are diagnostic history, not required player state; omit them from portable saves.
-  for (const s of ['profiles','progress','settings','economyEvents','statsDaily','statsAggregate']) dump[s] = await db.getAll(s);
+  for (const s of ['profiles','progress','settings','economyEvents','statsDaily','statsAggregate','achievements']) dump[s] = await db.getAll(s);
   const envelope = { envelope: 'word-connect-save-v2', exportedAt: now(), campaignVersion: CAMPAIGN.campaignVersion, campaignHash: CAMPAIGN.campaignHash, saveDataVersion: SAVE_DATA_VERSION, data: dump };
   return { ...envelope, integrity: { algorithm: 'SHA-256', digest: await digestPayload(envelope) } };
 }
@@ -373,6 +398,8 @@ async function validateSaveEnvelope(envelope: any): Promise<Record<string, unkno
   const out: Record<string, unknown[]> = {};
   for (const store of ['profiles','progress','settings','economyEvents','statsDaily']) out[store] = requireArray(data, store);
   const hasAggregate = Array.isArray(data.statsAggregate);
+  if (data.achievements !== undefined && !Array.isArray(data.achievements)) throw new Error('REC_IMPORT_INVALID');
+  out.achievements = data.achievements === undefined ? [] : data.achievements as unknown[];
   out.statsAggregate = hasAggregate ? data.statsAggregate as unknown[] : [];
   out.gameEvents = [];
   const profiles = out.profiles as ProfileRecord[];
@@ -410,6 +437,12 @@ async function validateSaveEnvelope(envelope: any): Promise<Record<string, unkno
   if (out.statsAggregate.length !== 1) throw new Error('REC_IMPORT_INVALID');
   const aggregate = out.statsAggregate[0] as Partial<StatsAggregateRecord>;
   if (!aggregate || aggregate.profileId !== PROFILE_ID || ['submissions','targets','bonus','acceptOnly','invalid','alreadyFound','levelsCompleted','coinsEarned','coinsSpent','bestCombo'].some(k => !nonNegativeInt(aggregate[k as keyof StatsAggregateRecord]))) throw new Error('REC_IMPORT_INVALID');
+  const trustedEligible = new Set(eligibleAchievements(profiles[0], aggregate as StatsAggregateRecord, out.progress as ProgressRecord[]));
+  const ids = new Set<string>();
+  for (const record of out.achievements as AchievementRecord[]) {
+    if (!record || typeof record !== 'object' || record.profileId !== PROFILE_ID || typeof record.id !== 'string' || !achievementIds.has(record.id) || !trustedEligible.has(record.id) || typeof record.unlockedAt !== 'string' || ids.has(record.id)) throw new Error('REC_IMPORT_INVALID');
+    ids.add(record.id);
+  }
   return out;
 }
 
@@ -420,13 +453,14 @@ export async function importSave(envelope: any): Promise<void> {
   const snapshot = await exportSave();
   await material(async () => {
     const db = await openGameDb();
-    const tx = db.transaction(['profiles','progress','settings','economyEvents','statsDaily','statsAggregate','gameEvents','saveSnapshots'], 'readwrite');
+    const tx = db.transaction(['profiles','progress','settings','economyEvents','statsDaily','statsAggregate','gameEvents','achievements','saveSnapshots'], 'readwrite');
     await tx.objectStore('saveSnapshots').add({ createdAt: now(), reason: 'pre-import', data: snapshot });
-    for (const store of ['profiles','progress','settings','economyEvents','statsDaily','statsAggregate','gameEvents']) {
+    for (const store of ['profiles','progress','settings','economyEvents','statsDaily','statsAggregate','gameEvents','achievements']) {
       await tx.objectStore(store).clear();
       for (const item of data[store]) await tx.objectStore(store).put(item);
     }
     await tx.done;
+    await backfillAchievements(db);
   });
 }
 

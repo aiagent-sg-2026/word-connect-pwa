@@ -28,6 +28,7 @@ try {
     await page.locator('.sheet-close').click(); await settle(page);
     await word(page, 'CAT');
     if (await page.locator('.candidate').textContent().then(text => !text.includes('Great!'))) throw new Error(`${name}: target result missing`);
+    if (await page.getByRole('status').count() !== 1 || !(await page.getByRole('status').textContent()).includes('First target')) throw new Error(`${name}: achievement unlock toast missing`);
     await word(page, 'AT');
     if (await page.locator('.candidate').textContent().then(text => !text.includes('Combo ×2'))) throw new Error(`${name}: combo feedback missing`);
     await page.reload({ waitUntil: 'networkidle' }); await settle(page);
@@ -40,11 +41,19 @@ try {
     await page.locator('.sheet-close').click(); await settle(page); await word(page, 'ACT');
     if (await page.locator('[data-celebration="true"]').count() !== 1 || !(await page.locator('.complete').textContent()).includes('Best combo')) throw new Error(`${name}: completion summary missing`);
     await page.getByRole('button', { name: 'Open settings' }).click();
+    await page.getByRole('button', { name: 'Achievements' }).first().click();
+    await page.getByRole('heading', { name: 'Achievements' }).waitFor();
+    if (await page.locator('.achievement-row.unlocked').count() < 1) throw new Error(`${name}: achievement UI did not show unlock`);
+    await page.locator('.sheet-close').click(); await settle(page);
+    await page.getByRole('button', { name: 'Open settings' }).click();
     const exportPromise = page.waitForEvent('download'); await page.locator('#export').click(); const download = await exportPromise; const savePath = await download.path();
     if (!savePath) throw new Error(`${name}: save export missing`);
     page.once('dialog', dialog => dialog.accept()); await page.locator('#reset').click();
     await page.waitForTimeout(120); await page.getByRole('button', { name: 'Open settings' }).click(); await page.setInputFiles('#import', savePath); await page.waitForTimeout(160); await settle(page); await page.getByRole('button', { name: 'Open settings' }).click(); await page.getByRole('button', { name: 'Player Stats' }).click();
     if (!(await page.locator('.stats-list').textContent()).includes('Best combo')) throw new Error(`${name}: imported stats missing`);
+    await page.locator('.sheet-close').click(); await settle(page); await page.getByRole('button', { name: 'Open settings' }).click(); await page.getByRole('button', { name: 'Achievements' }).first().click();
+    await page.getByRole('heading', { name: 'Achievements' }).waitFor();
+    if (await page.locator('.achievement-row.unlocked').count() < 1) throw new Error(`${name}: imported achievements missing`);
     await noScroll(page, name); if (errors.length) throw new Error(`${name}: browser errors ${JSON.stringify(errors)}`);
     console.log(`v1.2 ${name}: PASS`); await browser.close();
   }

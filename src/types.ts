@@ -70,3 +70,5 @@ export interface StatsAggregateRecord {
   bestCombo: number;
   updatedAt: string;
 }
+
+export interface AchievementRecord { id: string; profileId: string; unlockedAt: string; }

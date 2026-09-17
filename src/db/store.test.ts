@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import type { ProgressRecord } from '../types';
-import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, getSettings, getStats, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
+import { bootstrapData, closeGameDb, DB_NAME, exportSave, getAchievements, getProfile, getProgress, getSettings, getStats, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
 
 async function deleteDb() { await closeGameDb(); await new Promise<void>((resolve, reject) => { const r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = () => resolve(); r.onerror = () => reject(r.error); r.onblocked = () => resolve(); }); }
 function stable(value: unknown): string { if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value as Record<string, unknown>).sort().map(k => `${JSON.stringify(k)}:${stable((value as Record<string, unknown>)[k])}`).join(',')}}`; return JSON.stringify(value); }
@@ -318,5 +318,35 @@ describe('indexeddb persistence', () => {
     await db.put('levels', CAMPAIGN.levels[0]);
     await db.put('levels', { ...LEGACY_CAMPAIGNS[0].levels[0], hash: 'conflict' });
     await expect(bootstrapData()).rejects.toThrow('REC_CONTENT_IMMUTABLE_CONFLICT');
+  });
+  it('unlocks achievements transactionally and idempotently', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    await submitWord(level, 'CAT');
+    expect((await getAchievements()).map(a => a.id)).toEqual(['first-target']);
+    await submitWord(level, 'CAT');
+    expect(await getAchievements()).toHaveLength(1);
+    const save: any = await exportSave();
+    expect(save.data.achievements).toHaveLength(1);
+    await deleteDb(); await bootstrapData(); await importSave(save);
+    await bootstrapData();
+    expect((await getAchievements()).map(a => a.id)).toEqual(['first-target']);
+  });
+  it('backfills only verifiable achievements from older saves without achievement data', async () => {
+    await bootstrapData();
+    await submitWord(CAMPAIGN.levels[0], 'CAT');
+    const save: any = await exportSave();
+    delete save.data.achievements;
+    await resign(save);
+    await deleteDb(); await bootstrapData(); await importSave(save);
+    expect((await getAchievements()).map(a => a.id)).toEqual(['first-target']);
+  });
+  it('rejects duplicate or unknown achievement records', async () => {
+    await bootstrapData();
+    const save: any = await exportSave();
+    save.data.achievements = [{ id: 'first-target', profileId: PROFILE_ID, unlockedAt: 'x' }, { id: 'first-target', profileId: PROFILE_ID, unlockedAt: 'y' }];
+    await expect(importSave(await resign(save))).rejects.toThrow('REC_IMPORT_INVALID');
+    save.data.achievements = [{ id: 'made-up', profileId: PROFILE_ID, unlockedAt: 'x' }];
+    await expect(importSave(await resign(save))).rejects.toThrow('REC_IMPORT_INVALID');
   });
 });

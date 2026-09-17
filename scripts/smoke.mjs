@@ -82,7 +82,7 @@ try {
       await page.getByRole('button', { name:'Submit' }).click();
       await page.waitForTimeout(100);
       let text = await page.locator('body').innerText();
-      if (!text.includes('Great!') || !text.includes('🪙 30')) errors.push('tap gameplay failed');
+      if (!text.includes('Great!') || !text.includes('🪙 23')) errors.push('tap gameplay failed');
       await page.getByRole('button', { name:'Clear' }).click();
       const centers = [];
       for (const letter of ['A','C','T']) centers.push(await page.getByRole('button', { name: letter, exact: true }).boundingBox());
@@ -93,7 +93,7 @@ try {
         await page.mouse.up();
         await page.waitForTimeout(150);
         text = await page.locator('body').innerText();
-        if (!text.includes('Level complete') || !text.includes('🪙 55')) errors.push('pointer swipe gameplay failed');
+        if (!text.includes('Level complete') || !text.includes('🪙 36')) errors.push('pointer swipe gameplay failed');
       } else errors.push('pointer swipe tile boxes missing');
     }
     await page.close();

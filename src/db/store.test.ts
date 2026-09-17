@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import type { ProgressRecord } from '../types';
-import { bootstrapData, closeGameDb, DB_NAME, exportSave, getProfile, getProgress, getSettings, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
+import { bootstrapData, closeGameDb, DB_NAME, exportSave, getAchievements, getProfile, getProgress, getSettings, getStats, importSave, openGameDb, submitWord, updateSettings, useHint, verifySchema, PROFILE_ID } from './store';
 
 async function deleteDb() { await closeGameDb(); await new Promise<void>((resolve, reject) => { const r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = () => resolve(); r.onerror = () => reject(r.error); r.onblocked = () => resolve(); }); }
 function stable(value: unknown): string { if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value as Record<string, unknown>).sort().map(k => `${JSON.stringify(k)}:${stable((value as Record<string, unknown>)[k])}`).join(',')}}`; return JSON.stringify(value); }
@@ -26,7 +26,7 @@ describe('indexeddb persistence', () => {
   it('bootstraps and verifies required schema signature stores', async () => {
     await bootstrapData();
     await expect(verifySchema(await openGameDb())).resolves.toBeUndefined();
-    expect((await getProfile()).coins).toBe(25);
+    expect((await getProfile()).coins).toBe(20);
   });
   it('persists settings updates across database reopen and recreates missing settings conservatively', async () => {
     await bootstrapData();
@@ -44,27 +44,55 @@ describe('indexeddb persistence', () => {
     const level = CAMPAIGN.levels[0];
     let res = await submitWord(level, 'CAT');
     expect(res.outcome.kind).toBe('TARGET');
-    expect(res.profile.coins).toBe(30);
+    expect(res.profile.coins).toBe(23);
     res = await submitWord(level, 'CAT');
     expect(res.outcome.kind).toBe('ALREADY_FOUND');
-    expect(res.profile.coins).toBe(30);
+    expect(res.profile.coins).toBe(23);
+  });
+  it('persists combo transitions and aggregate stats for all outcomes', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    await submitWord(level, 'CAT');
+    expect((await getProfile()).combo).toBe(1);
+    await submitWord(level, 'AT');
+    expect((await getProfile()).combo).toBe(2);
+    await submitWord(level, 'ZZZ');
+    expect((await getProfile()).combo).toBe(0);
+    await submitWord(level, 'CAT');
+    expect((await getProfile()).combo).toBe(0);
+    const stats = await getStats();
+    expect(stats).toMatchObject({ submissions: 4, targets: 1, bonus: 1, invalid: 1, alreadyFound: 1, bestCombo: 2 });
+    expect(await (await openGameDb()).getAll('gameEvents')).toHaveLength(4);
+  });
+  it('backfills a missing v3 aggregate from durable daily, economy, and completed progress', async () => {
+    await bootstrapData();
+    const db = await openGameDb();
+    await db.delete('statsAggregate', PROFILE_ID);
+    await db.put('statsDaily', { profileId: PROFILE_ID, date: '2026-09-16', submissions: 4, targets: 2, bonus: 1 });
+    await db.put('economyEvents', { profileId: PROFILE_ID, levelId: 'L001', word: 'CAT', kind: 'TARGET', coinsDelta: 5, createdAt: 'old' });
+    await db.put('economyEvents', { profileId: PROFILE_ID, levelId: 'L001', word: 'ACT', kind: 'TARGET', coinsDelta: 25, createdAt: 'old' });
+    await db.put('economyEvents', { profileId: PROFILE_ID, levelId: 'L001', kind: 'HINT', hint: 'CAT', hintKind: 'word', coinsDelta: -10, createdAt: 'old' });
+    await db.put('progress', { profileId: PROFILE_ID, campaignVersion: CAMPAIGN.campaignVersion, levelId: 'L001', levelRevision: CAMPAIGN.levels[0].revision, levelHash: CAMPAIGN.levels[0].hash, foundTargets: ['CAT', 'ACT'], foundBonus: [], completed: true, updatedAt: 'old' });
+    await bootstrapData();
+    expect(await getStats()).toMatchObject({ submissions: 4, targets: 2, bonus: 1, levelsCompleted: 1, coinsEarned: 30, coinsSpent: 10, acceptOnly: 0, invalid: 0, alreadyFound: 0, bestCombo: 0 });
   });
   it('completion reward is not duplicated after reload/replay', async () => {
     await bootstrapData();
     const level = CAMPAIGN.levels[0];
     await submitWord(level, 'CAT'); await submitWord(level, 'ACT');
     const after = await getProfile();
-    expect(after.coins).toBe(55); // 25 + 5 + 5 + 20 completion
+    expect(after.coins).toBe(36); // 20 + 3 + 3 + 10 completion
     await submitWord(level, 'ACT');
-    expect((await getProfile()).coins).toBe(55);
+    expect((await getProfile()).coins).toBe(36);
   });
   it('spends hint coins transactionally', async () => {
     await bootstrapData();
     const res = await useHint(CAMPAIGN.levels[0]);
     expect(res.hint).toBe('CAT');
-    expect(res.profile.coins).toBe(15);
+    expect(res.profile.coins).toBe(12);
     expect(res.progress.revealedWords).toEqual(['CAT']);
     expect((await getProgress(CAMPAIGN.levels[0])).revealedWords).toEqual(['CAT']);
+    expect((await getStats()).coinsSpent).toBe(8);
   });
   it('persists letter hints and never targets a solved word', async () => {
     await bootstrapData();
@@ -72,54 +100,69 @@ describe('indexeddb persistence', () => {
     await submitWord(level, 'CAT');
     const res = await useHint(level, 'first-letter');
     expect(res.hint).toBe('ACT');
-    expect(res.profile.coins).toBe(25); // 25 + 5 for CAT - 5 for the hint
+    expect(res.profile.coins).toBe(19); // 20 + 3 for CAT - 4 for the hint
     expect(res.progress.revealedLetters?.ACT).toEqual([0]);
     await closeGameDb();
     await bootstrapData();
     expect((await getProgress(level)).revealedLetters?.ACT).toEqual([0]);
   });
-  it('charges 3 coins for a letter hint and reveals letters sequentially durably', async () => {
+  it('charges 2 coins for a letter hint and prefers hidden non-first letters durably', async () => {
     await bootstrapData();
     const level = CAMPAIGN.levels[0];
     const first = await useHint(level, 'letter');
     expect(first.hint).toBe('CAT');
     expect(first.charged).toBe(true);
-    expect(first.profile.coins).toBe(22);
-    expect(first.progress.revealedLetters?.CAT).toEqual([0]);
+    expect(first.profile.coins).toBe(18);
+    expect(first.progress.revealedLetters?.CAT).toEqual([1]);
     const second = await useHint(level, 'letter');
     expect(second.hint).toBe('CAT');
-    expect(second.profile.coins).toBe(19);
-    expect(second.progress.revealedLetters?.CAT).toEqual([0, 1]);
+    expect(second.profile.coins).toBe(16);
+    expect(second.progress.revealedLetters?.CAT).toEqual([1, 2]);
     await closeGameDb();
     await bootstrapData();
-    expect((await getProgress(level)).revealedLetters?.CAT).toEqual([0, 1]);
+    expect((await getProgress(level)).revealedLetters?.CAT).toEqual([1, 2]);
+  });
+  it('does not charge duplicate or unavailable hint information', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[2];
+    await useHint(level, 'letter');
+    await useHint(level, 'first-letter');
+    await useHint(level, 'letter');
+    const before = await getProfile();
+    const beforeStats = await getStats();
+    const result = await useHint(level, 'letter');
+    expect(result.hint).toBeUndefined();
+    expect(result.charged).toBe(false);
+    expect(result.profile.coins).toBe(before.coins);
+    expect((await getStats()).coinsSpent).toBe(beforeStats.coinsSpent);
   });
   it('does not charge or mutate when there are insufficient coins for a hint', async () => {
     await bootstrapData();
     const db = await openGameDb();
     const profile: any = await db.get('profiles', PROFILE_ID);
-    profile.coins = 2;
+    profile.coins = 1;
     await db.put('profiles', profile);
     const level = CAMPAIGN.levels[0];
     const beforeProgress = await getProgress(level);
     const result = await useHint(level, 'letter');
     expect(result.hint).toBe('CAT');
     expect(result.charged).toBe(false);
-    expect(result.profile.coins).toBe(2);
+    expect(result.profile.coins).toBe(1);
     expect(result.progress).toEqual(beforeProgress);
     expect(await getProfile()).toEqual(profile);
   });
   it('skips a fully letter-revealed target for Reveal Word', async () => {
     await bootstrapData();
     const level = CAMPAIGN.levels[0];
-    await useHint(level, 'letter');
-    await useHint(level, 'letter');
-    await useHint(level, 'letter');
+    const db = await openGameDb();
+    const saved = await getProgress(level);
+    saved.revealedLetters = { CAT: [0, 1, 2] };
+    await db.put('progress', saved);
     const result = await useHint(level, 'word');
     expect(result.hint).toBe('ACT');
     expect(result.charged).toBe(true);
     expect(result.progress.revealedWords).toEqual(['ACT']);
-    expect(result.profile.coins).toBe(6);
+    expect(result.profile.coins).toBe(12);
   });
   it('accept-only TSAR on L004 gives no coins and no progression', async () => {
     await bootstrapData();
@@ -148,6 +191,29 @@ describe('indexeddb persistence', () => {
     await expect(importSave(save)).resolves.toBeUndefined();
     expect((await getProgress(CAMPAIGN.levels[0])).revealedLetters?.ACT).toEqual([0]);
     await expect(importSave({envelope:'word-connect-save-v1', campaignVersion: CAMPAIGN.campaignVersion, campaignHash:'bad', data:{}})).rejects.toThrow('REC_IMPORT_INVALID');
+  });
+  it('does not export diagnostic game events and preserves aggregate stats through import', async () => {
+    await bootstrapData();
+    await submitWord(CAMPAIGN.levels[0], 'CAT');
+    await useHint(CAMPAIGN.levels[0], 'letter');
+    const save: any = await exportSave();
+    expect(save.data.gameEvents).toBeUndefined();
+    const expected = await getStats();
+    await deleteDb(); await bootstrapData(); await importSave(save);
+    expect(await getStats()).toMatchObject({ submissions: expected.submissions, coinsSpent: expected.coinsSpent, bestCombo: expected.bestCombo });
+  });
+  it('reconstructs aggregate history when importing a legacy v2 save without statsAggregate', async () => {
+    await bootstrapData();
+    await submitWord(CAMPAIGN.levels[0], 'CAT');
+    await useHint(CAMPAIGN.levels[0], 'word');
+    await submitWord(CAMPAIGN.levels[0], 'ACT');
+    const save: any = await exportSave();
+    delete save.data.statsAggregate;
+    await resign(save);
+    await deleteDb();
+    await bootstrapData();
+    await importSave(save);
+    expect(await getStats()).toMatchObject({ submissions: 2, targets: 2, bonus: 0, levelsCompleted: 1, coinsEarned: 16, coinsSpent: 8, acceptOnly: 0, invalid: 0, alreadyFound: 0, bestCombo: 0 });
   });
   it('preserves settings through signed export and import', async () => {
     await bootstrapData();
@@ -267,5 +333,35 @@ describe('indexeddb persistence', () => {
     await db.put('levels', CAMPAIGN.levels[0]);
     await db.put('levels', { ...LEGACY_CAMPAIGNS[0].levels[0], hash: 'conflict' });
     await expect(bootstrapData()).rejects.toThrow('REC_CONTENT_IMMUTABLE_CONFLICT');
+  });
+  it('unlocks achievements transactionally and idempotently', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[0];
+    await submitWord(level, 'CAT');
+    expect((await getAchievements()).map(a => a.id)).toEqual(['first-target']);
+    await submitWord(level, 'CAT');
+    expect(await getAchievements()).toHaveLength(1);
+    const save: any = await exportSave();
+    expect(save.data.achievements).toHaveLength(1);
+    await deleteDb(); await bootstrapData(); await importSave(save);
+    await bootstrapData();
+    expect((await getAchievements()).map(a => a.id)).toEqual(['first-target']);
+  });
+  it('backfills only verifiable achievements from older saves without achievement data', async () => {
+    await bootstrapData();
+    await submitWord(CAMPAIGN.levels[0], 'CAT');
+    const save: any = await exportSave();
+    delete save.data.achievements;
+    await resign(save);
+    await deleteDb(); await bootstrapData(); await importSave(save);
+    expect((await getAchievements()).map(a => a.id)).toEqual(['first-target']);
+  });
+  it('rejects duplicate or unknown achievement records', async () => {
+    await bootstrapData();
+    const save: any = await exportSave();
+    save.data.achievements = [{ id: 'first-target', profileId: PROFILE_ID, unlockedAt: 'x' }, { id: 'first-target', profileId: PROFILE_ID, unlockedAt: 'y' }];
+    await expect(importSave(await resign(save))).rejects.toThrow('REC_IMPORT_INVALID');
+    save.data.achievements = [{ id: 'made-up', profileId: PROFILE_ID, unlockedAt: 'x' }];
+    await expect(importSave(await resign(save))).rejects.toThrow('REC_IMPORT_INVALID');
   });
 });

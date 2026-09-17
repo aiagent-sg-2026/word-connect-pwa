@@ -1,7 +1,7 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import { CAMPAIGN, LEGACY_CAMPAIGNS } from '../content/campaign';
 import { validateCampaign } from '../content/validate';
-import { resolveOutcome } from '../game/logic';
+import { hintPlan, resolveOutcome } from '../game/logic';
 import { nextCombo } from '../game/progression';
 import { eligibleAchievements } from '../game/achievements';
 import { ECONOMY, hintCost } from '../game/economy';
@@ -313,20 +313,15 @@ export async function useHint(level: LevelContract, kind: HintKind = 'word'): Pr
     let progress = await tx.objectStore('progress').get([PROFILE_ID, level.campaignVersion, level.levelId]) as ProgressRecord | undefined;
     progress ||= { profileId: PROFILE_ID, campaignVersion: level.campaignVersion, levelId: level.levelId, levelRevision: level.revision, levelHash: level.hash, foundTargets: [], foundBonus: [], completed: false, revealedLetters: {}, revealedWords: [], updatedAt: now() };
     if (progress.levelHash !== level.hash || progress.levelRevision !== level.revision) throw new Error('REC_CONTENT_MISMATCH');
-    const hint = level.targets.find(word => {
-      if (progress.foundTargets.includes(word) || progress.revealedWords?.includes(word)) return false;
-      const indexes = progress.revealedLetters?.[word] || [];
-      if (kind === 'word') return indexes.length < word.length;
-      if (kind === 'first-letter') return !indexes.includes(0);
-      return indexes.length < word.length;
-    });
+    const plan = hintPlan(level, progress, kind);
+    const hint = plan?.word;
     let charged = false;
     const cost = hintCost(kind);
     if (hint && profile.coins >= cost) {
       charged = true; profile.coins -= cost; profile.hintsUsed++; profile.updatedAt = now();
       progress.revealedLetters ||= {}; progress.revealedWords ||= [];
       if (kind === 'word') progress.revealedWords = [...new Set([...progress.revealedWords, hint])];
-      else { const indexes = progress.revealedLetters[hint] || []; const next = kind === 'first-letter' ? 0 : Array.from({ length: hint.length }, (_, i) => i).find(i => !indexes.includes(i))!; progress.revealedLetters[hint] = [...new Set([...indexes, next])].filter(i => i >= 0 && i < hint.length).sort((a,b)=>a-b); }
+      else { const indexes = progress.revealedLetters[hint] || []; const next = plan!.index!; progress.revealedLetters[hint] = [...new Set([...indexes, next])].filter(i => i >= 0 && i < hint.length).sort((a,b)=>a-b); }
       progress.updatedAt = now(); await tx.objectStore('profiles').put(profile); await tx.objectStore('progress').put(progress); await tx.objectStore('economyEvents').add({ profileId: PROFILE_ID, levelId: level.levelId, kind: 'HINT', coinsDelta: -cost, hint, hintKind: kind, createdAt: now() });
       const aggregate = (await tx.objectStore('statsAggregate').get(PROFILE_ID) as StatsAggregateRecord | undefined) ?? emptyAggregate();
       aggregate.coinsSpent += cost; aggregate.updatedAt = now();

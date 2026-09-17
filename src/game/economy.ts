@@ -1,12 +1,13 @@
 import type { HintKind } from '../db/store';
 
-/** V1.1 economy policy, centralized for future balancing. */
+/** Current policy applies only to new actions; durable historical events are never rewritten. */
 export const ECONOMY = Object.freeze({
-  startingCoins: 25,
-  targetReward: 5,
+  version: 'v1.2-phase3',
+  startingCoins: 20,
+  targetReward: 3,
   bonusReward: 1,
-  completionReward: 20,
-  hintCosts: Object.freeze({ letter: 3, 'first-letter': 5, word: 10 })
+  completionReward: 10,
+  hintCosts: Object.freeze({ letter: 2, 'first-letter': 4, word: 8 })
 });
 
 export function rewardFor(kind: 'TARGET' | 'BONUS'): number {

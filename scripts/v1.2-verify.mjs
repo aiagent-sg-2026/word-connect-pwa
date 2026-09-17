@@ -36,7 +36,24 @@ try {
     await page.getByRole('button', { name: 'Open settings' }).click(); await page.getByRole('button', { name: 'Player Stats' }).click();
     const statsText = await page.locator('.stats-list').textContent();
     if (!statsText.includes('Submissions') || !statsText.includes('2') || !statsText.includes('Best combo')) throw new Error(`${name}: stats did not persist`);
-    await page.locator('.sheet-close').click(); await settle(page); await page.getByRole('button', { name: 'Hint' }).click(); await page.locator('[data-hint-kind="letter"]').click(); await page.waitForTimeout(60);
+    await page.locator('.sheet-close').click(); await settle(page); await page.getByRole('button', { name: 'Hint' }).click();
+    for (const kind of ['letter', 'first-letter', 'word']) { const button = page.locator(`[data-hint-kind="${kind}"]`); if (await button.isDisabled() || !(await button.textContent()).includes('Available now')) throw new Error(`${name}: affordable ${kind} hint was not available`); }
+    await page.locator('[data-hint-kind="letter"]').click(); await page.waitForTimeout(60);
+    const revealedAfterSmart = await page.locator('.slot').nth(1).locator('span').allTextContents();
+    if (revealedAfterSmart.join('') !== 'C' || revealedAfterSmart[0] !== '') throw new Error(`${name}: smart hint did not reveal ACT index 1 first`);
+    await page.reload({ waitUntil: 'networkidle' }); await settle(page);
+    const persistedSmart = await page.locator('.slot').nth(1).locator('span').allTextContents();
+    if (persistedSmart.join('') !== 'C' || persistedSmart[0] !== '') throw new Error(`${name}: smart hint did not persist`);
+    await page.getByRole('button', { name: 'Hint' }).click();
+    const firstLetter = page.locator('[data-hint-kind="first-letter"]');
+    if (await firstLetter.isDisabled() || !(await firstLetter.textContent()).includes('Available now')) throw new Error(`${name}: first-letter hint was not available after smart hint`);
+    await firstLetter.click(); await page.waitForTimeout(60);
+    const revealedAfterFirst = await page.locator('.slot').nth(1).locator('span').allTextContents();
+    if (revealedAfterFirst.join('') !== 'AC') throw new Error(`${name}: first-letter hint did not reveal ACT index 0 distinctly`);
+    await page.getByRole('button', { name: 'Hint' }).click(); await page.locator('[data-hint-kind="word"]').click(); await page.waitForTimeout(60);
+    await page.getByRole('button', { name: 'Hint' }).click();
+    for (const kind of ['letter', 'first-letter', 'word']) { const button = page.locator(`[data-hint-kind="${kind}"]`); if (!(await button.isDisabled()) || !(await button.textContent()).includes('No new information')) throw new Error(`${name}: exhausted ${kind} hint remained available`); }
+    await page.locator('.sheet-close').click(); await settle(page);
     await page.getByRole('button', { name: 'Open settings' }).click(); await page.getByRole('button', { name: 'Player Stats' }).click();
     if (!(await page.locator('.stats-list').textContent()).includes('Coins spent')) throw new Error(`${name}: hint spend stat missing`);
     await page.locator('.sheet-close').click(); await settle(page);

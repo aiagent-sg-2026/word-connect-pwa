@@ -26,7 +26,7 @@ describe('indexeddb persistence', () => {
   it('bootstraps and verifies required schema signature stores', async () => {
     await bootstrapData();
     await expect(verifySchema(await openGameDb())).resolves.toBeUndefined();
-    expect((await getProfile()).coins).toBe(25);
+    expect((await getProfile()).coins).toBe(20);
   });
   it('persists settings updates across database reopen and recreates missing settings conservatively', async () => {
     await bootstrapData();
@@ -44,10 +44,10 @@ describe('indexeddb persistence', () => {
     const level = CAMPAIGN.levels[0];
     let res = await submitWord(level, 'CAT');
     expect(res.outcome.kind).toBe('TARGET');
-    expect(res.profile.coins).toBe(30);
+    expect(res.profile.coins).toBe(23);
     res = await submitWord(level, 'CAT');
     expect(res.outcome.kind).toBe('ALREADY_FOUND');
-    expect(res.profile.coins).toBe(30);
+    expect(res.profile.coins).toBe(23);
   });
   it('persists combo transitions and aggregate stats for all outcomes', async () => {
     await bootstrapData();
@@ -81,18 +81,18 @@ describe('indexeddb persistence', () => {
     const level = CAMPAIGN.levels[0];
     await submitWord(level, 'CAT'); await submitWord(level, 'ACT');
     const after = await getProfile();
-    expect(after.coins).toBe(55); // 25 + 5 + 5 + 20 completion
+    expect(after.coins).toBe(36); // 20 + 3 + 3 + 10 completion
     await submitWord(level, 'ACT');
-    expect((await getProfile()).coins).toBe(55);
+    expect((await getProfile()).coins).toBe(36);
   });
   it('spends hint coins transactionally', async () => {
     await bootstrapData();
     const res = await useHint(CAMPAIGN.levels[0]);
     expect(res.hint).toBe('CAT');
-    expect(res.profile.coins).toBe(15);
+    expect(res.profile.coins).toBe(12);
     expect(res.progress.revealedWords).toEqual(['CAT']);
     expect((await getProgress(CAMPAIGN.levels[0])).revealedWords).toEqual(['CAT']);
-    expect((await getStats()).coinsSpent).toBe(10);
+    expect((await getStats()).coinsSpent).toBe(8);
   });
   it('persists letter hints and never targets a solved word', async () => {
     await bootstrapData();
@@ -100,54 +100,69 @@ describe('indexeddb persistence', () => {
     await submitWord(level, 'CAT');
     const res = await useHint(level, 'first-letter');
     expect(res.hint).toBe('ACT');
-    expect(res.profile.coins).toBe(25); // 25 + 5 for CAT - 5 for the hint
+    expect(res.profile.coins).toBe(19); // 20 + 3 for CAT - 4 for the hint
     expect(res.progress.revealedLetters?.ACT).toEqual([0]);
     await closeGameDb();
     await bootstrapData();
     expect((await getProgress(level)).revealedLetters?.ACT).toEqual([0]);
   });
-  it('charges 3 coins for a letter hint and reveals letters sequentially durably', async () => {
+  it('charges 2 coins for a letter hint and prefers hidden non-first letters durably', async () => {
     await bootstrapData();
     const level = CAMPAIGN.levels[0];
     const first = await useHint(level, 'letter');
     expect(first.hint).toBe('CAT');
     expect(first.charged).toBe(true);
-    expect(first.profile.coins).toBe(22);
-    expect(first.progress.revealedLetters?.CAT).toEqual([0]);
+    expect(first.profile.coins).toBe(18);
+    expect(first.progress.revealedLetters?.CAT).toEqual([1]);
     const second = await useHint(level, 'letter');
     expect(second.hint).toBe('CAT');
-    expect(second.profile.coins).toBe(19);
-    expect(second.progress.revealedLetters?.CAT).toEqual([0, 1]);
+    expect(second.profile.coins).toBe(16);
+    expect(second.progress.revealedLetters?.CAT).toEqual([1, 2]);
     await closeGameDb();
     await bootstrapData();
-    expect((await getProgress(level)).revealedLetters?.CAT).toEqual([0, 1]);
+    expect((await getProgress(level)).revealedLetters?.CAT).toEqual([1, 2]);
+  });
+  it('does not charge duplicate or unavailable hint information', async () => {
+    await bootstrapData();
+    const level = CAMPAIGN.levels[2];
+    await useHint(level, 'letter');
+    await useHint(level, 'first-letter');
+    await useHint(level, 'letter');
+    const before = await getProfile();
+    const beforeStats = await getStats();
+    const result = await useHint(level, 'letter');
+    expect(result.hint).toBeUndefined();
+    expect(result.charged).toBe(false);
+    expect(result.profile.coins).toBe(before.coins);
+    expect((await getStats()).coinsSpent).toBe(beforeStats.coinsSpent);
   });
   it('does not charge or mutate when there are insufficient coins for a hint', async () => {
     await bootstrapData();
     const db = await openGameDb();
     const profile: any = await db.get('profiles', PROFILE_ID);
-    profile.coins = 2;
+    profile.coins = 1;
     await db.put('profiles', profile);
     const level = CAMPAIGN.levels[0];
     const beforeProgress = await getProgress(level);
     const result = await useHint(level, 'letter');
     expect(result.hint).toBe('CAT');
     expect(result.charged).toBe(false);
-    expect(result.profile.coins).toBe(2);
+    expect(result.profile.coins).toBe(1);
     expect(result.progress).toEqual(beforeProgress);
     expect(await getProfile()).toEqual(profile);
   });
   it('skips a fully letter-revealed target for Reveal Word', async () => {
     await bootstrapData();
     const level = CAMPAIGN.levels[0];
-    await useHint(level, 'letter');
-    await useHint(level, 'letter');
-    await useHint(level, 'letter');
+    const db = await openGameDb();
+    const saved = await getProgress(level);
+    saved.revealedLetters = { CAT: [0, 1, 2] };
+    await db.put('progress', saved);
     const result = await useHint(level, 'word');
     expect(result.hint).toBe('ACT');
     expect(result.charged).toBe(true);
     expect(result.progress.revealedWords).toEqual(['ACT']);
-    expect(result.profile.coins).toBe(6);
+    expect(result.profile.coins).toBe(12);
   });
   it('accept-only TSAR on L004 gives no coins and no progression', async () => {
     await bootstrapData();
@@ -198,7 +213,7 @@ describe('indexeddb persistence', () => {
     await deleteDb();
     await bootstrapData();
     await importSave(save);
-    expect(await getStats()).toMatchObject({ submissions: 2, targets: 2, bonus: 0, levelsCompleted: 1, coinsEarned: 30, coinsSpent: 10, acceptOnly: 0, invalid: 0, alreadyFound: 0, bestCombo: 0 });
+    expect(await getStats()).toMatchObject({ submissions: 2, targets: 2, bonus: 0, levelsCompleted: 1, coinsEarned: 16, coinsSpent: 8, acceptOnly: 0, invalid: 0, alreadyFound: 0, bestCombo: 0 });
   });
   it('preserves settings through signed export and import', async () => {
     await bootstrapData();

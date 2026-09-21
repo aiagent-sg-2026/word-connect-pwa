@@ -32,6 +32,7 @@
     "reviewer:verify": "npm run reviewer:prepare && npm run reviewer:build && node scripts/reviewer-verify.mjs",
     "reviewer:smoke": "node scripts/reviewer-smoke.mjs",
     "layout:verify": "node scripts/layout-verify.mjs",
+    "e2e:state-machine": "npm run build && node scripts/state-machine-e2e.mjs",
     "v1.1:verify": "node scripts/v1.1-verify.mjs",
     "v1.2:verify": "node scripts/v1.2-verify.mjs"
   },

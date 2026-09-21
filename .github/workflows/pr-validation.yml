@@ -47,5 +47,8 @@ jobs:
       - name: Verify V1.1 gameplay integration in Chromium and WebKit
         run: npm run v1.1:verify
 
+      - name: Verify PWA state-machine lifecycle
+        run: npm run e2e:state-machine
+
       - name: Build and verify Human Golden Reviewer
         run: npm run reviewer:verify

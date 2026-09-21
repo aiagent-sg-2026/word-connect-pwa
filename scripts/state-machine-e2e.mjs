@@ -161,7 +161,6 @@ async function run(browserName, engine) {
 
     const achievementIds = (await idb(page)).achievements.map(a => a.id);
     assertCheckpoint(browserName, 'RESTORED', 'achievement-check', 'RESTORED', 'achievement idempotency', 'achievement IDs are unique and first-target is durable', achievementIds, ids => new Set(ids).size === ids.length && ids.includes('first-target'));
-    notRun.push({ browser: browserName, viewport: `${viewport.width}x${viewport.height}`, subsystem: 'service-worker update activation', reason: 'No deterministic local two-build fixture exists; existing npm run smoke covers registration, scope, controller, and warm offline reload.' });
     if (pageErrors.length) throw new Error(JSON.stringify(contextFor(browserName, 'RESTORED', 'console-check', 'RESTORED', 'browser', 'no page errors', pageErrors)));
   } catch (error) {
     failures.push(`${browserName}: ${error instanceof Error ? error.message : String(error)}`);

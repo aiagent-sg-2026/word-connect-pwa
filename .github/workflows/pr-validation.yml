@@ -50,5 +50,8 @@ jobs:
       - name: Verify PWA state-machine lifecycle
         run: npm run e2e:state-machine
 
+      - name: Verify deterministic Service Worker update lifecycle
+        run: npm run e2e:sw-update
+
       - name: Build and verify Human Golden Reviewer
         run: npm run reviewer:verify

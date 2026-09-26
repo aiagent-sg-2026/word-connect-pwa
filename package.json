@@ -33,6 +33,7 @@
     "reviewer:smoke": "node scripts/reviewer-smoke.mjs",
     "layout:verify": "node scripts/layout-verify.mjs",
     "e2e:state-machine": "npm run build && node scripts/state-machine-e2e.mjs",
+    "e2e:state-machine:run": "node scripts/state-machine-e2e.mjs",
     "e2e:full-player": "npm run build && node scripts/full-player-e2e.mjs",
     "e2e:sw-update": "node scripts/sw-update-e2e.mjs",
     "v1.1:verify": "node scripts/v1.1-verify.mjs",

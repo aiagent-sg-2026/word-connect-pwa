@@ -8,6 +8,7 @@ import { createFeedbackController, type FeedbackCue } from './game/feedback';
 import { askWaitingWorkerToActivate, bootOk, registerServiceWorker } from './pwa/register';
 import { setReadinessProbe } from './pwa/updateCoordinator';
 import type { LevelContract, ProfileRecord, ProgressRecord, SettingsRecord, StatsAggregateRecord } from './types';
+import { mountBlueprint } from './uiBlueprint';
 
 declare const __BUILD_ID__: string;
 declare const __APP_VERSION__: string;
@@ -148,5 +149,9 @@ motionMedia = typeof window !== 'undefined' && typeof window.matchMedia === 'fun
 systemReducedMotion = !!motionMedia?.matches;
 motionMedia?.addEventListener?.('change', event => { systemReducedMotion = event.matches; applyMotionHook(); });
 
-registerServiceWorker({ onWaiting: reg => { waitingReg = reg; render('Update available'); }, onOfflineReady: () => console.info('offline shell ready') });
-start();
+if (window.location.pathname.replace(/\/$/, '').endsWith('/ui')) {
+  mountBlueprint(app);
+} else {
+  registerServiceWorker({ onWaiting: reg => { waitingReg = reg; render('Update available'); }, onOfflineReady: () => console.info('offline shell ready') });
+  start();
+}

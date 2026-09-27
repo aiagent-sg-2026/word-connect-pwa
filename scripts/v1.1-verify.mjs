@@ -43,8 +43,10 @@ try {
     await playWord(page, 'CAT'); if (await page.locator('.app-shell[data-feedback="already-found"]').count() !== 1) throw new Error(`${name}: already-found marker missing`);
     await playWord(page, 'C'); if (await page.locator('.app-shell[data-feedback="invalid"]').count() !== 1) throw new Error(`${name}: invalid marker missing`);
     await playWord(page, 'AT'); if (await page.locator('.app-shell[data-feedback="bonus"]').count() !== 1) throw new Error(`${name}: bonus marker missing`);
-    await playWord(page, 'ACT'); if (await page.locator('[data-celebration="true"]').count() !== 1) throw new Error(`${name}: celebration marker missing`);
-    if (await page.locator('#next').count() !== 1 || await page.locator('#next').evaluate(el => el.getBoundingClientRect().height < 44)) throw new Error(`${name}: next level unavailable`);
+    await playWord(page, 'ACT');
+    await page.waitForFunction(() => { const next = document.querySelector('#next'); return !!next && Math.round(next.getBoundingClientRect().height) >= 44; });
+    if (await page.locator('[data-celebration="true"]').count() !== 1) throw new Error(`${name}: celebration marker missing`);
+    if (await page.locator('#next').count() !== 1 || await page.locator('#next').evaluate(el => Math.round(el.getBoundingClientRect().height) < 44)) throw new Error(`${name}: next level unavailable`);
     await page.reload({ waitUntil: 'networkidle' }); await settle(page);
     if (await page.locator('[data-celebration="true"]').count() !== 0) throw new Error(`${name}: celebration replayed after reload`);
     await page.getByRole('button', { name: 'Hint' }).click(); if (await page.locator('.hint-choice').count() !== 3) throw new Error(`${name}: hint unavailable`); await page.locator('.sheet-close').click();

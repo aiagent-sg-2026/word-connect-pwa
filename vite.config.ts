@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const buildId = process.env.BUILD_ID || new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
@@ -22,10 +22,21 @@ function generatedServiceWorker(base = appBase) {
   };
 }
 
+function uiBlueprintEntry() {
+  return {
+    name: 'word-connect-ui-blueprint-entry',
+    closeBundle() {
+      const uiDir = join(outDir, 'ui');
+      mkdirSync(uiDir, { recursive: true });
+      writeFileSync(join(uiDir, 'index.html'), readFileSync(join(outDir, 'index.html'), 'utf8'));
+    }
+  };
+}
+
 export default defineConfig(({ mode }) => ({
   base: appBase,
   build: { outDir },
-  plugins: [mode === 'development' ? basicSsl() : undefined, generatedServiceWorker()].filter(Boolean),
+  plugins: [mode === 'development' ? basicSsl() : undefined, generatedServiceWorker(), uiBlueprintEntry()].filter(Boolean),
   define: {
     __BUILD_ID__: JSON.stringify(buildId),
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '0.1.0')

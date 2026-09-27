@@ -75,6 +75,7 @@ function wheel() {
 }
 
 function render(message = '') {
+  if (!profile || !level || !progress || !settings || !stats) return;
   const index = CAMPAIGN.levels.findIndex(l => l.levelId === level.levelId);
   const candidate = selected.length ? tileWord(selected, level.letters) : '';
   app.dataset.feedback = feedbackMarker;

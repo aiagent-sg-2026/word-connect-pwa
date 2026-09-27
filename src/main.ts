@@ -31,6 +31,10 @@ let selected: number[] = [];
 let swipeDraft: number[] = [];
 let dragging = false;
 let waitingReg: ServiceWorkerRegistration | undefined;
+type UpdatePhase = 'idle' | 'updating' | 'timeout';
+let updatePhase: UpdatePhase = 'idle';
+let updateTimer: ReturnType<typeof setTimeout> | undefined;
+const UPDATE_TIMEOUT_MS = 9000;
 let achievementToast = '';
 let achievementToastTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -75,12 +79,29 @@ function wheel() {
   return `<div class="wheel" id="wheel" aria-label="Letter wheel. Tap letters then Submit, or swipe across letters."><svg id="path" aria-hidden="true"></svg>${level.letters.map((l,i)=>{ const a = (i / n) * Math.PI * 2 - Math.PI/2; const x = 50 + Math.cos(a)*34; const y = 50 + Math.sin(a)*34; return `<button class="tile ${selected.includes(i)?'sel':''}" data-i="${i}" style="left:${x}%;top:${y}%" aria-pressed="${selected.includes(i)}">${l}</button>`; }).join('')}</div>`;
 }
 
+function clearUpdateTimer() { if (updateTimer) clearTimeout(updateTimer); updateTimer = undefined; }
+function updateOverlay() {
+  if (updatePhase === 'idle') return '';
+  const timedOut = updatePhase === 'timeout';
+  return `<aside class="update-loader" role="dialog" aria-modal="true" aria-labelledby="update-loader-title" aria-describedby="update-loader-copy"><div class="update-loader-card" aria-live="polite"><span class="update-loader-spinner" aria-hidden="true"></span><span class="eyebrow">WORD CONNECT</span><h2 id="update-loader-title">${timedOut ? 'Still updating' : 'Updating…'}</h2><p id="update-loader-copy">${timedOut ? 'This is taking longer than expected. Your progress is safe.' : 'Installing the latest version. Keep this window open.'}</p>${timedOut ? '<div class="update-loader-actions"><button id="updateRetry">Retry</button><button id="updateCancel" class="secondary">Continue playing</button></div>' : ''}</div></aside>`;
+}
+async function beginUpdateNow() {
+  if (!waitingReg) return;
+  const materialActive = hasActiveMaterialTransaction();
+  const ready = !dragging && !materialActive && !!profile?.campaignVersion && profile.campaignVersion === CAMPAIGN.campaignVersion;
+  if (!ready) { updatePhase = 'idle'; clearUpdateTimer(); render('Finish the current move, then update'); return; }
+  updatePhase = 'updating'; clearUpdateTimer(); render('Updating…');
+  const started = await askWaitingWorkerToActivate(waitingReg, { swipeEnded: !dragging, progressSaved: true, materialTransactionActive: materialActive, compatibilityStaged: profile.campaignVersion === CAMPAIGN.campaignVersion, allClientsReady: ready });
+  if (!started) { updatePhase = 'timeout'; render('Update paused'); return; }
+  updateTimer = setTimeout(() => { if (updatePhase === 'updating') { updatePhase = 'timeout'; render('Update is taking longer than expected'); } }, UPDATE_TIMEOUT_MS);
+}
+
 function render(message = '') {
   if (!profile || !level || !progress || !settings || !stats) return;
   const index = CAMPAIGN.levels.findIndex(l => l.levelId === level.levelId);
   const candidate = selected.length ? tileWord(selected, level.letters) : '';
   app.dataset.feedback = feedbackMarker;
-  app.innerHTML = `<div class="app-shell" data-feedback="${feedbackMarker}">${achievementToast ? `<aside class="achievement-toast" role="status" aria-label="Achievement unlocked: ${achievementToast}"><span class="achievement-toast-medal" aria-hidden="true">🏆</span><span class="achievement-toast-copy"><span class="achievement-toast-eyebrow">Achievement unlocked</span><strong>${achievementToast}</strong></span><span class="achievement-toast-shine" aria-hidden="true"></span></aside>` : ''}<header><div class="level-mark"><span class="eyebrow">LEVEL ${index+1} / ${CAMPAIGN.levels.length}</span><strong>${progress.foundTargets.length} / ${level.targets.length}</strong></div><div class="hud-actions"><div class="coins ${coinsChanged ? 'coin-pulse' : ''}" aria-label="Coins">🪙 ${profile.coins}</div><button id="settings" class="icon-button" aria-label="Open settings">⚙</button></div></header><section class="progress" aria-label="Level progress"><div style="width:${(progress.foundTargets.length/level.targets.length)*100}%"></div></section><main><section class="answers" aria-label="Answer slots">${answerSlots()}</section><div class="candidate" aria-live="polite" aria-label="Current word">${candidate || message || 'Tap or swipe letters'}</div>${wheel()}<section class="controls"><button id="submit" ${!candidate?'disabled':''}>Submit</button><button id="clear" class="compact">Clear</button><button id="shuffle" class="secondary">Shuffle</button><button id="hint" class="secondary">Hint</button></section><section class="bonus" aria-live="polite"><span>★ Bonus</span> ${progress.foundBonus.length ? progress.foundBonus.join(', ') : 'Find extra words for +1'}</section>${progress.completed ? `<section class="complete ${feedbackMarker === 'complete' ? 'celebrate' : ''}" data-celebration="${feedbackMarker === 'complete' ? 'true' : 'false'}"><div><span class="eyebrow">PUZZLE COMPLETE</span><h2>Level complete!</h2><small>${progress.foundTargets.length} targets · ${progress.foundBonus.length} bonus · Best combo ×${stats.bestCombo}</small></div><button id="next">${index === CAMPAIGN.levels.length-1 ? 'Replay final level' : 'Next level'}</button></section>` : ''}</main>${waitingReg ? `<aside class="update"><strong>Update ready</strong><button id="later">Later</button><button id="updateNow">Update Now</button></aside>` : ''}<div id="sheet-root"></div></div>`;
+  app.innerHTML = `<div class="app-shell" data-feedback="${feedbackMarker}" aria-busy="${updatePhase === 'updating'}">${achievementToast ? `<aside class="achievement-toast" role="status" aria-label="Achievement unlocked: ${achievementToast}"><span class="achievement-toast-medal" aria-hidden="true">🏆</span><span class="achievement-toast-copy"><span class="achievement-toast-eyebrow">Achievement unlocked</span><strong>${achievementToast}</strong></span><span class="achievement-toast-shine" aria-hidden="true"></span></aside>` : ''}<header><div class="level-mark"><span class="eyebrow">LEVEL ${index+1} / ${CAMPAIGN.levels.length}</span><strong>${progress.foundTargets.length} / ${level.targets.length}</strong></div><div class="hud-actions"><div class="coins ${coinsChanged ? 'coin-pulse' : ''}" aria-label="Coins">🪙 ${profile.coins}</div><button id="settings" class="icon-button" aria-label="Open settings">⚙</button></div></header><section class="progress" aria-label="Level progress"><div style="width:${(progress.foundTargets.length/level.targets.length)*100}%"></div></section><main><section class="answers" aria-label="Answer slots">${answerSlots()}</section><div class="candidate" aria-live="polite" aria-label="Current word">${candidate || message || 'Tap or swipe letters'}</div>${wheel()}<section class="controls"><button id="submit" ${!candidate?'disabled':''}>Submit</button><button id="clear" class="compact">Clear</button><button id="shuffle" class="secondary">Shuffle</button><button id="hint" class="secondary">Hint</button></section><section class="bonus" aria-live="polite"><span>★ Bonus</span> ${progress.foundBonus.length ? progress.foundBonus.join(', ') : 'Find extra words for +1'}</section>${progress.completed ? `<section class="complete ${feedbackMarker === 'complete' ? 'celebrate' : ''}" data-celebration="${feedbackMarker === 'complete' ? 'true' : 'false'}"><div><span class="eyebrow">PUZZLE COMPLETE</span><h2>Level complete!</h2><small>${progress.foundTargets.length} targets · ${progress.foundBonus.length} bonus · Best combo ×${stats.bestCombo}</small></div><button id="next">${index === CAMPAIGN.levels.length-1 ? 'Replay final level' : 'Next level'}</button></section>` : ''}</main>${waitingReg && updatePhase === 'idle' ? `<aside class="update"><strong>Update ready</strong><button id="later">Later</button><button id="updateNow">Update Now</button></aside>` : ''}${updateOverlay()}<div id="sheet-root"></div></div>`;
   coinsChanged = false;
   bindEvents(); drawPath();
 }
@@ -101,13 +122,10 @@ function bindEvents() {
   document.querySelector('#hint')?.addEventListener('click', () => openHintSheet());
   document.querySelector('#settings')?.addEventListener('click', () => openSettingsSheet());
   document.querySelector('#next')?.addEventListener('click', async () => { if (feedbackMarker) clearFeedbackMarker(feedbackMarker); if (feedbackTimer) clearTimeout(feedbackTimer); const i = CAMPAIGN.levels.findIndex(l=>l.levelId===level.levelId); const next = CAMPAIGN.levels[Math.min(i+1, CAMPAIGN.levels.length-1)]; await setCurrentLevel(next.levelId); selected=[]; await loadState(next.levelId); render('Next puzzle'); });
-  document.querySelector('#later')?.addEventListener('click', () => { waitingReg = undefined; render('Update postponed'); });
-  document.querySelector('#updateNow')?.addEventListener('click', async () => {
-    if (!waitingReg) return;
-    const ready = !dragging && !hasActiveMaterialTransaction() && !!profile?.campaignVersion && profile.campaignVersion === CAMPAIGN.campaignVersion;
-    const started = await askWaitingWorkerToActivate(waitingReg, { swipeEnded: !dragging, progressSaved: true, materialTransactionActive: hasActiveMaterialTransaction(), compatibilityStaged: profile.campaignVersion === CAMPAIGN.campaignVersion, allClientsReady: ready });
-    if (!started) render('Finish the current move, then update');
-  });
+  document.querySelector('#later')?.addEventListener('click', () => { clearUpdateTimer(); updatePhase = 'idle'; waitingReg = undefined; render('Update postponed'); });
+  document.querySelector('#updateNow')?.addEventListener('click', () => { void beginUpdateNow(); });
+  document.querySelector('#updateRetry')?.addEventListener('click', () => { void beginUpdateNow(); });
+  document.querySelector('#updateCancel')?.addEventListener('click', () => { clearUpdateTimer(); updatePhase = 'idle'; render('Update still available'); });
 }
 
 function closeSheet() { const root = document.querySelector('#sheet-root')!; const token = ++sheetToken; root.querySelector('.sheet-backdrop')?.classList.add('closing'); setTimeout(() => { if (token === sheetToken) root.innerHTML = ''; }, reducedMotion() ? 0 : 160); document.removeEventListener('keydown', onSheetKey); }

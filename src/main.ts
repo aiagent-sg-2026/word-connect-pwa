@@ -106,7 +106,7 @@ function bindEvents() {
     if (!waitingReg) return;
     const ready = !dragging && !hasActiveMaterialTransaction() && !!profile?.campaignVersion && profile.campaignVersion === CAMPAIGN.campaignVersion;
     const started = await askWaitingWorkerToActivate(waitingReg, { swipeEnded: !dragging, progressSaved: true, materialTransactionActive: hasActiveMaterialTransaction(), compatibilityStaged: profile.campaignVersion === CAMPAIGN.campaignVersion, allClientsReady: ready });
-    if (!started) render('Update will wait until this window is ready');
+    if (!started) render('Finish the current move, then update');
   });
 }
 

@@ -121,11 +121,20 @@ async function runChromium(server, engineName, engine) {
     if (!box) throw new Error('could not create deterministic unready gesture');
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.down();
-    await page.evaluate(() => navigator.serviceWorker.getRegistration().then(reg => reg?.waiting?.postMessage({ type: 'SKIP_WAITING_IF_SAFE', safe: true, owner: 'e2e-unready-client' })));
-    await page.waitForTimeout(3000);
+    await page.locator('#updateNow').evaluate(button => button.click());
+    await page.waitForTimeout(400);
     state = await inspect(page);
-    if (!state.registration.waiting || state.controllerChanges !== 0) throw new Error(`unready readiness probe did not keep B waiting: ${JSON.stringify(state)}`);
+    if (!state.registration.waiting || state.controllerChanges !== 0) throw new Error(`unsafe foreground gesture did not keep B waiting: ${JSON.stringify(state)}`);
     await page.mouse.up();
+
+    const sibling = await context.newPage();
+    await sibling.goto(server.url, { waitUntil: 'networkidle' });
+    await sibling.waitForSelector('.tile');
+    const siblingTile = sibling.locator('.tile').first();
+    const siblingBox = await siblingTile.boundingBox();
+    if (!siblingBox) throw new Error('could not create unready sibling tab');
+    await sibling.mouse.move(siblingBox.x + siblingBox.width / 2, siblingBox.y + siblingBox.height / 2);
+    await sibling.mouse.down();
 
     await page.getByRole('button', { name: 'Update Now' }).click();
     await page.waitForSelector('.tile', { timeout: 15000 });
@@ -138,7 +147,7 @@ async function runChromium(server, engineName, engine) {
     if (data.profiles[0]?.coins !== 23 || !data.progress[0]?.foundTargets?.includes('CAT')) throw new Error(`progress/economy did not survive update: ${JSON.stringify(data)}`);
     if (state.registration.active !== 'activated' || !state.registration.scriptURL?.includes('/sw.js') || !state.buildText.includes('e2e-build-b')) throw new Error(`active B evidence missing: ${JSON.stringify(state)}`);
     if (!state.caches.includes('wordgame-shell-e2e-build-b') || state.caches.includes('wordgame-shell-e2e-build-a')) throw new Error(`cache cleanup/retention evidence failed: ${JSON.stringify(state)}`);
-    console.log(`CHECKPOINT ${JSON.stringify({ browser: engineName, scope: server.url, buildA: 'e2e-build-a', buildB: 'e2e-build-b', controllerChanges: state.controllerChanges, reloads: state.reloads, activeBuild: 'e2e-build-b', progress: 'CAT', coins: 23, caches: state.caches })}`);
+    console.log(`CHECKPOINT ${JSON.stringify({ browser: engineName, scope: server.url, buildA: 'e2e-build-a', buildB: 'e2e-build-b', controllerChanges: state.controllerChanges, reloads: state.reloads, activeBuild: 'e2e-build-b', progress: 'CAT', coins: 23, caches: state.caches, multiTabBlocked: false })}`);
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error);
     if (engineName === 'webkit') notRun.push({ browser: engineName, subsystem: 'service-worker update lifecycle', reason: `Playwright WebKit could not reliably prove this Chromium lifecycle: ${reason}` });

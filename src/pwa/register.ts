@@ -31,8 +31,10 @@ export function registerServiceWorker(handlers: UpdateHandlers): void {
 }
 
 export async function askWaitingWorkerToActivate(reg: ServiceWorkerRegistration, state: UpdateSafetyState): Promise<boolean> {
-  const owner = claimUpdateOwner();
-  if (!owner || !isUpdateSafe(state)) return false;
+  if (!isUpdateSafe(state)) return false;
+  // A background/suspended Safari tab can retain the advisory owner lock while being unable to act.
+  // Explicit foreground activation is safe to de-duplicate at the Service Worker layer because skipWaiting() is idempotent.
+  const owner = claimUpdateOwner() ?? `foreground-${Date.now()}`;
   announceUpdate({ type: 'UPDATE_ACTIVATING', buildId: __BUILD_ID__, owner });
   reg.waiting?.postMessage({ type: 'SKIP_WAITING_IF_SAFE', safe: true, buildId: __BUILD_ID__, owner });
   return true;

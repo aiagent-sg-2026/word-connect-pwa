@@ -136,7 +136,27 @@ async function runChromium(server, engineName, engine) {
     await sibling.mouse.move(siblingBox.x + siblingBox.width / 2, siblingBox.y + siblingBox.height / 2);
     await sibling.mouse.down();
 
-    await page.getByRole('button', { name: 'Update Now' }).click();
+    await page.evaluate(() => {
+      const proto = ServiceWorker.prototype;
+      window.__wcOriginalSwPostMessage = proto.postMessage;
+      proto.postMessage = function () {};
+    });
+    const loaderShown = await page.locator('#updateNow').evaluate(button => {
+      button.click();
+      return document.querySelector('.update-loader')?.textContent?.includes('Updating') === true;
+    });
+    if (!loaderShown) throw new Error('fullscreen update loader did not appear immediately');
+    const loaderMetrics = await page.locator('.update-loader').evaluate(el => { const r = el.getBoundingClientRect(); return { top:r.top, left:r.left, right:r.right, bottom:r.bottom, width:r.width, height:r.height, vw:innerWidth, vh:innerHeight }; });
+    if (Math.round(loaderMetrics.width) !== loaderMetrics.vw || Math.round(loaderMetrics.height) !== loaderMetrics.vh || loaderMetrics.top !== 0 || loaderMetrics.left !== 0) throw new Error(`fullscreen update loader does not cover viewport: ${JSON.stringify(loaderMetrics)}`);
+    await page.getByText('Still updating', { exact: true }).waitFor({ timeout: 12000 });
+    if (await page.getByRole('button', { name: 'Retry', exact: true }).count() !== 1 || await page.getByRole('button', { name: 'Continue playing', exact: true }).count() !== 1) throw new Error('update timeout fallback controls missing');
+    const fallbackTargets = await page.locator('.update-loader-actions button').evaluateAll(buttons => buttons.map(button => { const r=button.getBoundingClientRect(); return [r.width,r.height]; }));
+    if (fallbackTargets.some(([w,h]) => Math.round(w) < 44 || Math.round(h) < 44)) throw new Error(`update timeout targets below 44px: ${JSON.stringify(fallbackTargets)}`);
+    await page.evaluate(() => {
+      if (window.__wcOriginalSwPostMessage) ServiceWorker.prototype.postMessage = window.__wcOriginalSwPostMessage;
+      delete window.__wcOriginalSwPostMessage;
+    });
+    await page.getByRole('button', { name: 'Retry', exact: true }).click();
     await page.waitForSelector('.tile', { timeout: 15000 });
     await page.getByRole('button', { name: 'Open settings' }).click();
     await waitFor(page, () => document.querySelector('.build-meta')?.textContent?.includes('e2e-build-b'), 'B boot/reload did not complete', 15000);
@@ -147,7 +167,7 @@ async function runChromium(server, engineName, engine) {
     if (data.profiles[0]?.coins !== 23 || !data.progress[0]?.foundTargets?.includes('CAT')) throw new Error(`progress/economy did not survive update: ${JSON.stringify(data)}`);
     if (state.registration.active !== 'activated' || !state.registration.scriptURL?.includes('/sw.js') || !state.buildText.includes('e2e-build-b')) throw new Error(`active B evidence missing: ${JSON.stringify(state)}`);
     if (!state.caches.includes('wordgame-shell-e2e-build-b') || state.caches.includes('wordgame-shell-e2e-build-a')) throw new Error(`cache cleanup/retention evidence failed: ${JSON.stringify(state)}`);
-    console.log(`CHECKPOINT ${JSON.stringify({ browser: engineName, scope: server.url, buildA: 'e2e-build-a', buildB: 'e2e-build-b', controllerChanges: state.controllerChanges, reloads: state.reloads, activeBuild: 'e2e-build-b', progress: 'CAT', coins: 23, caches: state.caches, multiTabBlocked: false })}`);
+    console.log(`CHECKPOINT ${JSON.stringify({ browser: engineName, scope: server.url, buildA: 'e2e-build-a', buildB: 'e2e-build-b', controllerChanges: state.controllerChanges, reloads: state.reloads, activeBuild: 'e2e-build-b', progress: 'CAT', coins: 23, caches: state.caches, multiTabBlocked: false, fullscreenLoader: true, timeoutFallback: true })}`);
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error);
     if (engineName === 'webkit') notRun.push({ browser: engineName, subsystem: 'service-worker update lifecycle', reason: `Playwright WebKit could not reliably prove this Chromium lifecycle: ${reason}` });
